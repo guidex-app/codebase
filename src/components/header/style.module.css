@@ -1,0 +1,63 @@
+.header {
+	height: 60px;
+	width: 100%;
+	padding: 2.5px;
+	background: transparent;
+	overflow: hidden;
+
+	display: grid; 
+	grid-template-columns: 100px calc(100% - 212px) 100px; 
+	grid-template-rows: 60px;
+	gap: 0px 5px; 
+	grid-template-areas: "extraButton title menu";
+}
+
+.fixed {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	z-index: 50;
+}
+
+.title { 
+	grid-area: title;
+	text-align: center;
+	align-self: center;
+	justify-self: center;
+	pointer-events: none;
+}
+
+.title h1 {
+	font-size: 17px;
+	font-weight: 600;
+	color: #FFFFFF;
+}
+
+.menu { 
+	grid-area: menu;
+	align-self: center;
+	justify-self: end;
+}
+
+.menu button {
+	text-align: center;
+	border: none;
+	text-decoration: none;
+	color: #ed576b;
+	height: 55px;
+	width: 55px;
+	vertical-align: middle;
+	background-color: transparent;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: 0.3s background ease-in-out;
+	will-change: background;
+}
+
+.menu svg {
+	width: 25px;
+	height: 55px;
+}
+
+.menu button:hover { background: rgba(0,0,0,0.2); }

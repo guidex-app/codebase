@@ -1,0 +1,34 @@
+.inputEl {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.inputEl > div {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 210, 91, 0.5);;
+    padding: 10px;
+}
+
+.inputEl .error { border: 1px solid rgba(252, 66, 75, 0.5); }
+.errorMessage { color: rgba(252, 66, 75, 0.5); }
+
+.inputEl label {
+    display: block;
+    color: #FFFFFF;
+    transition: 0.2s ease-in-out transform;
+    font-size: 15px;
+    padding-bottom: 10px;
+}
+
+.inputEl .disabled, input:disabled {
+    opacity: 0.5;
+}
+
+.inputEl button {
+    border: none;
+    padding: 10px 20px 10px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    height: auto;
+}

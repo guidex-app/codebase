@@ -1,0 +1,43 @@
+@keyframes slideInFromLeft {
+	0% {
+	  transform: translateX(15px);
+	  opacity: 0.5;
+	}
+	100% {
+	  transform: translateX(0);
+	  opacity: 1;
+	}
+}
+
+.backButton {
+    position: fixed;
+    top: 5px; left: 5px;
+	padding: 0 15px;
+	border-radius: 25px;
+    line-height: 55px;
+    color: #fc424a;
+	animation: 0.3s ease-in-out 0s 1 slideInFromLeft;
+    transition: 0.3s background ease-in-out, 0.3s opacity ease-in-out;
+    will-change: background;
+}
+
+.backButton:hover { background-color: rgba(0,0,0,0.2); opacity: 0.5; }
+
+.backButton span::before {
+	border-style: solid;
+	border-width: 2px 2px 0 0;
+	content: '';
+	display: inline-block;
+	height: 10px;
+	width: 10px;
+
+	left: 0.15em;
+	position: relative;
+	top: 0.15em;
+	transform: rotate(-45deg);
+	vertical-align: middle;
+    margin-right: 7px;
+    
+    left: 0.25em;
+    transform: translateY(-3px) rotate(-135deg);
+}

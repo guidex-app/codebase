@@ -1,0 +1,114 @@
+.inputEl {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.inputEl > div {
+    background-color: #2b303d;
+    border-radius: 10px;
+    border: 1px solid #00d25b;
+    padding-bottom: 11px;
+}
+
+.inputEl small {
+  display: block;
+  text-align: center;
+  color: #6c7293;
+  padding: 10px 10px 0 10px;
+}
+
+.image {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background-color: rgba(255,255,255,0.03);
+  color: transparent;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-left: 10px;
+  border-radius: 20px;
+  text-indent: -100px;
+}
+
+.image img {
+  width: 100%;
+  height: auto;
+}
+
+.inputEl .error { border: 1px solid #fc424a; }
+.errorMessage { color: #fc424a; }
+
+.inputEl label {
+    display: block;
+    color: #FFFFFF;
+    transition: 0.2s ease-in-out transform;
+    font-size: 15px;
+    padding: 5px 10px 10px 10px;
+}
+
+.fileinput {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  color: transparent;
+  height: 100px;
+  padding: 30px 10px;
+  z-index: 10;
+  cursor: pointer;
+  background-color: #000;
+
+  line-height: 2em;
+  margin: 0 10px;
+  width: calc(100% - 20px);
+  font-size: 15px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  border-radius: 5px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-weight: 500;
+  outline: none;
+}
+
+  .fileinput::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    content: '*Klicke, um ein Bild auszuwählen (JPG/JPEG)';
+    content: attr(placeholder);
+    display: block;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.07);
+    text-align: center;
+
+    border-radius: 15px;
+    outline: none;
+    white-space: nowrap;
+    font-weight: 700;
+    color: white;
+    font-size: 25px;
+    padding: 32px 10px 10px 10px;
+  }
+
+.fileinput:hover::before { border-color: rgba(255, 255, 255, 0.15); }
+.fileinput:active::before { background: #6c7293; }
+
+  .image + .fileinput {
+    display: inline-block;
+    width: calc(100% - 110px);
+    vertical-align: middle;
+  }
+
+  .fileinput::-webkit-file-upload-button {
+    position: relative;
+    z-index: 80;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    visibility: hidden;
+  }

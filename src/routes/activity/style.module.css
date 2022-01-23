@@ -1,0 +1,77 @@
+.activity {
+    display: block;
+    width: 100%;
+    border-radius: 20px;
+    background: #222531;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+}
+
+.image {
+    width: 115px;
+    height: 115px;
+    margin-right: 15px;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: 20px;
+    vertical-align: middle;
+    background-color: rgba(255,255,255,0.03);
+    color: transparent;
+}
+
+.image img { width: 100%; height: auto; }
+
+.activity h2 {
+    line-height: 20px;
+    color: white;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+.image + div {
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 130px);
+}
+
+.activity table {
+    padding: 0;
+    width: 100%;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.activity table tbody {
+    width: 100%;
+    display: table;
+}
+
+.activity table td {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 5px;
+}
+
+.activity table tr:first-child td:nth-child(even),
+.activity table tr:nth-child(2) td:nth-child(odd) {
+    background-color: rgba(255,255,255,0.01);
+}
+
+.activity:hover {
+    transform: scale(1.01);
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(auto-fill, 1fr);
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+}
+
+@media (min-width: 750px) { .list { grid-template-columns: repeat(2, 1fr); }}
+@media (min-width: 1047px) { .list { grid-template-columns: repeat(3, 1fr); }}

@@ -1,0 +1,77 @@
+.inputEl {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.inputEl > div {
+    background-color: #2b303d;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 210, 91, 0.5);;
+}
+
+.inputEl svg + div {
+    display: inline-block;
+    width: calc(100% - 40px);
+    vertical-align: middle;
+}
+
+.inputEl svg {
+    width: 40px;
+    display: inline-block;
+    height: auto;
+    padding-left: 15px;
+    padding-right: 5px;
+    color: #6c7293;
+    vertical-align: middle;
+}
+
+.inputEl .error { border: 1px solid rgba(252, 66, 75, 0.5); }
+.errorMessage { color: rgba(252, 66, 75, 0.5); }
+
+.inputEl button {
+    display: block;
+    padding: 5px 10px;
+    width: 100%;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: left;
+    color: #FFFFFF;
+    
+    cursor: pointer;
+    outline: none;
+}
+
+.inputEl button:empty::after {
+    content: 'Klicke zum auswählen';
+    color: #6c7293;
+}
+
+.inputEl label {
+    display: block;
+    color: #FFFFFF;
+    transition: 0.2s ease-in-out transform;
+    font-size: 14px;
+    padding: 5px 10px 0 10px;
+}
+
+.inputEl .disabled, input:disabled {
+    opacity: 0.5;
+}
+
+.search {
+    display: block;
+    width: calc(100% - 20px);
+    border: none;
+    margin: 0 10px 10px 10px;
+    padding: 10px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #2b303d;
+    font-size: 15px;
+    color: white;
+    outline: none;
+}

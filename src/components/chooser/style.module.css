@@ -1,0 +1,34 @@
+.chooser {
+    background-color: #111218;
+    border-radius: 27px;
+  
+    max-width: 350px;
+    width: 85%;
+    height: 55px;
+    margin: 0 auto 15px auto;
+  
+      display: grid; 
+      grid-template-rows: 55px;
+    grid-template-columns: calc(100% / 3);
+      grid-template-areas: "first second third";
+  }
+  
+  .chooser > div:hover {
+    background-color: #191C25;
+  } 
+  
+  .chooser svg { display: inline-block; }
+  
+  .first, .second, .third {
+    text-align: center;
+    padding-top: 14.5px;
+    border-radius: 27.5px;
+    width: 100%;
+    cursor: pointer;
+      transition: 0.3s background ease-in-out;
+      will-change: background;
+  }
+  
+  .first { grid-area: first; }
+  .second { grid-area: second;  }
+  .third { grid-area: third; }

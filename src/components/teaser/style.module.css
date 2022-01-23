@@ -1,0 +1,75 @@
+.teaser {
+    padding-top: 77px;
+    height: 370px;
+    text-align: center;
+    background-color: var(--ion-color-dark);
+    background-repeat: no-repeat;
+    background-size: auto 380px;
+    background-position: center top;
+    position: relative;
+    color: #FFFFFF;
+}
+
+.teaser::after {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 360px;
+    display: block;
+    content: ' ';
+    background: rgb(82,117,109);
+    background: linear-gradient(180deg, #f37516 0%, #2b0079 100%);
+    opacity: 0.7;
+    z-index: 0;
+}
+
+.teaser > div {
+  position: relative;
+  z-index: 1;
+}
+
+.weather {
+  position: relative;
+  display: inline-block;
+  background: #111218;
+  line-height: 30px;
+  letter-spacing: 2px;
+  border-radius: 10px;
+  min-width: 200px;
+  font-size: 11px;
+  padding: 0 10px;
+  z-index: 1;
+  color: #ffab00;
+  text-transform: uppercase;
+}
+
+.teaser p {
+  padding: 0;
+  max-width: 90%;
+  margin: 0 auto;
+  display: block;
+}
+
+.teaser p {
+  display: inline-block;
+  font-size: 16px;
+  padding: 7px 0 20px;
+  color: #e1e1e1;
+}
+
+.teaser h1 {
+  line-height: 35px;
+  font-size: 32px;
+}
+
+@media (min-width: 1100px) {
+  .teaser {
+    background-attachment: fixed;
+    background-size: 100% auto;
+  }
+}
+
+@media (min-width: 1500px) {
+  .teaser {
+    background-size: 1500px auto;
+  }
+}

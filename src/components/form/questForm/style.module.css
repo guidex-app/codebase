@@ -1,0 +1,17 @@
+.questForm h2 + p {
+    margin-top: 3px;
+}
+
+.questForm header div {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.questForm header div p {
+    margin: 0;
+}
+
+.questForm header div p + p {
+    margin-top: 3px;
+}

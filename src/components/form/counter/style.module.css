@@ -1,0 +1,58 @@
+.counter {
+    display: inline-block;
+    width: calc(50% - 7.5px);
+    max-width: 250px;
+    margin-bottom: 15px;
+}
+
+.counter + .counter {
+    margin-left: 15px;
+}
+
+.counter > div {
+    background-color: #2b303d;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid rgba(0, 210, 91, 0.5);
+}
+
+.counter input {
+    opacity: 0.5;
+    -webkit-appearance: none;
+}
+
+.counter input::-webkit-outer-spin-button,
+.counter input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.counter input, .counter button {
+    display: block;
+    height: 45px;
+    width: calc(100% / 3);
+    text-align: center;
+    line-height: 45px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.counter svg {
+    height: 43px;
+}
+
+.counter label {
+    display: block;
+    padding-bottom: 5px;
+    margin: 0;
+}
+
+.counter button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}

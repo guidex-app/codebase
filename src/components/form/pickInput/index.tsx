@@ -1,0 +1,32 @@
+import { FunctionalComponent, h } from 'preact';
+import { CheckCircle } from 'react-feather';
+import Chip from '../../chip';
+
+import style from './style.module.css';
+
+interface PickInputProps {
+    label: string;
+    name: string;
+    options: string[];
+    value?: string[];
+    error?: 'invalid' | 'error' | 'valid';
+    required?: true;
+    change: (value: any, key: string, itemIndex?: number | undefined) => void,
+}
+
+const PickInput: FunctionalComponent<PickInputProps> = ({ label, options, name, error, required, value = [], change }: PickInputProps) => (
+  <div class={style.inputEl}>
+    <div class={(error !== 'valid' || value?.length === 0) && required ? style.error : 'valid'}>
+      <label>{required && '*'}{label}</label>
+      {options.map((item: string) => {
+        const itemIndex: number = value?.indexOf(item);
+        return (
+          <Chip label={item} icon={<CheckCircle />} type={itemIndex !== -1 ? 'active' : 'inactive'} key={item} action={() => change(item, name, itemIndex)} />
+        );
+      })}
+    </div>
+    {error === 'error' && <small class={style.errorMessage}>Bitte mache eine korrekte eingabe</small>}
+  </div>
+);
+
+export default PickInput;

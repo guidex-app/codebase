@@ -1,0 +1,31 @@
+.slider {
+    white-space: nowrap;
+
+    scroll-snap-type: x mandatory;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+
+    -webkit-overflow-scrolling: touch;
+    text-align: center;
+    scroll-padding: 0;
+
+    margin: 15px 0;
+}
+
+.slider > div {
+    display:inline-block; scroll-snap-align: start;
+    padding: 15px;
+    text-align: center;
+    background-color: #232732;
+    border-radius: 20px;
+    margin-right: 10px;
+    min-width: 75px;
+}
+
+.slider svg {
+    color: #ffab00;
+}
+

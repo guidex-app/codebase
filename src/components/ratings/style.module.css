@@ -1,0 +1,29 @@
+.rate {
+    margin-bottom: 15px;
+    padding: 10px 20px; 
+    border-radius: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rate button {
+    display: inline-block;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.349);
+    transform: scale(1) rotate(0);
+    transition: transform 0.3s;
+}
+
+.rate button svg {
+    width: 30px;
+    height: 30px;
+    stroke-width: 1px;
+}
+
+.rate button:hover {
+    transform: scale(1.1) rotate(5deg);
+    color: white;
+}

@@ -1,0 +1,60 @@
+.chip {
+    display: inline-block;
+    outline: none;
+    padding: 0 15px;
+    border: none;
+    border-radius: 20px;
+    height: 40px;
+    margin: 7.5px 2.5px;
+    cursor: pointer;
+
+    transition: background 0.2s ease-out, border 0.2s ease-out;
+    will-change: background;
+}
+
+.chip svg {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    width: 30px;
+    height: auto;
+}
+
+.inactive {
+    border: 1px solid #cf3c4f;
+    background-color: #342935;
+    color: #cf3c4f;
+}
+
+.active {
+    border: 1px solid #ffab02;
+    background-color: #342935;
+    color: #ffab02;
+}
+
+.warning {
+    background-color: #ffab02;
+    color: #000000;
+}
+
+.delete {
+    background-color: transparent;
+    color: #eb445a;
+}
+
+.disabled {
+    background-color: #222631;
+    color: #818388;
+}
+
+.grey {
+    background-color: #2b303d;
+    color: #ffab02;
+}
+
+.small {
+    height: 30px;
+    border-radius: 7px;
+    padding: 0 15px;
+}

@@ -1,0 +1,111 @@
+.link {
+    display: block;
+    font-size: 17px;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 2.5px 5px;
+    margin: 2.5px 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    will-change: background;
+    transition: background 0.3s ease-in-out;
+}
+
+.grey {
+    background-color: rgba(255,255,255,0.04);
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+.link:hover {
+    background-color: rgba(255,255,255,0.03);
+}
+
+.link:hover .label {
+    border-color: transparent; 
+}
+
+.grey .label {
+    border: none;
+}
+
+.link:last-child .label {
+    border: none;
+}
+
+.link svg {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    width: 30px;
+    height: 50px;
+}
+
+.link svg:not([color]) {
+    color: #6c7293;
+}
+
+.active, .current svg, .current .label, .grey, .active.link svg, .grey.link svg {
+    color: #fc424a;
+}
+
+.large {
+    position: relative;
+}
+
+.large svg {
+    width: 40px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.label {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+	line-height: 23px;
+    vertical-align: top;
+    padding: 13.5px 15px;
+    border-bottom: 1px solid #373349;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.label.text { padding: 2px 15px; }
+
+.label p {
+    margin: 0;
+}
+
+.label small {
+    color: #6c7293;
+}
+
+.link svg + .label {
+    width: calc(100% - 30px);
+    padding-left: 0;
+}
+
+.large svg + .label {
+    width: calc(100% - 45px);
+    margin-left: 45px;
+    padding: 10px 0;
+}
+
+.image {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #323643;
+    margin-right: 15px;
+    color: transparent;
+}
+
+.image img { width: 100%; height: auto; }
+
+.image + .label {
+    width: calc(100% - 65px);
+    padding-left: 0;
+}

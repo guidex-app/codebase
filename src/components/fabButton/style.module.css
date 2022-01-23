@@ -1,0 +1,26 @@
+.fabButton {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border: none;
+    height: 65px;
+    width: 65px;
+    border-radius: 20px;
+    background: linear-gradient(270deg,#f5af19,#f12711);
+    opacity: 1;
+    cursor: pointer;
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    will-change: transform, opacity;
+}
+
+.hide {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.fabButton svg {
+    height: auto;
+    width: 30px;
+    vertical-align: middle;
+}

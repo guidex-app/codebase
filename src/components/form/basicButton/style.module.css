@@ -1,0 +1,27 @@
+.solid, .outline {
+    display: block;
+    color: #FFFFFF;
+    border-radius: 22.5px;
+    border: none;
+    padding: 0 20px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.solid {
+    background-color: #fc424a;
+}
+
+.outline {
+    background-color: transparent;
+    color: #fc424a;
+    border: 1px solid #fc424a;
+}
+
+.solid:disabled, .outline:disabled {
+    opacity: 0.5;
+}

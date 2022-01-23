@@ -1,0 +1,51 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    top: 0;
+  
+    z-index: 70;
+  
+    width: 100%;
+    height: 100vh;
+
+    overflow-y: scroll;
+    background-color: #20192a;
+    transition: max-width 0.3s ease-in-out;
+  }
+  
+  .content {
+    overflow: auto;
+    min-height: 200px;
+    padding: 10px 0;
+  }
+  
+  .overlay {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 60;
+    touch-action: none;
+    cursor: pointer;
+  }
+  
+  @media (min-width: 693px) {
+    .modal {
+        top: 75px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 100%;
+        max-width: 500px;
+        width: 100%;
+        height: 500px;
+        border-radius: 10px;
+    }
+
+    .modal.large {
+      max-width: 1024px;
+    }
+  }

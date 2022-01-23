@@ -1,0 +1,28 @@
+.textHeader {
+	position: relative;
+	padding-top: 70px;
+	padding-bottom: 10px;
+}
+
+.textHeader h1 {
+	padding: 0 15px 15px 15px;
+}
+
+.textHeader h1 + p {
+	margin-top: -10px;
+	padding: 0 15px;
+	color: #6c7293;
+}
+
+.textHeader svg {
+    width: 35px;
+	height: auto;
+    position: absolute;
+    top: 50%; left: 10px;
+    transform: translateY(calc(-50% + 25px));
+}
+
+.textHeader svg + div {
+    width: calc(100% - 45px);
+    margin-left: 50px;
+}

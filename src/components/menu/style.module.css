@@ -1,0 +1,69 @@
+@keyframes slideInFromLeft {
+	0% {
+	  transform: translateX(100%);
+	  opacity: 0.5;
+	}
+	100% {
+	  transform: translateX(0);
+	  opacity: 1;
+	}
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #20192a;
+    width: 250px;
+    padding: 30px 0;
+    overflow-y: auto;
+    z-index: 70;
+    animation: 0.3s ease 0s 1 slideInFromLeft;
+}
+
+.menu h4 {
+    background-color: #2f2938;
+    padding: 5px 10px;
+    transform: translateY(-1px);
+}
+
+.menu small {
+    display: block;
+    margin-top: -17px;
+    padding: 5px 10px 15px 10px;
+    font-style: italic;
+    color: #6c7293;
+    letter-spacing: 1px;
+}
+
+.title {
+    font-size: 27px;
+    color: #DCDBDE;
+    padding: 15px 10px;
+}
+
+.button {
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    z-index: 20;
+    text-align: center;
+    border: none;
+    text-decoration: none;
+    color: #ed576b;
+    height: 55px;
+    width: 55px;
+    vertical-align: middle;
+    background-color: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s background ease-in-out;
+    will-change: background;
+}
+
+button:empty {
+    display: none;
+}
+
+.button:hover { background: rgba(0,0,0,0.2); }

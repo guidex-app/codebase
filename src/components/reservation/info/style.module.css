@@ -1,0 +1,26 @@
+.table {
+    padding: 0;
+    width: 100%;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.table tbody {
+    width: 100%;
+    display: table;
+}
+
+.table td {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 5px;
+}
+
+.table tr:first-child td:nth-child(even),
+.table tr:nth-child(2) td:nth-child(odd) {
+    background-color: rgba(255,255,255,0.01);
+}

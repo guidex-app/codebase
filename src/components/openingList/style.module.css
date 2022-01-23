@@ -1,0 +1,23 @@
+.openings {
+    padding: 0;
+    width: 100%;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #232732;
+    margin-bottom: 15px;
+}
+
+.openings td {
+    height: 35px;
+    line-height: 1.5em;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.openings tr:first-child td:nth-child(even),
+.openings tr:nth-child(2) td:nth-child(odd) {
+    background-color: rgba(255,255,255,0.01);
+}

@@ -1,0 +1,64 @@
+.dashboard,
+.tools {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fill, 1fr);
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+}
+
+.dashboard {
+    padding: 0 10px 15px 10px;
+}
+
+.item {
+    border-radius: 10px;
+    padding: 55px 0 70px 0;
+    text-align: center;
+    background: linear-gradient(145deg, #272b37, #2e3341);
+    /* box-shadow:  13px 13px 26px #191c25a2,
+    -13px -13px 26px #191c25a9; */
+    color: #FFFFFF;
+    overflow: hidden;
+    height: 175px;
+    opacity: 1;
+    will-change: background, transform;
+    transform: scale(1);
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.item:hover {
+    background-color: #333948;
+    transform: scale(1.01);
+}
+
+.item svg {
+    display: block;
+    text-align: center;
+    width: 30px;
+    padding-bottom: 5px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.item small { display: inline-block; color: #6c7293; font-size: 14px; padding-top: 2px; }
+
+.tools {
+    padding: 10px 10px 2.5px 10px;
+}
+
+.tools > div:nth-child(even) {
+    text-align: right;
+}
+
+@media (min-width: 693px) {
+ .dashboard {
+    grid-template-columns: repeat(3, 1fr);
+ }
+}
+
+@media (min-width: 1047px) {
+    .dashboard {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

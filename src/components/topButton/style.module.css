@@ -1,0 +1,17 @@
+.topButton {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    color: #fc424a;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    line-height: 55px;
+    text-align: left;
+}
+
+.topButton:hover {
+    opacity: 0.8;
+}
