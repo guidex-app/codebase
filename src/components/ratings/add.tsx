@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Star } from 'react-feather';
 import { getFireDocument, setNewRating } from '../../data/fire';
@@ -52,7 +52,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, type
   }, [activityId]);
 
   return (
-    <div style={{ padding: '0 10px' }}>
+    <Fragment>
       {type === 'rating' && (
         <div class={style.rate}>
           {[1, 2, 3, 4, 5].map((starNum: number) => {
@@ -105,7 +105,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, type
 
       {ownComment.oldRating && <p class="red">Mit einer neuen Bewertung, werden alle Votes auf 0 zurückgesetzt</p>}
       <p class="grey">Hilf anderen und neuen Besuchern und gebe Ihnen mit deiner Bewertung eine Bewertungsgrundlage. Beschreibe dein Erlebnis in Worten und beschreibe was dich zu deiner Bewertung führt.</p>
-    </div>
+    </Fragment>
   );
 };
 

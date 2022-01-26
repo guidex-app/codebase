@@ -65,14 +65,26 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
     if (showOverview) setShowOverview(false);
   };
 
-  const checkDurationOnDays = (amountOfFields: string, values?: any[], onDays?: (string | undefined)[]): boolean => {
-    if (!days || !onDays || onDays.length < days?.length) return true;
-    const amountSplitted = amountOfFields.split(',');
-
-    return !days?.every((day: string, index: number) => {
-      const amount = amountSplitted[index] || '1';
-      return (values?.[index]?.split(',')?.length || 0) === parseInt(amount, 10);
+  /** validiert bei mehreren möglichen antworten ob der keine tage doppelt gwählt wurden (bei den tagen radio) */
+  const checkboxValidation = (ans: AnsDB): boolean => {
+    if (!ans.name.startsWith('onDay')) return false;
+    const currentDays: (string | undefined)[] = ans.onDays || [];
+    const getAllDays = [...currentDays];
+    const isInvalid = !field?.answers?.every((a: AnsDB) => { // wenn keiner gefunden wird
+      if (a.name === ans.name || !a.name.startsWith('onDay') || !a.onDays) return true; // springt zum nächsten
+      return a.onDays?.every((day: (string | undefined)) => {
+        if (day === undefined || !currentDays.includes(day)) { // wenn es nicht enthält zum nächsten
+          if (getAllDays.indexOf(day) === -1) getAllDays.push(day);
+          return true;
+        }
+        return false;
+      });
     });
+
+    console.log(getAllDays);
+    if (!isInvalid && getAllDays.length !== days?.length) return true;
+
+    return isInvalid;
   };
 
   /**
@@ -91,9 +103,8 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         const checkAmountOfFields: boolean = checkOnService && !(ans.values?.length === (ans.amountOfFields?.split(',') || ['1'])?.length);
 
         const checkIsMulti: boolean = ans.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
-        const checkDuration: boolean = ans.name === 'onDaysDuration' && checkDurationOnDays(ans.amountOfFields, ans.values, ans.onDays);
-        return !(checkAmountOfFields || checkIsMulti || checkOnService || checkDuration || checkOnDays);
-        // beim check werden fehler gesucht (true = 'notValid')
+        const checkCheckbox: boolean = question?.info.type === 'checkbox' && checkboxValidation(ans);
+        return !(checkAmountOfFields || checkIsMulti || checkOnService || checkCheckbox || checkOnDays);
       });
     }
     return setValidation(isValid ? 'valid' : 'notValid');
@@ -178,8 +189,8 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
   if (showOverview) return <Overview fields={service?.structure} close={toggleOverview} questions={questions} select={getQuestion} />;
   return (
-    <div class={style.questForm} style={{ padding: '0 15px' }}>
-      <header style={{ paddingBottom: '15px' }}>
+    <Fragment>
+      <header class={style.header} style={{ paddingBottom: '15px' }}>
         <TopButton action={toggleOverview} title="Übersicht" />
         <h2><strong>{question.info.question}</strong></h2>
         {question.info.explanation && <p>{question.info.explanation}</p>}
@@ -200,11 +211,14 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         )}
         {question.info.type === 'onService' && !service?.serviceNames?.[0] && <p class="red">Definiere mindestens eine Leistung.</p>}
         {question.answers.map((answer: AnsInfo) => {
+          if (answer.name.startsWith('onDay') && !days?.[0]) return; // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
+
           const getField: number = field?.answers ? field?.answers?.findIndex((g) => g.name === answer.name) : -1;
           const { type } = question.info;
           const amountOfFields = field?.answers?.[getField]?.amountOfFields ? field?.answers?.[getField]?.amountOfFields?.split(',') : ['1'];
           const { values, onDays } = field?.answers?.[getField] || { values: undefined, onDays: undefined };
           const showContent = (type === 'onOpenings' && openings && getField > -1) || ((type === 'onType' && service?.serviceType === answer.name) || (type === 'onService' && service?.serviceNames?.[0])) || false;
+
           return (
             <Fragment key={answer.name}>
               {['onType', 'onService'].includes(type) ? service?.serviceType === answer.name && (
@@ -258,7 +272,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
       <FormButton action={nextButton} label="Weiter" disabled={validation === 'notValid'} />
 
-    </div>
+    </Fragment>
   );
 };
 

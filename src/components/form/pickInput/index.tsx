@@ -15,8 +15,8 @@ interface PickInputProps {
 }
 
 const PickInput: FunctionalComponent<PickInputProps> = ({ label, options, name, error, required, value = [], change }: PickInputProps) => (
-  <div class={style.inputEl}>
-    <div class={(error !== 'valid' || value?.length === 0) && required ? style.error : 'valid'}>
+  <div class={style.container}>
+    <div class={error ? style[error] : ''}>
       <label>{required && '*'}{label}</label>
       {options.map((item: string) => {
         const itemIndex: number = value?.indexOf(item);

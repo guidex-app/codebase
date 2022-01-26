@@ -37,7 +37,7 @@ const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon,
   }, [searchText]);
 
   return (
-    <div class={style.inputEl}>
+    <div class={style.container}>
       <div class={error !== 'valid' && required ? style.error : 'valid'}>
         {icon && icon}
         <div>

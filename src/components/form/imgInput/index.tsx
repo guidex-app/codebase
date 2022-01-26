@@ -1,4 +1,4 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useStorage from '../../../hooks/useStorage';
@@ -97,7 +97,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
   };
 
   return (
-    <div class={style.inputEl}>
+    <div class={style.container}>
       <div class={error !== 'valid' && !hasImage ? style.error : 'valid'}>
         <label for={`${name}_fileinput`}>{label}</label>
 

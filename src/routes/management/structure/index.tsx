@@ -2,6 +2,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'preact-router';
+import { Box, Circle, DollarSign, Home } from 'react-feather';
 import BackButton from '../../../components/backButton';
 import QuestForm from '../../../components/form/questForm';
 
@@ -14,7 +15,7 @@ import useCompany from '../../../hooks/useCompany';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceField, ServiceInfo } from '../../../interfaces/company';
 import StructureQuestions from './structureQuestions';
-import { Box, Circle, DollarSign, Home } from 'react-feather';
+import { getPerfectNumber } from '../../../helper/number';
 
 interface ActivityProp {
     activityID: string;
@@ -110,7 +111,7 @@ const Structure: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
 
   const generateServiceLabel = (x: ServiceInfo): string => {
     const percent: number = ((x?.structure?.length || 0) / (StructureQuestions.length)) * 100;
-    return `${x.serviceNames?.toString() || ''} (${percent}%)`;
+    return `${x.serviceNames?.toString() || ''} (${getPerfectNumber(percent)}%)`;
   };
 
   return (

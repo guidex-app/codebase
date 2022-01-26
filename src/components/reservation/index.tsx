@@ -18,7 +18,7 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
   const [modalState, setModalState] = useState<'info' | 'available' | 'confirm' | 'finished' | undefined>('info');
 
   const loadServiceList = () => {
-    getFireCollection(`activities/${activityID}/services`, false).then((d) => {
+    getFireCollection(`activities/${activityID}/services/`, false, [['serviceNames', '!=', false]]).then((d) => {
       if (d) setServiceList(d);
     });
   };

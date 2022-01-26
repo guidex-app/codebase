@@ -16,6 +16,7 @@ import { Activity } from '../../../interfaces/activity';
 import { AnsDB, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import ServiceQuestions from './serviceQuestions';
 import FormButton from '../../../components/form/basicButton';
+import { getPerfectNumber } from '../../../helper/number';
 
 interface ActivityProp {
     activityID: string;
@@ -139,7 +140,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
     const notDefined = `Noch keine ${x.serviceType && `${serviceProps[x.serviceType].name}e`} definiert`;
     const serviceNames = x.serviceNames ? x.serviceNames.toString() : notDefined;
 
-    return `${serviceNames} (${percent}%)`;
+    return `${serviceNames} (${getPerfectNumber(percent)}%)`;
   };
 
   const nextRoute = () => route(`/company/structure/${activityID}`);

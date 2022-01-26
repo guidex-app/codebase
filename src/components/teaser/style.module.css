@@ -1,6 +1,4 @@
 .teaser {
-    padding-top: 77px;
-    height: 370px;
     text-align: center;
     background-color: var(--ion-color-dark);
     background-repeat: no-repeat;
@@ -10,24 +8,28 @@
     color: #FFFFFF;
 }
 
-.teaser::after {
+/* .teaser::after {
     position: absolute;
-    left: 0; right: 0; top: 0;
-    height: 360px;
+    left: 0; top: 0;
+    height: 100%;
+    width: 100%;
     display: block;
     content: ' ';
     background: rgb(82,117,109);
     background: linear-gradient(180deg, #f37516 0%, #2b0079 100%);
     opacity: 0.7;
     z-index: 0;
-}
+} */
 
 .teaser > div {
   position: relative;
-  z-index: 1;
+  padding-top: 77px;
+  background: rgb(82,117,109);
+  background: linear-gradient(180deg, rgba(243, 118, 22, 0.7) 0%, rgba(43, 0, 121, 0.7) 100%);
+  height: 370px;
 }
 
-.weather {
+.weatherText {
   position: relative;
   display: inline-block;
   background: #111218;
@@ -36,7 +38,7 @@
   border-radius: 10px;
   min-width: 200px;
   font-size: 11px;
-  padding: 0 10px;
+  padding: 0 15px;
   z-index: 1;
   color: #ffab00;
   text-transform: uppercase;

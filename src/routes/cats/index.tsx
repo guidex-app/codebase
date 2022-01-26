@@ -7,13 +7,14 @@ import FilterBar from '../../components/filterBar';
 import LocationList from '../../components/locationList';
 import Masonry from '../../components/masonry';
 import Teaser from '../../components/teaser';
+import WeatherList from '../../components/weatherList';
 import Modal from '../../container/modal';
 import catFilter from '../../data/catFilter';
 import { getFireCollection } from '../../data/fire';
 import { setStorageKeys } from '../../data/localStorage';
 import getGeoLocation from '../../data/location';
 import getWeather from '../../data/weather';
-import { dayIsGreater } from '../../helper/date';
+import { isDayGreater } from '../../helper/date';
 import { User, Weather, Location } from '../../interfaces/user';
 import style from './style.css';
 
@@ -49,7 +50,7 @@ const Cats: FunctionalComponent<CatsProps> = ({ user, updateUser }: CatsProps) =
   };
 
   const loadStartData = () => {
-    if (user.weather && user.location && !dayIsGreater(user.location.date, 1)) {
+    if (user.weather && user.location && !isDayGreater(user.location.date, 1)) {
       fetchCategories();
     } else {
       updateData();
@@ -70,6 +71,7 @@ const Cats: FunctionalComponent<CatsProps> = ({ user, updateUser }: CatsProps) =
       <Modal title={openModal} close={closeModal}>
         {openModal === 'Filtern' && <FilterList data={catFilter} values={['we_sunny']} />}
         {openModal === 'Standort' && <LocationList />}
+        {openModal === 'Tag' && <WeatherList />}
       </Modal>
       )}
     </div>

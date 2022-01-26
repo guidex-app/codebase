@@ -25,7 +25,7 @@
     "@types/firebase": "^3.2.1",
     "firebase": "^9.6.4",
     "firebase-tools": "^10.1.2",
-    "geofire": "^5.2.0",
+    "geofire-common": "^5.2.0",
     "preact": "^10.3.1",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",

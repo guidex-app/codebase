@@ -11,14 +11,14 @@ interface ModalProps {
     children: ComponentChildren;
 }
 
-const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, type = 'small' }) => {
+const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, type }) => {
   const container: any = document?.getElementById('modals');
 
   return container && createPortal(
     (
       <Fragment>
         <Overlay action={close} />
-        <div class={`${style.modal} ${style[type]}`}>
+        <div class={`${style.modal} ${type ? style[type] : ''}`}>
           <Header title={title} action={close} />
           <div class={style.content}>{children}</div>
         </div>

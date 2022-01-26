@@ -1,5 +1,4 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-
 import style from './style.module.css';
 
 interface BasicInputProps {
@@ -30,7 +29,7 @@ const BasicInput: FunctionalComponent<BasicInputProps> = ({ label, isMulti, icon
   };
 
   return (
-    <div class={style.inputEl}>
+    <div class={style.container}>
       <div class={error ? style[error] : ''} title={placeholder}>
         {icon && icon}
         <div class={isMulti ? style.multi : ''}>

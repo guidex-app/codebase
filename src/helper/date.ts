@@ -1,11 +1,12 @@
 export const shortDay: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 export const dayNames: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
-export const dayIsGreater = (date: number, days: number): boolean => {
-  const firstDate = new Date();
-  const secondDate = new Date(date);
+/** gibt true zurück wenn heute größer als der angegebene Tag ist  */
+export const isDayGreater = (date: number, days: number): boolean => {
+  const today = new Date(); // heute
+  const toCompare = new Date(date);
   const time = days * 60 * 60 * 24 * 1000;
-  if ((secondDate.getTime() - firstDate.getTime()) < time) {
+  if ((toCompare.getTime() - today.getTime()) < time) {
     return false;
   }
   return true;

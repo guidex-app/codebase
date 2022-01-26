@@ -1,21 +1,30 @@
 .chip {
     display: inline-block;
     outline: none;
-    padding: 0 15px;
+    padding: 10px 15px;
     border: none;
     border-radius: 20px;
-    height: 40px;
     margin: 7.5px 2.5px;
     cursor: pointer;
 
-    transition: background 0.2s ease-out, border 0.2s ease-out;
+    font-size: 15px;
+    font-weight: bold;
+    height: auto;
+    transform: scale(1);
+
+    transition: background 0.2s ease-out, opacity 0.3s ease-in-out, border 0.2s ease-out;
     will-change: background;
+}
+
+.chip:hover {
+    opacity: 0.8;
 }
 
 .chip svg {
     display: inline-block;
     vertical-align: middle;
-    padding-right: 2px;
+    padding-right: 6px;
+    margin-left: -5px;
     padding-bottom: 2px;
     width: 30px;
     height: auto;
@@ -54,7 +63,6 @@
 }
 
 .small {
-    height: 30px;
     border-radius: 7px;
-    padding: 0 15px;
+    padding: 7px 15px;
 }

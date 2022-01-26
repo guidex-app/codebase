@@ -1,7 +1,7 @@
 import { getAuth } from '@firebase/auth';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { Globe, Grid, Home, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
 import fireConfig from '../../data/fireConfig';
 import Item from '../item';
@@ -14,6 +14,7 @@ const Menu: FunctionalComponent = () => {
     displayName: string,
   } | undefined>(undefined);
   const [show, setShow] = useState<boolean>(false);
+  const container = useRef<any>(null);
 
   const routes: { title: string; link: string; icon: any }[] = [
     { title: 'Für mich', link: '/', icon: <Home /> },
@@ -39,9 +40,11 @@ const Menu: FunctionalComponent = () => {
     if (!user) checkUserState();
   }, [show]);
 
-  const close = () => setShow(false);
+  useEffect(() => {
+    container.current = typeof window !== 'undefined' && document?.getElementById('modals');
+  }, []);
 
-  const container: any = typeof window !== 'undefined' && document?.getElementById('modals');
+  const close = () => setShow(false);
 
   return (
     <Fragment>
@@ -49,7 +52,7 @@ const Menu: FunctionalComponent = () => {
         <Grid color="#FFFFFF" size="24" />
       </button>
 
-      {show && container && createPortal(
+      {show && container.current && createPortal(
         (
           <Fragment>
             <Overlay action={close} />
@@ -80,7 +83,7 @@ const Menu: FunctionalComponent = () => {
             </aside>
           </Fragment>
         ),
-        container,
+        container.current,
       )}
     </Fragment>
   );

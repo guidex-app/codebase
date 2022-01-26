@@ -27,13 +27,16 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID }: TopicProps) => 
       <TextHeader
         icon={<Star color="#2fd159" />}
         title={data.title.name}
-        text={data.description}
+        text="Entdecke Topics"
       />
       <main class={`${style.topics} small_size_holder`}>
         <BackButton url="/explore" />
-        {data.partitions?.map((p) => (
-          <p>{p}</p>
-        ))}
+        <article>
+          <p><strong>{data.description}</strong></p>
+          {data.partitions?.map((p) => (
+            <p>{p}</p>
+          ))}
+        </article>
       </main>
     </Fragment>
   );

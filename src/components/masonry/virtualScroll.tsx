@@ -11,7 +11,6 @@ interface VirtualScrollProps {
 const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }: VirtualScrollProps) => {
   const MAX_ITEMS: number = chunks.length;
   const VISIBLE_ITEMS = 3;
-  const containerEl: any = document.getElementById('app');
 
   const elementRef: any = useRef(null);
   const [offset, setOffset] = useState({ gap: 0, elHeight: 0 });
@@ -24,8 +23,8 @@ const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }
     setScrolling({ startAt, offsetY });
   };
 
-  const onScroll = (e: any) => requestAnimationFrame(() => {
-    setUpScrolling(e.target.scrollTop);
+  const onScroll = () => requestAnimationFrame(() => {
+    setUpScrolling(window.pageYOffset);
   });
 
   useEffect(() => {
@@ -36,9 +35,9 @@ const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }
   useEffect(() => {
     if (scrolling.startAt === -1 && offset.gap) {
       setUpScrolling(0);
-      containerEl.addEventListener('scroll', onScroll);
+      window.addEventListener('scroll', onScroll, { passive: true });
     }
-    return () => containerEl.removeEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, [offset]);
 
   const visibleChildren = useMemo(() => new Array(VISIBLE_ITEMS).fill(null).map((_, index) => (

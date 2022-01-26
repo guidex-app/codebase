@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import FormButton from '../form/basicButton';
 import { Filter } from '../../interfaces/filter';
@@ -6,7 +6,7 @@ import FilterItem from './filterItem';
 
 interface FilterListProps {
   data: Filter[][];
-  values: string[]
+  values: string[];
 }
 
 const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: FilterListProps) => {
@@ -56,7 +56,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: Filt
   };
 
   return (
-    <div style={{ padding: '0 10px' }}>
+    <Fragment>
       {data.map((group: Filter[], groupIndex: number) => (
         <div key={groupIndex.toString()} style={{ backgroundColor: '#2b303d', borderRadius: '20px', marginBottom: '15px' }}>
           {group.map((item: Filter) => (
@@ -71,7 +71,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: Filt
         </div>
       ))}
       <FormButton label="Filter zurücksetzen" type="outline" action={() => reset()} />
-    </div>
+    </Fragment>
   );
 };
 

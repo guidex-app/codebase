@@ -1,0 +1,13 @@
+.container {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.container > div {
+    background-color: #2b303d;
+    border-radius: 10px;
+}
+
+.errorMessage { color: rgba(252, 66, 75, 0.5); }
+.container .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
+.container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }

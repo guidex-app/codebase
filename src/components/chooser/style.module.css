@@ -12,22 +12,33 @@
     grid-template-columns: calc(100% / 3);
       grid-template-areas: "first second third";
   }
-  
-  .chooser > div:hover {
-    background-color: #191C25;
-  } 
-  
+    
   .chooser svg { display: inline-block; }
   
-  .first, .second, .third {
-    text-align: center;
-    padding-top: 14.5px;
-    border-radius: 27.5px;
-    width: 100%;
-    cursor: pointer;
-      transition: 0.3s background ease-in-out;
-      will-change: background;
-  }
+.chooser button {
+  text-align: center;
+  border-radius: 27.5px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  transition: 0.3s background ease-in-out;
+  will-change: background;
+}
+
+.chooser button:hover {
+  background-color: #191C25;
+} 
+
+.chooser small {
+  display: block;
+  padding-top: 3px;
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 3px;
+  font-size: 8px;
+  color: rgb(252, 66, 74, 0.6);
+}
   
   .first { grid-area: first; }
   .second { grid-area: second;  }

@@ -32,7 +32,7 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings }: Opening
         {list?.map((day: [string, string]) => <td><strong>{day[0]}:</strong> {day[1]}</td>)}
       </tr>
       <tr class="red">
-        <td colSpan={list.length}>Feiertage & Sonderöffnungszeiten </td>
+        <td colSpan={list.length}>Feiertage und Sonder&shy;öffnungszeiten </td>
       </tr>
     </table>
   );

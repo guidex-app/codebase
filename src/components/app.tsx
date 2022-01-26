@@ -5,7 +5,7 @@ import Menu from './menu';
 
 const App: FunctionalComponent = () => (
   <Fragment>
-    <main id="app" style={{ height: '100vh', overflowY: 'auto' }}>
+    <main id="app">
       <Menu />
       <AppRoutes />
     </main>

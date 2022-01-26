@@ -1,4 +1,9 @@
+.topics {
+    padding-bottom: 60px;
+}
+
 .topics p {
-    line-height: 1.5em;
+    line-height: calc(1ex / 0.32);
     font-size: 1.2em;
+    margin: calc(1ex / 0.32) 0;
 }

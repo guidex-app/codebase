@@ -3,12 +3,11 @@ import { createPortal } from 'preact/compat';
 import style from './style.module.css';
 
 interface PopupProps {
-    title: string;
     close: () => void;
     children: ComponentChildren;
 }
 
-const Popup: FunctionalComponent<PopupProps> = ({ close, title, children }) => {
+const Popup: FunctionalComponent<PopupProps> = ({ close, children }) => {
   const container: any = document?.getElementById('popups');
 
   return container && createPortal(

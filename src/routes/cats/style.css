@@ -1,3 +1,5 @@
 .cats {
 	min-height: 100%;
+	padding-bottom: 100px;
+	min-height: -webkit-fill-available;
 }

@@ -1,21 +1,20 @@
-.inputEl {
+.container {
     margin-bottom: 15px;
     width: 100%;
 }
 
-.inputEl > div {
+.container > div {
     background-color: #2b303d;
     border-radius: 10px;
-    border: 1px solid rgba(0, 210, 91, 0.5);;
 }
 
-.inputEl svg + div {
+.container svg + div {
     display: inline-block;
     width: calc(100% - 40px);
     vertical-align: middle;
 }
 
-.inputEl svg {
+.container svg {
     width: 40px;
     display: inline-block;
     height: auto;
@@ -25,10 +24,11 @@
     vertical-align: middle;
 }
 
-.inputEl .error { border: 1px solid rgba(252, 66, 75, 0.5); }
 .errorMessage { color: rgba(252, 66, 75, 0.5); }
+.container .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
+.container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
 
-.inputEl button {
+.container button {
     display: block;
     padding: 5px 10px;
     width: 100%;
@@ -39,18 +39,18 @@
     font-size: inherit;
     font-weight: inherit;
     text-align: left;
-    color: #FFFFFF;
+    color: #8184a1;
     
     cursor: pointer;
     outline: none;
 }
 
-.inputEl button:empty::after {
+.container button:empty::after {
     content: 'Klicke zum auswählen';
     color: #6c7293;
 }
 
-.inputEl label {
+.container label {
     display: block;
     color: #FFFFFF;
     transition: 0.2s ease-in-out transform;
@@ -58,7 +58,7 @@
     padding: 5px 10px 0 10px;
 }
 
-.inputEl .disabled, input:disabled {
+.container .disabled, input:disabled {
     opacity: 0.5;
 }
 

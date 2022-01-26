@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { Archive } from 'react-feather';
 import { ServiceInfo } from '../../../interfaces/company';
 import FormButton from '../../form/basicButton';
@@ -13,7 +13,7 @@ interface ReserveInfoProps {
 }
 
 const ReserveInfo: FunctionalComponent<ReserveInfoProps> = ({ list, service, changeState }: ReserveInfoProps) => (
-  <div style={{ padding: '10px' }}>
+  <Fragment>
     {list && (list?.length >= 1 || list?.[0].serviceNames?.[1]) && (
     <SelectInput
       icon={<Archive />}
@@ -36,7 +36,7 @@ const ReserveInfo: FunctionalComponent<ReserveInfoProps> = ({ list, service, cha
 
     <FormButton action={() => changeState('available')} label="Verfügbarkeiten prüfen" />
 
-  </div>
+  </Fragment>
 );
 
 export default ReserveInfo;

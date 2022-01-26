@@ -2,7 +2,7 @@
     position: fixed;
     bottom: 30px;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0) scale(1);
     border: none;
     height: 65px;
     width: 65px;
@@ -10,13 +10,17 @@
     background: linear-gradient(270deg,#f5af19,#f12711);
     opacity: 1;
     cursor: pointer;
-    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
     will-change: transform, opacity;
 }
 
 .hide {
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1.04);
     opacity: 0;
+}
+
+.fabButton:hover {
+    transform: translate(-50%, 0) scale(1.04);
 }
 
 .fabButton svg {

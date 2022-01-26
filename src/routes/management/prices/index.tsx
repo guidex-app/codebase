@@ -39,7 +39,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
   const [structure, setStructure] = useState<ServiceField[] | false>(false);
 
   const loadListData = () => {
-    getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceNames', '!=', false]]).then((listData: ServiceInfo[]) => {
+    getFireCollection(`activities/${data.title.form}/services/`, false, [['structure', 'array-contains-any', ['serviceNames', 'persons', 'duration', 'foundation', 'time', 'age']]]).then((listData: ServiceInfo[]) => {
       if (listData) {
         const newList: PriceListItem[] = [];
 
@@ -89,7 +89,8 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
         {selectList !== false && (
         <section class="group form">
           <h3>Wähle eine Leistungsgruppe</h3>
-          {selectList?.map((x: PriceListItem) => <Item icon={<DollarSign />} key={x.title} label={x.title} action={() => changeSelect(x.title)} />)}
+          {!selectList?.[0] ? <p class="red">Definieren sie zuerst Ihre Rabatte</p>
+            : selectList.map((x: PriceListItem) => <Item icon={<DollarSign />} key={x.title} label={x.title} action={() => changeSelect(x.title)} />)}
           <p class="grey">Sollte eine gewünschte Leistung nicht gefunden werden, schließen sie bitte zuerst die Preis-Struktur ab oder legen sie die Leistung neu an.</p>
         </section>
         )}

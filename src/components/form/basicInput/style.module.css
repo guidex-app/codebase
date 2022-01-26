@@ -1,16 +1,16 @@
-.inputEl {
+.container {
     margin-bottom: 15px;
     width: 100%;
 }
 
-.inputEl > div {
+.container > div {
     background-color: #2b303d;
     border-radius: 10px;
     width: auto;
     vertical-align: middle;
 }
 
-.inputEl svg {
+.container svg {
     width: 40px;
     display: inline-block;
     height: auto;
@@ -20,18 +20,17 @@
     vertical-align: middle;
 }
 
-.inputEl svg + div {
+.container svg + div {
     display: inline-block;
     width: calc(100% - 40px);
     vertical-align: middle;
 }
 
-.inputEl .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
-.inputEl .error,
-.inputEl .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
 .errorMessage { color: rgba(252, 66, 75, 0.5); }
+.container .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
+.container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
 
-.inputEl input, .inputEl textarea {
+.container input, .container textarea {
     display: block;
     line-height: 2em;
     margin: 0;
@@ -45,11 +44,11 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-weight: 500;
-    color: #999999;
+    color: #8184a1;
     outline: none;
 }
 
-.inputEl label + input, .inputEl label + textarea {
+.container label + input, .container label + textarea {
     padding: 5px 10px;
 }
 
@@ -65,7 +64,7 @@
     color: #6c7293;
   }
 
-.inputEl label {
+.container label {
     display: block;
     color: #FFFFFF;
     transition: 0.2s ease-in-out transform;
@@ -73,18 +72,18 @@
     padding: 5px 10px 0 10px;
 }
 
-.inputEl .disabled, input:disabled, textarea:disabled {
+.container .disabled, input:disabled, textarea:disabled {
     opacity: 0.5;
 }
 
-.inputEl textarea {
+.container textarea {
     resize: none;
     line-height: 1.5em;
     font-family: inherit;
     overflow: auto; /* hides scrollbar, but puts back if needed */
 }
 
-.inputEl > div.disabled:not(.error) {
+.container > div.disabled:not(.error) {
     border: 1px solid #ffab00;
 } 
 
@@ -106,8 +105,8 @@
     font-size: 13px;
 }
 
-.inputEl input[type="date"]::-webkit-calendar-picker-indicator,
-.inputEl input[type="time"]::-webkit-calendar-picker-indicator {
+.container input[type="date"]::-webkit-calendar-picker-indicator,
+.container input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(100%) brightness(50%) sepia(80%) saturate(10000%);
     transform: scale(1.2);
     cursor: pointer;

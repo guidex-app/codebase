@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { Fragment, FunctionalComponent, h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import Chip from '../../chip';
 
 interface DayPickerProps {
@@ -16,7 +16,7 @@ const DayPicker: FunctionalComponent<DayPickerProps> = ({ name, values, position
   const updateValue = (dayValue: string) => {
     const value: string[] = values?.[position]?.split(',') || [];
     const getIndex = value.indexOf(dayValue);
-    const isEmpty = !values || values?.findIndex((x) => x.indexOf(dayValue) !== -1) === -1;
+    const isEmpty = !values || values?.findIndex((x) => x && x.indexOf(dayValue) !== -1) === -1;
     console.log(isEmpty);
     const newValue: string[] = [];
     console.log(dayValue);

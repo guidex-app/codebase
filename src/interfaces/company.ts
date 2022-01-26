@@ -36,7 +36,6 @@ export interface ServiceField {
   name: string;
   notIsChecked?: boolean;
   answers?: AnsDB[];
-  onDays?: string[];
 }
 
 /**

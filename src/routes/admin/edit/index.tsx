@@ -106,8 +106,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
   };
 
   return (
-    <div style={{ padding: '0 15px' }}>
-      {/* <code>/{type === 'topics' ? 'explore' : 'activity'}/{fields.title.form}</code> */}
+    <Fragment>
 
       <BasicInput
                 //   icon={listOutline}
@@ -115,7 +114,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         label="Name:"
         name="title"
         value={fields.title?.name}
-        disabled={data !== 'new'}
+        disabled={data !== undefined}
                 //   disabled={data !== 'new' ? 'Bereits definiert' : undefined}
         placeholder="Name der Unternehmung"
         error={formState.title}
@@ -211,7 +210,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
 
       <FormButton action={editTopicForm} />
       <FormButton label="Löschen" type="outline" action={deleteTopic} />
-    </div>
+    </Fragment>
   );
 };
 
