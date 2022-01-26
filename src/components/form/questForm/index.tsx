@@ -68,6 +68,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
   /** validiert bei mehreren möglichen antworten ob der keine tage doppelt gwählt wurden (bei den tagen radio) */
   const checkboxValidation = (ans: AnsDB): boolean => {
     if (!ans.name.startsWith('onDay')) return false;
+
     const currentDays: (string | undefined)[] = ans.onDays || [];
     const getAllDays = [...currentDays];
     const isInvalid = !field?.answers?.every((a: AnsDB) => { // wenn keiner gefunden wird
@@ -81,7 +82,6 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
       });
     });
 
-    console.log(getAllDays);
     if (!isInvalid && getAllDays.length !== days?.length) return true;
 
     return isInvalid;
