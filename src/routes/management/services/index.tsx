@@ -1,8 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { route } from 'preact-router';
-import { Archive, Box, Circle, Home, PlusCircle } from 'react-feather';
+import { Archive, Dribbble, Home, PlusCircle, Users } from 'react-feather';
 import BackButton from '../../../components/backButton';
 import QuestForm from '../../../components/form/questForm';
 
@@ -10,12 +9,11 @@ import Item from '../../../components/item';
 import TextHeader from '../../../components/iconTextHeader';
 import Modal from '../../../container/modal';
 import { fireDocument, getFireCollection } from '../../../data/fire';
-import { mergeUnique } from '../../../helper/array';
 import useCompany from '../../../hooks/useCompany';
 import { Activity } from '../../../interfaces/activity';
 import { AnsDB, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import ServiceQuestions from './serviceQuestions';
-import FormButton from '../../../components/form/basicButton';
+
 import { getPerfectNumber } from '../../../helper/number';
 
 interface ActivityProp {
@@ -29,12 +27,11 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
   if (!data || !uid) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Definiere alle Angebote die du zur verfügung stellen willst" />;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bereich', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <Home /> }, object: { name: 'Verleihobjekt', icon: <Box /> }, roundGames: { name: 'Raum/Bereich', icon: <Circle /> },
+    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, roundGames: { name: 'Raum/Bereich', icon: <Home color="#bf5bf3" /> },
   };
 
   const [service, setService] = useState<ServiceInfo | false | undefined>(false);
   const [serviceList, setServiceList] = useState<ServiceInfo[]>([]);
-
   const [serviceFields, setServiceFields] = useState<ServiceField[] | false | undefined>(false);
 
   /** Lade alle services von der activity ID */
@@ -46,17 +43,13 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
   /** Lade alle services von der activity ID */
   const generateFields = (select: ServiceInfo | undefined) => {
     if (!select) setServiceFields(undefined);
-    const fields = ['serviceType', 'serviceNames', 'structure', 'descriptions', 'images'];
+    const fields = ['serviceName', 'structure', 'description', 'image', 'bringWith'];
     const newFields: ServiceField[] = [];
-    const getType: string | undefined = (select && select.serviceType) || undefined;
 
     Object.entries(select || []).forEach(([name, values]: [string, any]) => {
       if (fields.includes(name)) {
-        const isType: boolean = name === 'serviceType';
-        const isNames = name === 'serviceNames';
-        const getName = isType ? values : (isNames ? getType : name);
-        const amountOfFields = isType ? '1' : (values.map((x: string, i: number) => x && i + 1)).toString();
-        const answers: AnsDB[] = [{ amountOfFields, name: getName, ...(!isType && { values }) }];
+        const isServiceName: boolean = name === 'serviceName';
+        const answers: AnsDB[] = [{ name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values }];
         newFields.push({ name, answers });
       }
     });
@@ -107,43 +100,58 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
   };
 
   const saveQuestions = (newField: ServiceField) => {
-    const isServiceType: boolean = newField.name === 'serviceType';
-    const serviceType: string | undefined = isServiceType ? newField?.answers?.[0]?.name : undefined;
+    const isInitial = newField.name === 'serviceName';
 
-    const getServiceID: string = service && service.id ? service.id : `${serviceType}_${Date.now()}`;
-    const isDifferentServiceType: boolean = !!(service && serviceType && serviceType !== service.serviceType);
-    const structure: string[] = service ? (service?.structure?.includes(newField.name) ? service.structure : [...(service.structure || []), newField.name]) : [newField.name];
-    const newFieldData = { [newField.name]: newField.answers?.[0]?.[newField.name === 'serviceType' ? 'name' : 'values'], ...(((!service && isServiceType) || isDifferentServiceType) && { id: getServiceID }), structure };
+    const getName: string | undefined = newField?.answers?.[0]?.name;
+    const getServiceID: string = service && service.id ? service.id : `${getName}_${Date.now()}`;
 
-    fireDocument(`activities/${data.title.form}/services/${getServiceID}`, newFieldData, !service || isDifferentServiceType ? 'set' : 'update').then(() => {
-      const allFields: ServiceInfo = { ...(service && service), ...newFieldData };
-      if (newField.name === 'images') return closeService(allFields);
-      // update serviceInfo
-      setService(((!service && isServiceType) || isDifferentServiceType) ? newFieldData : allFields);
+    if (getName) {
+      const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.answers?.[0]?.values?.[0] };
 
-      // aktuellen felder updaten
-      if (isDifferentServiceType) {
-        setServiceFields([newField]); // hard reset bei neuem type
-      } else {
+      fireDocument(`activities/${activityID}/services/${getServiceID}`, updatedField, isInitial ? 'set' : 'update').then(() => {
+        setService({ ...(!isInitial ? service : []), ...updatedField });
         updateServiceFields(newField);
-      }
+        if (newField.name === 'image') setService(false);
+      });
+    }
 
-      if (!service && serviceType) {
-        fireDocument(`activities/${data.title.form}`, { online: false, state: mergeUnique(['service'], data.state) }, 'update');
-      }
-    });
+    // const isServiceType: boolean = newField.name === 'serviceType';
+    // // const serviceType: string | undefined = isServiceType ? newField?.answers?.[0]?.name : undefined;
+
+    // const getServiceID: string = service && service.id ? service.id : `${serviceName}_${Date.now()}`;
+    // const isDifferentServiceType: boolean = !!(service && serviceType && serviceType !== service.serviceType);
+    // const structure: string[] = service ? (service?.structure?.includes(newField.name) ? service.structure : [...(service.structure || []), newField.name]) : [newField.name];
+
+    // const getCorrectValue = newField.answers?.[0]?.[newField.name === 'serviceType' ? 'name' : 'values'];
+    // const newFieldData = { [newField.name]: getCorrectValue, ...(((!service && isServiceType) || isDifferentServiceType) && { id: getServiceID }), structure };
+
+    // fireDocument(`activities/${data.title.form}/services/${getServiceID}`, newFieldData, !service || isDifferentServiceType ? 'set' : 'update').then(() => {
+    //   const allFields: ServiceInfo = { ...(service && service), ...newFieldData };
+    //   if (newField.name === 'images') return closeService(allFields);
+    //   // update serviceInfo
+    //   setService(((!service && isServiceType) || isDifferentServiceType) ? newFieldData : allFields);
+
+    //   // aktuellen felder updaten
+    //   if (isDifferentServiceType) {
+    //     setServiceFields([newField]); // hard reset bei neuem type
+    //   } else {
+    //     updateServiceFields(newField);
+    //   }
+
+    //   if (!service && serviceType) {
+    //     fireDocument(`activities/${data.title.form}`, { online: false, state: mergeUnique(['service'], data.state) }, 'update');
+    //   }
+    // });
   };
 
   const generateServiceLabel = (x: ServiceInfo): string => {
     const serviceKeys: string[] = Object.keys(x);
     const percent: number = ((serviceKeys.length - 1) / (ServiceQuestions.length + 1)) * 100;
-    const notDefined = `Noch keine ${x.serviceType && `${serviceProps[x.serviceType].name}e`} definiert`;
-    const serviceNames = x.serviceNames ? x.serviceNames.toString() : notDefined;
+    const notDefined = `Noch keine Leistung ${x.serviceType && `${serviceProps[x.serviceType].name}e`} definiert`;
+    const label = x.serviceName || notDefined;
 
-    return `${serviceNames} (${getPerfectNumber(percent)}%)`;
+    return `${label} (${getPerfectNumber(percent)}%)`;
   };
-
-  const nextRoute = () => route(`/company/structure/${activityID}`);
 
   return (
     <Fragment>
@@ -151,13 +159,17 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
         <section class="group form">
-          <h3>Deine Leistungsgruppen</h3>
           <Item type="grey" icon={<PlusCircle />} label="Hinzufügen" action={() => selectService(undefined)} />
 
-          {serviceList?.map((x: ServiceInfo) => <Item key={x.id} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)}
+          {serviceList?.map((x: ServiceInfo) => (
+            // <div>
+            //   <p>{generateServiceLabel(x)}</p>
+            //   <button type="button" onClick={() => selectService(x)}>Einrichten</button>
+            // </div>
+            <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />
+          ))}
         </section>
 
-        <FormButton label="Weiter zur Preis-Logik" action={nextRoute} />
       </main>
       {service !== false && serviceFields !== false && (
       <Modal title="" close={() => closeService()} type="large">

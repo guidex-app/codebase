@@ -1,6 +1,4 @@
 .price {
-    background: rgb(255,199,8);
-    background: linear-gradient(90deg, rgba(255,199,8,1) 0%, rgba(255,160,71,1) 100%);
     color: white;
     padding: 10px;
     border-radius: 20px;

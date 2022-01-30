@@ -58,24 +58,6 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID }: Acti
         </div>
 
         <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => console.log('test')} />
-        {/* <IonModal
-          isOpen={!!openModal}
-          onDidDismiss={closeModal}
-          cssClass="small"
-        >
-          <Suspense fallback={<ListLoading />}>
-            {openModal === 'filter' && (
-              <ActivityFilter initialFilter={['so_distance', 'ra_ten']} close={closeModal} />
-            )}
-            {openModal === 'addToList' && catDetails?.title?.name && (
-              <AddToListChooser
-                categoryTitle={catDetails.title.name}
-                onDismissModal={closeModal}
-              />
-            )}
-          </Suspense>
-
-        </IonModal> */}
       </main>
     </Fragment>
   );

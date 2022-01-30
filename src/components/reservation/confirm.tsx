@@ -80,7 +80,7 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, s
     <div style={{ padding: '0 10px' }}>
       <TopButton action={() => changeState('available')} />
       {isValid === 'loading' ? (
-        <div class={style.price}>
+        <div class={`${style.price} orange-bg`}>
           Dein Preis wird berechnet...<strong>€</strong>
         </div>
       ) : (

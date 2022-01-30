@@ -43,15 +43,15 @@
 }
 
 .table tr {
-    background-color: black;
+    background-color: rgb(255, 255, 255);
 }
 
-.table tr:focus-within td {
-    background-color: blue;
+.table tr:focus-within {
+    box-shadow: 0 0 2px #fc424a inset, 0 0 2px #fc424a inset, 0 0 2px #fc424a inset, 0 0 2px #fc424a inset;
 }​
 
 .table tr:nth-child(odd) {
-    background-color: #191919;
+    background-color: #e6e6e6;
 }
 
 .table td:first-child {
@@ -69,7 +69,8 @@
     max-width: 160px;
 }
 
-.price th:nth-child(2) {
+.price th:nth-child(2),
+.table tr td:nth-child(2) {
     background-color: black;
 }
 
@@ -84,7 +85,7 @@
     color: inherit;
     outline: none;
 
-    background-color: #ffffffe1;
+    background-color: transparent;
     transition: 0.3s ease-in-out;
     border-bottom: 1px solid rgba(61, 61, 61, 0.171);
 }

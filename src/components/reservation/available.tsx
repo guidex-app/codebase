@@ -13,21 +13,19 @@ import BasicInput from '../form/basicInput';
 import Counter from '../form/counter';
 import SelectInput from '../form/selectInput';
 import Item from '../item';
-import OpeningList from '../openingList/openings';
 import TopButton from '../topButton';
 import Confirm from './confirm';
 import Slots from './slots/slots';
 
 interface ReserveAvailableProps {
     service: ServiceInfo;
-    serviceName: string;
     openings: (string | false)[];
     activityID: string;
     modalState?: 'info' | 'available' | 'confirm' | 'finished';
     changeState: (type: 'info' | 'available' | 'confirm' | 'finished' | undefined) => void;
 }
 
-const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service, activityID, modalState, serviceName, openings, changeState }: ReserveAvailableProps) => {
+const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service, activityID, modalState, openings, changeState }: ReserveAvailableProps) => {
   const [activityData, setActivityData] = useState<{
         structure?: ServiceField[];
         available?: Available;
@@ -61,7 +59,6 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
       changeState('confirm');
     }
   };
-  const dayString = (date: Date) => `${date.getDate()}_${date.getMonth()}_${date.getFullYear()}`;
 
   /**
      * Wir holen uns die richtigen Dauern.
@@ -117,16 +114,17 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
     const dateIndex: number = choosenDate.getDay();
     const dateID = generateDateString(choosenDate);
 
-    const today = new Date();
+    // const today = new Date();
 
-    const dateIsToday = choosenDate > today || dayString(choosenDate) === dayString(today);
+    // const dateIsToday = choosenDate > today || dayString(choosenDate) === dayString(today);
 
-    const checkIfOpen: boolean = !!openings?.[dateIndex] && dateIsToday;
+    const checkIfOpen: boolean = !!openings?.[dateIndex];
     setIsOpen(checkIfOpen);
+    // console.log({ checkIfOpen, today: !!openings?.[dateIndex], dateIsToday });
 
     if (checkIfOpen && choosenDate) {
-      getFireCollection(`services/${service.id}/reserved`, false, [['date', '==', dateID]]).then((data) => setReserved(data));
-      getFireCollection(`services/${service.id}/available/${serviceName}/capacity`, false, [['date', '==', dateID]]).then((data) => setCapacityList(data));
+      getFireCollection(`activities/${activityID}/services/${service.id}/reserved`, false, [['date', '==', dateID]]).then((data) => data && setReserved(data));
+      getFireCollection(`activities/${activityID}/available/${service.id}/capacity`, false, [['date', '==', dateID]]).then((data) => setCapacityList(data));
       setUpDuration(dateIndex);
     }
   };
@@ -149,7 +147,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   useEffect(() => {
     if (service) {
       getFireMultiCollection([
-        { path: `activities/${activityID}/services/${service.id}/structure` },
+        { path: `activities/${activityID}/structures/${service.structureID}/fields` },
         { path: `activities/${activityID}/available/${service.id}`, isDocument: true },
       ]).then(([priceStructure, available]: [ServiceField[], Available]) => {
         if (priceStructure) {
@@ -163,15 +161,15 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
         }
       });
     }
-  }, [serviceName]);
+  }, [service]);
 
-  if (modalState === 'confirm' && reservationTime && service && duration && durationList) return <Confirm foundation="persPrice" changeState={changeState} service={service} serviceName={service.serviceNames?.[0] || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />;
+  if (modalState === 'confirm' && reservationTime && service && duration && durationList) return <Confirm foundation="persPrice" changeState={changeState} service={service} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />;
 
   return (
     <div style={{ padding: '10px' }}>
       <TopButton action={() => changeState('info')} />
 
-      {/* {service && confirmOpen && reservationTime && duration && durationList && <ConfirmReservation foundation="persPrice" changeState={changeState} service={service} title={service.serviceNames?.[0] || 'nicht angegeben'} date={fields.calendar[0]} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />} */}
+      {/* {service && confirmOpen && reservationTime && duration && durationList && <ConfirmReservation foundation="persPrice" changeState={changeState} service={service} title={service.serviceName?.[0] || 'nicht angegeben'} date={fields.calendar[0]} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />} */}
 
       <BasicInput
         label="Wähle einen Tag"
@@ -211,7 +209,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
 
       {console.log({ openings, available: activityData.available, isOpen, serviceType: service?.serviceType, duration, durationList })}
 
-      {openings && isOpen && activityData.available && service?.serviceType && duration && durationList ? (
+      {isOpen && activityData.available && service?.serviceType && duration && durationList ? (
         <Slots
           duration={parseInt(duration, 10)}
           durationList={durationList}
@@ -226,10 +224,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
         />
       ) : (
         isOpen ? (<p class="red">Bitte wähle alle optionen</p>) : (
-          <div style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: '20px', padding: '3px 10px 0 10px' }}>
-            <p><strong>Am {fields.calendar} ist leider geschlossen</strong><br /><small class="grey">wähle einen anderen geöffneten Tag aus den Öffnungszeiten.</small></p>
-            <OpeningList openings={openings} />
-          </div>
+          <Item type="grey" icon={<Info />} label={`Nicht verfügbar (${fields.calendar})`} text="Bitte wähle einen geöffneten Tag aus" />
         )
       )}
     </div>

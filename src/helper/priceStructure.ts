@@ -9,7 +9,7 @@ const getQuestFormValue = (day?: string, answers?: AnsDB[], defaultVal?: string[
       const validIndexList: number[] = [];
 
       onDays?.forEach((dayName: (string | undefined), onDayIndex: number) => {
-        if (day && dayName && dayName.indexOf(day) > -1) validIndexList.push(onDayIndex);
+        if (day && day !== 'nothing' && dayName && dayName.indexOf(day) > -1) validIndexList.push(onDayIndex);
       });
 
       return validIndexList;

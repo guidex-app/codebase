@@ -5,6 +5,7 @@ import { Home } from 'react-feather';
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import Modal from '../../../container/modal';
 import useCompany from '../../../hooks/useCompany';
 import { Activity } from '../../../interfaces/activity';
@@ -50,9 +51,21 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
             <Chip label="Alles Löschen" small type="delete" action={() => console.log('da')} />
           </div>
         </div>
-        <div class={`${style.dashboard} size_holder`}>
-          {companyRoutes.pages.map((x) => (
-            <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.item}>
+        <div class={`${style.basic} size_holder`}>
+          {companyRoutes.basic.map((x) => (
+            // <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.item}>
+            //   {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
+            //   {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
+            //   {x.icon && x.icon}
+            //   <strong>{x.title}</strong><br />
+            //   {/* <small>{x.subTitle}</small> */}
+            // </Link>
+            <Item icon={x.icon} label={x.title} />
+          ))}
+        </div>
+        <div class={`${style.reservation} size_holder`}>
+          {companyRoutes.reservation.map((x) => (
+            <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.dashItem}>
               {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
               {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
               {x.icon && x.icon}
@@ -61,7 +74,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
             </Link>
           ))}
           {companyRoutes.disabled.map((x) => (
-            <Link key={x.title} href="/company/dashboard" class={style.item} style={{ opacity: 0.5 }}>
+            <Link key={x.title} href="/company/dashboard" class={style.dashItem} style={{ opacity: 0.5 }}>
               {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
               {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
               {x.icon && x.icon}

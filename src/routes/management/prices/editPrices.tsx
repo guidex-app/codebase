@@ -1,15 +1,18 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { Calendar, Info } from 'react-feather';
 import SelectInput from '../../../components/form/selectInput';
-import { fireDocument, getFireCollection } from '../../../data/fire';
+import Item from '../../../components/item';
+import { deleteFireDocument, fireDocument, getFireCollection } from '../../../data/fire';
 import getQuestFormValue from '../../../helper/priceStructure';
 import { ServiceField } from '../../../interfaces/company';
 
 import style from '../../../style/table.module.css';
 
 interface EditPricesProps {
-    structure: ServiceField[];
-    collection: string;
+    structureID: number;
+    activityID: string;
+    serviceID: string;
 }
 
 interface PriceRows {
@@ -24,9 +27,10 @@ interface PriceItem {
   value: number;
 }
 
-const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collection }: EditPricesProps) => {
+const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, activityID, serviceID }: EditPricesProps) => {
   const [day, setDay] = useState<string>();
-  const [dayList] = useState<string[]>(structure.find((x) => x.name === 'days')?.answers?.[0].values || []);
+  const [dayList, setDayList] = useState<string[]>();
+  const [structureFields, setStructureFields] = useState<ServiceField[]>();
   const [columns, setColumns] = useState<string[]>([]);
   const [isRoundValue, setIsRoundValue] = useState<boolean>(false);
   const [durationList, setDurationList] = useState<string[]>([]);
@@ -47,7 +51,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
 
   const getFoundation = (): string => {
     let foundation: string = 'persPrice';
-    const getFound = structure.find((x) => x.name === 'foundation');
+    const getFound = structureFields?.find((x) => x.name === 'foundation');
     if (getFound?.name === 'objectPriceGroup') {
       foundation = getQuestFormValue(day, getFound.answers, []).list?.[0] || 'persPrice';
     } else {
@@ -57,9 +61,9 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
   };
 
   const generateRowNames = () => {
-    const { list: discountList } = getQuestFormValue(day, structure.find((x) => x.name === 'discounts')?.answers, ['']);
-    const { list: ageList } = getQuestFormValue(day, structure.find((x) => x.name === 'age')?.answers, ['']);
-    const { list: timeList } = getQuestFormValue(day, structure.find((x) => x.name === 'time')?.answers, ['']);
+    const { list: discountList } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'discounts')?.answers, ['']);
+    const { list: ageList } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'age')?.answers, ['']);
+    const { list: timeList } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'time')?.answers, ['']);
 
     const rowList: string[][] = [];
 
@@ -83,12 +87,13 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
     if (prices !== false) {
       const rowNames: string[][] = generateRowNames();
 
-      console.log(prices);
       const rowValues: PriceRows[] = rowNames.map((row: string[]) => {
         const rowID = row.toString();
         const getColumns = columns.map((col: string) => (prices?.find((p) => p.row === rowID && col.toString() === p.col)?.value || 0.00));
         return { name: row, columns: getColumns };
       });
+
+      console.log('rows', rowValues);
 
       setRows(rowValues);
     }
@@ -98,7 +103,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
     if (day) {
       const newColumns: string[] = [];
 
-      const { list: personList } = getQuestFormValue(day, structure.find((x) => x.name === 'persons')?.answers, ['1']);
+      const { list: personList } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'persons')?.answers, ['1']);
       const foundation: string = getFoundation();
 
       personList.forEach((p: string) => durationList.forEach((d: string) => {
@@ -111,26 +116,18 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
   };
 
   const checkDuration = () => {
-    if (day) {
-      const roundDiscountList = ['1'];
-      const { list: newDurationList, isRound = false } = getQuestFormValue(day, structure.find((x) => x.name === 'duration')?.answers);
-      if (isRound) {
-        const { list: roundDiscount } = getQuestFormValue(day, structure.find((x) => x.name === 'roundDiscount')?.answers);
-        roundDiscountList.push(...roundDiscount);
-      }
-      setIsRoundValue(isRound);
-      console.log(structure.find((x) => x.name === 'duration'));
-      console.log(newDurationList);
-      setDurationList(isRound ? roundDiscountList : newDurationList);
+    const roundDiscountList = ['1'];
+    const { list: newDurationList, isRound = false } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'duration')?.answers);
+    if (isRound) {
+      const { list: roundDiscount } = getQuestFormValue(day, structureFields?.find((x) => x.name === 'roundDiscount')?.answers);
+      roundDiscountList.push(...roundDiscount);
     }
+    setIsRoundValue(isRound);
+    setDurationList(isRound ? roundDiscountList : newDurationList);
   };
 
-  const loadPrices = () => {
-    if (day) {
-      getFireCollection(`${collection}/prices`, false, [['onDay', '==', day]]).then((data: any[]) => {
-        setPrices(data || undefined);
-      });
-    }
+  const loadPrices = (currentDay: string) => {
+    getFireCollection(`activities/${activityID}/services/${serviceID}/prices`, false, [['onDay', '==', currentDay]]).then((data: any[]) => setPrices(data || undefined));
   };
 
   const savePrice = (e: any) => {
@@ -138,53 +135,78 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, collectio
       const { value, id } = e.target;
       const [row, col] = id.split('_');
       const newItem: PriceItem = { row, col, value: +value, onDay: day };
-      fireDocument(`${collection}/prices/${id}`, newItem, 'set').then(() => console.log('gespeichert'));
+      if (!value || value === 0) {
+        return deleteFireDocument(`activities/${activityID}/services/${serviceID}/prices/${id}`);
+      }
+      return fireDocument(`activities/${activityID}/services/${serviceID}/prices/${id}`, newItem, 'set').then(() => console.log('gespeichert'));
+    }
+  };
+
+  /** Lade alle services von der activity ID */
+  const loadStructureFields = async () => {
+    const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structureID}/fields`, false);
+    if (serviceFieldData) {
+      const { list: days } = getQuestFormValue(day, serviceFieldData?.find((x) => x.name === 'days')?.answers);
+      setDayList(days?.[1] ? days : []);
+      if (!days?.[1]) setDay(days[0] || 'nothing');
+      setStructureFields(serviceFieldData);
     }
   };
 
   useEffect(() => {
-    checkDuration();
-    loadPrices();
-  }, [day]);
+    if (day) {
+      checkDuration();
+      loadPrices(day);
+    }
+  }, [day]); // wenn ein Tag ausgewählt wurde
+
   useEffect(() => { generateColumns(); }, [durationList]);
   useEffect(() => { generateRows(); }, [prices]);
 
+  useEffect(() => { loadStructureFields(); }, [structureID]); // init
+
   return (
-    <div style={{ padding: '10px' }}>
-      <SelectInput
-        label="Wähle eine Tagesgruppe"
-        name="day"
-        options={dayList || []}
-        error={day ? 'valid' : 'invalid'}
-        change={changeDay}
-        value={day}
-      />
-      <p class="grey">Wenn Sie keinen Preis angegeben haben, wird der zugrunde liegende Standartpreis verwendet.</p>
-      {day ? (
-        <table class={`${style.table} ${style.price}`}>
-          <thead>
-            <tr>
-              <th>Zeiten</th>
-              <th style={{ padding: '5px 0' }}>Rabatte</th>
-              {columns?.map((col: string) => <th>{col}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row: PriceRows, rowIndex: number) => (
-              <tr>
-                {row.name[0] && <td style={{ color: colorList[0], opacity: row.name[0].indexOf('Kein') > -1 ? 0.8 : 1 }}>{(rowIndex === 0 || rows[rowIndex - 1].name[0] !== row.name[0]) ? row.name[0] : 's.o.'}</td>}
-                <td>{row.name.map((x, i) => i > 0 && <span style={{ color: colorList[i], opacity: x.indexOf('Kein') > -1 ? 0.5 : 1 }}>{x}</span>)}</td>
-                {row.columns?.map((price: number, cellIndex: number) => (
-                  <td class={price === 0.00 ? 'red' : 'green'}><input id={`${row.name}_${columns[cellIndex]}`} value={price} type="number" onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p class="red">Wähle eine Tagesgruppe, um die Preise anzupassen.</p>
+    <Fragment>
+      {dayList?.[1] && (
+        <Fragment>
+          <SelectInput
+            label="Wähle eine Tagesgruppe"
+            name="day"
+            icon={<Calendar />}
+            options={dayList || []}
+            error={day ? 'valid' : 'invalid'}
+            change={changeDay}
+            value={day}
+          />
+          {!day && <Item icon={<Info />} type="grey" label="Wählen Sie eine Tagesgruppe aus, um die Preise anzupassen." />}
+        </Fragment>
       )}
-    </div>
+      {day && (
+        <Fragment>
+          <Item icon={<Info />} label="Der Preis kann nur berechnet werden, wenn ein Preis angegeben ist" text="Wenn ein Standartpreis, bei nicht angabe, definiert sein, wird dieser verwendet." />
+          <table class={`${style.table} ${style.price}`}>
+            <thead>
+              <tr>
+                <th>Zeiten</th>
+                <th style={{ padding: '5px 0' }}>Rabatte</th>
+                {columns?.map((col: string) => <th>{col}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row: PriceRows, rowIndex: number) => (
+                <tr>
+                  {row.name[0] && <td style={{ color: colorList[0], opacity: row.name[0].indexOf('Kein') > -1 ? 0.8 : 1 }}>{(rowIndex === 0 || rows[rowIndex - 1].name[0] !== row.name[0]) ? row.name[0] : 's.o.'}</td>}
+                  <td>{row.name.map((x, i) => i > 0 && <span style={{ color: colorList[i], opacity: x.indexOf('Kein') > -1 ? 0.5 : 1 }}>{x}</span>)}</td>
+                  {row.columns?.map((price: number, cellIndex: number) => (
+                    <td class={price === 0.00 ? 'red' : 'green'}><input id={`${row.name}_${columns[cellIndex]}`} value={price} type="number" onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Fragment>
+      )}
+    </Fragment>
   );
 };
 

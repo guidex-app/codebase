@@ -1,4 +1,4 @@
-import { getFirestore, collection, getDocs, query, limit, updateDoc, doc, setDoc, where, startAt, getDoc, runTransaction, increment, writeBatch } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, query, limit, updateDoc, doc, setDoc, where, startAt, getDoc, runTransaction, increment, deleteDoc } from 'firebase/firestore/lite';
 import fireConfig from './fireConfig';
 
 const db = getFirestore(fireConfig);
@@ -55,9 +55,10 @@ export const fireDocument = async (path: string, fields: any, type: 'set' | 'upd
   }
 };
 
-// export const deleteFireDocument = (collection: string, documentId: string) => {
-//   collection(db, collection).doc(documentId).delete();
-// };
+export const deleteFireDocument = (path: string) => {
+  const docRef = doc(db, path);
+  deleteDoc(docRef);
+};
 
 export const setNewRating = async (activityId: string, uid: string, values: any, type: 'rating' | 'tipps', oldStarValue?: number) => {
   const activityPath = doc(db, `activities/${activityId}`);

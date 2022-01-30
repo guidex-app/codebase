@@ -13,7 +13,8 @@ interface OverviewProps {
 
 const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, select, close }: OverviewProps) => (
   <Fragment>
-    <h2 style={{ padding: '10px' }}>Wähle eine Frage, die du bearbeiten möchtest.</h2>
+    <h2 style={{ padding: '10px' }}>Welche Frage möchtest du bearbeiten</h2>
+    {console.log('overview', fields)}
 
     <section class="form group" style={{ margin: '10px' }}>
       <TopButton action={close} title="Zurück" />
@@ -22,7 +23,8 @@ const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, selec
       )) : (
         <Item icon={<Info />} label="Bitte beantworten Sie zuerst die Fragen." action={close} />
       )}
-      <p class="grey">Wenn Ihre Frage hier noch nicht angezeigt wird, haben sie noch nicht alle vorherigen Fragen ausgefüllt.</p>
+
+      {fields && fields?.length !== questions.length && <Item icon={questions[fields.length].info.icon} label={`${questions[fields.length].info.title.name} (Nächste Frage)`} type="large" text={questions[fields.length].info.question} action={() => select(fields.length)} />}
     </section>
   </Fragment>
 );

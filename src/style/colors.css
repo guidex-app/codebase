@@ -5,3 +5,13 @@
 .lila { color: #8f5fe8 }
 .grey { color: #6c7293 }
 .olive { color: #0a717c }
+
+.blue-bg {
+    background: rgb(42,178,248);
+    background: linear-gradient(90deg, #038aff 0%, #4cadfe 100%);
+}
+
+.orange-bg {
+    background: rgb(255,199,8);
+    background: linear-gradient(90deg, rgba(255,199,8,1) 0%, rgba(255,160,71,1) 100%);
+}

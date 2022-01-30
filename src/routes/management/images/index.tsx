@@ -1,10 +1,10 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
+import { Image } from 'react-feather';
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import ImgInput from '../../../components/form/imgInput';
-import TitleLoader from '../../../components/loader/titleLoader';
 import TextHeader from '../../../components/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
@@ -12,7 +12,6 @@ import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
 import { FormInit } from '../../../interfaces/form';
-import { Image } from 'react-feather';
 
 interface ActivityProp {
     activityID: string;
@@ -90,7 +89,6 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
               name="image1"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image1}
               startUpload={imageState === 'loading'}
               uploadFinished={uploadFinished}
               size={[1200, 900]}
@@ -103,7 +101,6 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
               name="image2"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image2}
               startUpload={imageState === 'loading'}
               uploadFinished={uploadFinished}
               size={[1200, 900]}
@@ -116,7 +113,6 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
               name="image3"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image3}
               uploadFinished={uploadFinished}
               startUpload={imageState === 'loading'}
               size={[1200, 900]}
@@ -128,7 +124,6 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
               label="Bild 4 auswählen (JPG/JPEG)."
               name="image4"
               folderPath={`activities/${data.title.form}`}
-              error={formState.image4}
               uploadFinished={uploadFinished}
               startUpload={imageState === 'loading'}
               size={[1200, 900]}

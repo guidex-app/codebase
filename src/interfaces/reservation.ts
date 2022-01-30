@@ -4,7 +4,7 @@
 export interface PriceTerms {
     priceId: string;
     persDuration: { [key:string]: number };
-    serviceNames: string[];
+    serviceName: string[];
     dayGroup?: string;
     serviceType: any; // serviceType: 'entry'|'roomGame'|'object';
     countRounds?: number;

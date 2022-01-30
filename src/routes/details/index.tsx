@@ -43,6 +43,7 @@ const Details: FunctionalComponent<DetailsProps> = ({ activityID, user }: Detail
         {data.openings && <Reservation activityID={activityID} openings={data.openings} />}
         <Rating user={user} activityId={activityID} rating={data.rating} />
       </main>
+
     </Fragment>
   );
 };

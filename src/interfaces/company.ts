@@ -11,11 +11,17 @@ export interface CompState {
 export interface ServiceInfo {
   id?: string;
   serviceType?: 'entry' | 'roundGames' | 'object';
-  serviceNames?: string[];
+  serviceName?: string;
   structure?: string[],
-  descriptions?: string[];
-  images?: string[];
+  description?: string;
+  image?: string;
+  structureID: number;
+}
 
+export interface Structure {
+  id?: number;
+  services?: string[];
+  description?: string;
 }
 
 /**
@@ -44,7 +50,7 @@ export interface ServiceField {
  * "onType" = wenn es auf den Types basiert
  */
 export interface Infos {
-  title: { name: string, form: string }, question: string, explanation: string, example: string, advice: string, icon: any, type: 'radio' | 'checkbox' | 'onType' | 'onService' | 'onOpenings' | 'simple', availableText: string, availableActivated: boolean
+  title: { name: string, form: string }, question: string, explanation: string, example: string, advice: string, icon: any, type: 'radio' | 'checkbox' | 'onService' | 'onOpenings' | 'simple', availableText: string, availableActivated: boolean
 }
 
 export interface AnsInfo {

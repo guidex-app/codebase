@@ -12,7 +12,7 @@ interface ImgInputProps {
     name: string,
     folderPath?: string,
     editAble?: true,
-    error: 'invalid' | 'error' | 'valid';
+    error?: 'invalid' | 'error' | 'valid';
     size: [number, number],
     showSizeInfo?: true,
     startUpload: boolean,
@@ -98,7 +98,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
 
   return (
     <div class={style.container}>
-      <div class={error !== 'valid' && !hasImage ? style.error : 'valid'}>
+      <div class={error ? style[error] : ''}>
         <label for={`${name}_fileinput`}>{label}</label>
 
         <div>

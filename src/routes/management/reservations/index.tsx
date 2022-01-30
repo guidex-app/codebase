@@ -4,24 +4,17 @@ import { Columns } from 'react-feather';
 import BackButton from '../../../components/backButton';
 import SelectInput from '../../../components/form/selectInput';
 import TextHeader from '../../../components/iconTextHeader';
-import Item from '../../../components/item';
 import Modal from '../../../container/modal';
 import { getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
-import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceInfo } from '../../../interfaces/company';
-import { FormInit } from '../../../interfaces/form';
 import Reservations from './reservations';
 
 interface ActivityProp {
     activityID: string;
     activity: Activity;
     uid: string;
-}
-
-interface SelectListItem {
-  title: string, id?: string, serviceType?: 'entry' | 'object' | 'roundGames';
 }
 
 const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
@@ -36,38 +29,25 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, 
     );
   }
 
-  const formInit: FormInit = {
-    defaultCapacity: { value: 10, type: 'number', required: false },
-    defaultValue: { value: !!data.holidayOpenings, type: 'number', required: false },
-    hasHolidays: { value: !!data.saisonalOpenings, type: 'boolean', required: false },
-    storno: { type: 'string', required: false },
-  };
+  // const formInit: FormInit = {
+  //   defaultCapacity: { value: 10, type: 'number', required: false },
+  //   defaultValue: { value: !!data.holidayOpenings, type: 'number', required: false },
+  //   hasHolidays: { value: !!data.saisonalOpenings, type: 'boolean', required: false },
+  //   storno: { type: 'string', required: false },
+  // };
 
-  const [selected, setSelected] = useState<SelectListItem | false>(false);
-  const [selectList, setSelectList] = useState<SelectListItem[] | false>(false);
+  const [selected, setSelected] = useState<ServiceInfo | false>(false);
+  const [selectList, setSelectList] = useState<ServiceInfo[] | false>(false);
   const [showReservation, setShowReservation] = useState(false);
 
   const loadListData = () => {
-    getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceNames', '!=', false]]).then((listData: ServiceInfo[]) => {
-      if (listData) {
-        const newList: SelectListItem[] = [];
-
-        listData.forEach((l: ServiceInfo) => {
-          if (l.serviceNames && l.serviceType && l.id) {
-            const newItems: SelectListItem[] = l.serviceNames.map((name: string) => (
-              { title: name, id: l.id, serviceType: l.serviceType }
-            ));
-            newList.push(...newItems);
-            console.log(newItems);
-          }
-        });
-        setSelectList(newList);
-      }
+    getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceName', '!=', false]]).then((listData: ServiceInfo[]) => {
+      if (listData) setSelectList(listData);
     });
   };
 
   const changeSelect = (value: string) => {
-    setSelected(selectList ? selectList?.find((x: SelectListItem) => x.title === value) || false : false);
+    setSelected(selectList ? selectList?.find((x: ServiceInfo) => x.serviceName === value) || false : false);
   };
 
   const toggleShowReservation = () => setShowReservation(!showReservation);
@@ -87,8 +67,8 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, 
           <SelectInput
             label="Wähle eine Leistung:"
             name="select"
-            value={selected ? selected?.title : undefined}
-            options={selectList.map((x: any) => x.title)}
+            value={selected ? selected?.serviceName : undefined}
+            options={selectList.map((x: any) => x.serviceName)}
             error={selected !== false ? 'valid' : 'invalid'}
             required
             change={changeSelect}

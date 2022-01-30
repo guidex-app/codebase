@@ -7,6 +7,8 @@ export const sameArrCheck = (arr1: any[], arr2: any[]) => (
   ))
 );
 
+export const removeDuplicated = (arr: any[]) => arr.filter((item, index) => arr.indexOf(item) === index);
+
 export const arrayIsEqual = (arr: any[]) => (
   arr.every((item) => item === arr[0])
 );

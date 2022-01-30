@@ -1,5 +1,4 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { Star } from 'react-feather';
 import BackButton from '../../components/backButton';
 import TextHeader from '../../components/iconTextHeader';
 import useCompany from '../../hooks/useCompany';
@@ -15,9 +14,8 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID }: TopicProps) => 
   if (!data) {
     return (
       <TextHeader
-        icon={<Star color="#2fd159" />}
         title=" "
-        text="Gebe alle verüfgbaren der Unternehmung an, um diese für die Nutzer anzuzeigen"
+        text=""
       />
     );
   }
@@ -25,9 +23,8 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID }: TopicProps) => 
   return (
     <Fragment>
       <TextHeader
-        icon={<Star color="#2fd159" />}
         title={data.title.name}
-        text="Entdecke Topics"
+        text=""
       />
       <main class={`${style.topics} small_size_holder`}>
         <BackButton url="/explore" />
