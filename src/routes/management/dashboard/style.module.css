@@ -4,7 +4,7 @@
     grid-row-gap: 10px;
     grid-column-gap: 10px;
 
-    padding: 0 10px 15px 10px;
+    padding: 0 10px;
 }
 
 .tools { grid-template-columns: repeat(1, 1fr); }
@@ -48,13 +48,8 @@
 
 .dashItem small { display: inline-block; color: #6c7293; font-size: 14px; padding-top: 2px; }
 
-.tools {
-    padding: 20px;
-}
-
-.tools > div:nth-child(even) {
-    text-align: right;
-}
+.tools { padding: 20px; }
+.tools > div:nth-child(even) { text-align: right; }
 
 @media (min-width: 693px) {
     .basic a > div { border-color: transparent; }

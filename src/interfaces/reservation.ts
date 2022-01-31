@@ -35,7 +35,7 @@ export interface IncludedPriceSpecs {
 //   description?: string;
 //   title?: string;
 //   durationAndGames?: { type?: 'rounds'|'duration', list: string[], roundDuration?: number };
-//   serviceType: 'entry'|'roundGames'|'object';
+//   serviceType: 'entry'|'section'|'object';
 //   questionsCompleted?: boolean;
 // }
 

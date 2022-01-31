@@ -36,7 +36,7 @@ const ChangeStructure: FunctionalComponent<ChangeStructureProps> = ({ activityID
           <h4 style={{ backgroundColor: '#2f2938', padding: '5px 20px', margin: '20px -15px 15px -15px', fontSize: '17px' }}>Vorlagen übernehmen</h4>
 
           {structureList?.map((x: Structure) => (
-            <Item icon={<GitBranch color="#63e6e1" />} type={x.services?.includes(serviceID) ? 'grey' : undefined} label={`Verwendet von: ${x.services?.toString() || 'test'}`} text={x.description} action={() => select(x.id)} />
+            <Item icon={<GitBranch color={x.services?.[0] ? '#fea00a' : undefined} />} type={x.services?.includes(serviceID) ? 'grey' : undefined} label={x.services?.[0] ? `Verwendet von: ${x.services?.join(' & ')}` : 'Wird nicht verwendet'} text={x.description} action={() => select(x.id)} />
           ))}
         </Fragment>
         )}

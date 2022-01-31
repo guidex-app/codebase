@@ -1,4 +1,4 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import Chip from '../../chip';
 
 interface DayValueProps {
@@ -10,8 +10,6 @@ interface DayValueProps {
 }
 
 const DayValue: FunctionalComponent<DayValueProps> = ({ name, values, position, dayGroups, updateSelectDay }: DayValueProps) => {
-  const dayNames = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
-
   const updateValue = (dayValue: string) => {
     const newValue: string[] = values?.[position]?.split(',') || [];
     const getIndex = newValue.indexOf(dayValue);
@@ -25,7 +23,7 @@ const DayValue: FunctionalComponent<DayValueProps> = ({ name, values, position, 
 
   return (
     <div style={{ backgroundColor: '#2b303d67', borderRadius: '10px', margin: '2.5px 0', padding: '0 10px' }}>
-      {dayGroups.map((day: string, index: number) => (
+      {dayGroups.map((day: string) => (
         <Chip small label={`${day}.`} type={values?.[position]?.indexOf(day) > -1 ? 'active' : 'inactive'} key={day} action={() => updateValue(day)} />
       ))}
     </div>

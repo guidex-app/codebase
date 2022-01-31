@@ -12,7 +12,9 @@
     transition: background 0.3s ease-in-out;
 }
 
-.grey {
+.info { margin: 2.5px 0; }
+
+.grey, .info {
     background-color: rgba(255,255,255,0.04);
     margin-bottom: 10px;
     padding-left: 10px;
@@ -22,12 +24,8 @@
     background-color: rgba(255,255,255,0.03);
 }
 
-.link:hover .label {
+.link:hover .label, .info .label, .grey .label {
     border-color: transparent; 
-}
-
-.grey .label {
-    border: none;
 }
 
 .link:last-child .label {
@@ -50,9 +48,7 @@
     color: #fc424a;
 }
 
-.large {
-    position: relative;
-}
+.large { position: relative; }
 
 .large svg {
     width: 40px;
@@ -74,13 +70,9 @@
 
 .label.text { padding: 2px 15px; }
 
-.label p {
-    margin: 0;
-}
+.label p { margin: 0; }
 
-.label small {
-    color: #6c7293;
-}
+.label small { color: #6c7293; }
 
 .link svg + .label {
     width: calc(100% - 30px);
@@ -115,7 +107,7 @@
     border-bottom: 1px solid transparent !important;
 }
 
-.link:not(.grey):after {
+.link:not(.grey, .info):after {
     content: "";
     display: block;
 

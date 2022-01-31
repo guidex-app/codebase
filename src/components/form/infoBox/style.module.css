@@ -1,0 +1,21 @@
+.box {
+    position: relative;
+    background: rgba(255,255,255,0.05);
+    padding: 10px 20px 10px 65px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    margin: 60px 5px 0 5px;
+}
+
+.box svg {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    width: 24px;
+    transform: translateY(-50%);
+    opacity: 0.7;
+}
+
+.box + .box {
+    margin-top: 20px;
+}

@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { MessageCircle } from 'react-feather';
 
 import { Questions, ServiceField, ServiceInfo, AnsInfo, AnsDB } from '../../../interfaces/company';
 import Chip from '../../chip';
@@ -12,6 +11,7 @@ import FormButton from '../basicButton';
 import BasicInput from '../basicInput';
 import CheckInput from '../checkInput';
 import ImgInput from '../imgInput';
+import InfoBox from '../infoBox/infoBox';
 import DayPicker from './dayPicker';
 import Overview from './overview';
 import style from './style.module.css';
@@ -93,14 +93,16 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
     if (field?.notIsChecked) return setValidation('valid');
     let isValid: boolean = false;
     if (field?.answers?.[0]) {
-      if (question?.info.type === 'simple') return setValidation('valid');
       isValid = field.answers.every((ans: AnsDB) => {
-        const checkOnDays: boolean = ans.name.startsWith('onDay') && (!ans.onDays || ans.onDays?.includes(undefined) || ans.onDays?.length !== ans.values?.length);
+        if (question?.info.type === 'simple' && !ans.name.startsWith('onDay')) return true;
+        const checkOnDays: boolean = ans.name.startsWith('onDay') && (!ans.onDays || ans.onDays?.includes(undefined) || (question?.info.type !== 'simple' && ans.onDays?.length !== ans.values?.length));
         const checkOnService: boolean = question?.info.type === 'onService' && (!service?.serviceName || (ans.values?.includes(undefined) || false));
         const checkAmountOfFields: boolean = checkOnService && !(ans.values?.length === (ans.amountOfFields?.split(',') || ['1'])?.length);
 
-        const checkIsMulti: boolean = ans.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
+        const checkIsMulti: boolean = question?.info.type !== 'simple' && ans.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
         const checkCheckbox: boolean = question?.info.type === 'checkbox' && checkboxValidation(ans);
+
+        console.log({ checkAmountOfFields, checkIsMulti, checkOnService, checkCheckbox, checkOnDays });
         return !(checkAmountOfFields || checkIsMulti || checkOnService || checkCheckbox || checkOnDays);
       });
     }
@@ -183,6 +185,8 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
       valueIndex === valIndex ? day : newAnswers[answerIndex]?.onDays?.[valIndex]
     )) || [day];
 
+    // HIER DIE FUNKTION EINBAUEN BEI 'SIMPLE' DAY FIELD MEHRERE TAGE EINFÜGEN KÖNNEN
+
     newAnswers.splice(answerIndex !== -1 ? answerIndex : 0, 1, { ...newAnswers[answerIndex], onDays }); // replace answer
     setField({ name: question.info.title.form, answers: [...newAnswers] });
   };
@@ -211,7 +215,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
           const { type } = question.info;
           const amountOfFields = field?.answers?.[getField]?.amountOfFields ? field?.answers?.[getField]?.amountOfFields?.split(',') : ['1'];
           const { values, onDays } = field?.answers?.[getField] || { values: undefined, onDays: undefined };
-          const showContent = (type === 'onOpenings' && openings && getField > -1) || (type === 'onService' && service?.serviceName?.[0]) || false;
+          const exceptions = (type === 'onOpenings' && openings && getField > -1) || (type === 'onService' && service?.serviceName?.[0]) || (type === 'simple' && answer.inputType === 'dayPicker');
 
           return (
             <Fragment key={answer.name}>
@@ -222,7 +226,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
               )}
 
               {getField > -1 && type === 'onOpenings' && !openings && <p class="red">Konfigurieren Sie zuerst Ihre Öffnungszeiten</p>}
-              {((getField > -1 && !['simple', 'onOpenings'].includes(type)) || showContent) && (
+              {getField > -1 && (!['simple', 'onOpenings'].includes(type) || exceptions) && (
               <Fragment>
                 <p class="grey">{answer.info}</p>
                 {amountOfFields.map((amountString: string, amountIndex: number) => (
@@ -240,13 +244,19 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                         change={setNewValue}
                       />
                     ) : (answer.inputType === 'dayPicker' ? (
-                      <DayPicker
-                        name={`${answer.name}+${amountIndex}`}
-                        values={values}
-                        position={amountIndex}
-                        change={setNewValue}
-                        openings={openings}
-                      />
+                      question.info.type !== 'simple' ? (
+                        <DayPicker
+                          name={`${answer.name}+${amountIndex}`}
+                          values={values}
+                          position={amountIndex}
+                          change={setNewValue}
+                          openings={openings}
+                        />
+                      ) : (
+                        answer.onDay && (
+                          days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
+                        )
+                      )
                     ) : (
                       <div style={answer.onDay ? { backgroundColor: '#2b303d', borderRadius: '10px', padding: '5px 10px', marginBottom: '10px' } : undefined}>
                         {answer.onDay && (
@@ -257,7 +267,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                     ))}
                   </Fragment>
                 ))}
-                {question.info.title.form !== 'serviceName' && !['onService'].includes(type) && <AddRemove action={extraField} isFirst={!(amountOfFields?.[1])} name={answer.name} />}
+                {question.info.type !== 'simple' && question.info.title.form !== 'serviceName' && !['onService'].includes(type) && <AddRemove action={extraField} isFirst={!(amountOfFields?.[1])} name={answer.name} />}
               </Fragment>
               )}
             </Fragment>
@@ -267,12 +277,8 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
       <FormButton action={nextButton} label="Weiter" disabled={validation === 'notValid'} />
 
-      {/* {question.info.explanation && <p>{question.info.explanation}</p>} */}
-      <div class={style.box}>
-        <MessageCircle color="#6c7293" />
-        {question.info.advice && <p>{question.info.advice}</p>}
-        {question.info.example && <p class="grey">{question.info.example}</p>}
-      </div>
+      <InfoBox title={question.info.advice} text={question.info.example} />
+      {question.info.explanation && <InfoBox text={question.info.explanation} />}
 
       <Chip label="Unterstützung von Guidex erhalten" type="delete" action={() => console.log('')} />
     </Fragment>

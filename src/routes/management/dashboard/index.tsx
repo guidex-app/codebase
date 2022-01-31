@@ -1,5 +1,5 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { Link } from 'preact-router';
+import { Link, route } from 'preact-router';
 import { useState } from 'preact/hooks';
 import { Home } from 'react-feather';
 import BackButton from '../../../components/backButton';
@@ -53,21 +53,12 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
         </div>
         <div class={`${style.basic} size_holder`}>
           {companyRoutes.basic.map((x) => (
-            // <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.item}>
-            //   {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
-            //   {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
-            //   {x.icon && x.icon}
-            //   <strong>{x.title}</strong><br />
-            //   {/* <small>{x.subTitle}</small> */}
-            // </Link>
-            <Item icon={x.icon} label={x.title} />
+            <Item icon={x.icon} label={x.title} type="info" action={() => route(`${x.path}/${data.title.form}`)} />
           ))}
         </div>
         <div class={`${style.reservation} size_holder`}>
           {companyRoutes.reservation.map((x) => (
             <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.dashItem}>
-              {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
-              {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
               {x.icon && x.icon}
               <strong>{x.title}</strong><br />
               <small>{x.subTitle}</small>

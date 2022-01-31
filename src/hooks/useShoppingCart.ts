@@ -16,11 +16,7 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
    * sonst wird der Preis für eine Runde genommen.
    */
   const persDurationID = (amountPers: number, durationOrRound: number): string => `_${amountPers}_${durationOrRound}`;
-
-  const getRoundPrice = (price: number) => {
-    if (isRound && price) return price * parseInt(duration, 10);
-    return price;
-  };
+  const getPrice = (price: number) => (isRound ? price * parseInt(duration, 10) : price);
 
   /**
    * Holt sich den korrekten Preis, unter berücksichtigung von rundenrabatt und personen rabatt
@@ -29,10 +25,10 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
     const nDuration = parseInt(duration, 10);
 
     const durationPrice: number | undefined = price?.[persDurationID(persons, nDuration)] || price?.[persDurationID(1, nDuration)];
-    if (durationPrice) return getRoundPrice(durationPrice);
+    if (durationPrice) return getPrice(durationPrice);
 
     const personPrice: number | undefined = price?.[persDurationID(persons, 1)] || price?.[persDurationID(1, 1)];
-    return personPrice ? getRoundPrice(personPrice) : 0;
+    return personPrice ? getPrice(personPrice) : 0;
   };
 
   /**
@@ -51,9 +47,6 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
 
       return timeCheck && ageCheck && discountCheck && dayCheck;
     });
-
-    // console.log('persDurationID', `${persDurationID(persons)} oder ${persDurationID(1)}`);
-    console.log('gefundener Preis', findPrice);
 
     return calculateCorrectPrice(persons, findPrice?.persDuration);
   };
@@ -151,20 +144,16 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
 
         setPriceList(priceData);
         setPriceSpecs(newPriceSpecs);
-        console.log('Alle Preise', priceData);
       }
     });
   }, [serviceId]);
 
   useEffect(() => {
     if (priceList.length > 0) createShoppingCart();
-    console.log('priceSpecs', priceSpecs);
   }, [userPreferences, priceSpecs]);
 
   useEffect(() => {
     setIsValid('loading');
-    console.table(shoppingCart);
-    console.log({ duration, personAmount });
     checkIfPriceIsValid();
   }, [shoppingCart]);
 

@@ -38,7 +38,7 @@ const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon,
 
   return (
     <div class={style.container}>
-      <div class={error !== 'valid' && required ? style.error : 'valid'}>
+      <div class={error ? style[error] : ''}>
         {icon && icon}
         <div>
           <label for={name} class={disabled ? style.disabled : undefined}>{required && '*'}{label}</label>

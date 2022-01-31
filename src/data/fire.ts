@@ -1,4 +1,4 @@
-import { getFirestore, collection, getDocs, query, limit, updateDoc, doc, setDoc, where, startAt, getDoc, runTransaction, increment, deleteDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, query, limit, updateDoc, doc, setDoc, where, startAt, getDoc, runTransaction, increment, deleteDoc, arrayUnion, arrayRemove } from 'firebase/firestore/lite';
 import fireConfig from './fireConfig';
 
 const db = getFirestore(fireConfig);
@@ -53,6 +53,10 @@ export const fireDocument = async (path: string, fields: any, type: 'set' | 'upd
     console.log('Fehler:', path);
     console.error(`Error ${type} documument`, e);
   }
+};
+
+export const fireArray = async (path: string, fieldName: string, value: string, type: 'add' | 'remove'): Promise<void> => {
+  fireDocument(path, { [fieldName]: type === 'add' ? arrayUnion(value) : arrayRemove(value) }, 'update');
 };
 
 export const deleteFireDocument = (path: string) => {

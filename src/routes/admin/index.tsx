@@ -36,16 +36,14 @@ const Admin: FunctionalComponent = () => {
     }
   };
 
-  useEffect(() => {
-    fetchList();
-  }, [type]);
+  useEffect(() => { fetchList(); }, [type]);
 
   return (
     <Fragment>
       <TextHeader icon={<Lock color="#fea00a" />} title="Admin" text="Verwalte die Kategorien oder die Topics" />
       <main class="small_size_holder">
         <Item icon={<ToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
-        <Item icon={<PlusCircle />} label="Hinzufügen" action={() => setItem(undefined)} />
+        <Item icon={<PlusCircle />} label="Hinzufügen" type="info" action={() => setItem(undefined)} />
         {list.map((x) => (
           <Item key={x.title.form} label={x.title.name} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type === 'topics' ? 'topics' : 'categories'}%2F${x.title.form}%2F${x.title.form}_250x200`} action={() => setItem(x)} />
         ))}

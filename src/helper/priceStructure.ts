@@ -4,40 +4,43 @@ const getQuestFormValue = (day?: string, answers?: AnsDB[], defaultVal?: string[
   let list: string[] = defaultVal || [];
   let isRound: boolean = false;
 
-  if (answers) {
-    const findOnDayIndex = (onDays: (string | undefined)[]): number[] => {
-      const validIndexList: number[] = [];
+  if (!answers) return { list, isRound };
 
-      onDays?.forEach((dayName: (string | undefined), onDayIndex: number) => {
-        if (day && day !== 'nothing' && dayName && dayName.indexOf(day) > -1) validIndexList.push(onDayIndex);
-      });
+  const findOnDayIndex = (onDays?: (string | undefined)[]): number[] => {
+    if (!onDays || !day || day === 'nothing') return [];
 
-      return validIndexList;
-    };
-
-    answers.forEach((element: AnsDB) => {
-      if (element.values && !isRound) {
-        if (element.name.startsWith('onDay')) { // DayValue
-          const onDaysIndexes: number[] = element.onDays ? findOnDayIndex(element.onDays) : [];
-          onDaysIndexes.forEach((indexValue: number) => {
-            if (element.values?.[indexValue]) {
-              if (element.isRound?.[indexValue]) isRound = true; // es sind runden
-              if (element.name === 'durationGroup') {
-                list.push(...(element.values?.[indexValue].split(',') || []));
-              } else {
-                list.push(element.values?.[indexValue]);
-              }
-            }
-          });
-        } else if (element.isRound?.[0]) {
-          isRound = true;
-          list.push(element.values?.[0]);
-        } else {
-          list = [...list, ...element.values];
-        }
-      }
+    const indexList: number[] = [];
+    onDays.forEach((dayName: (string | undefined), onDayIndex: number) => {
+      if (dayName && dayName.indexOf(day) > -1) indexList.push(onDayIndex);
     });
-  }
+
+    return indexList;
+  };
+
+  answers.forEach((ans: AnsDB) => {
+    if (ans.values && !isRound) {
+      if (ans.name.startsWith('onDay')) { // DayValue
+        const dayIndexList: number[] = findOnDayIndex(ans.onDays);
+        dayIndexList.forEach((indexValue: number) => {
+          const currentValue: any = ans.values?.[indexValue];
+
+          if (currentValue) {
+            if (ans.isRound?.[indexValue]) isRound = true; // es sind runden
+            if (ans.name === 'onDayObject') {
+              list.push(currentValue.split(','));
+            } else {
+              list.push(currentValue);
+            }
+          }
+        });
+      } else if (ans.isRound?.[0]) {
+        isRound = true;
+        list.push(ans.values?.[0]);
+      } else {
+        list = [...list, ...ans.values];
+      }
+    }
+  });
 
   return { list, isRound };
 };

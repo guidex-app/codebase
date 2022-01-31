@@ -10,7 +10,7 @@ export interface CompState {
  */
 export interface ServiceInfo {
   id?: string;
-  serviceType?: 'entry' | 'roundGames' | 'object';
+  serviceType?: 'entry' | 'section' | 'object';
   serviceName?: string;
   structure?: string[],
   description?: string;

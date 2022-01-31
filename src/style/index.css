@@ -26,6 +26,8 @@ body {
 
 * { box-sizing: border-box; }
 
+#app { padding-bottom: 40px; }
+
 h1, h2, h3, h4 { 
 	letter-spacing: -.025em;
 	font-weight: bolder;

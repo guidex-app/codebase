@@ -8,7 +8,7 @@ interface SlotsProps {
   reserved: Reserved[];
   personAmount: number;
   amountRooms: number;
-  serviceType: 'entry' | 'roundGames' | 'object';
+  serviceType: 'entry' | 'section' | 'object';
   durationList: { list: any; isRound: boolean };
   duration: number;
   openings: (string | false)[];

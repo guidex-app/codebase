@@ -9,7 +9,7 @@ interface ItemProps {
     link?: string;
     icon?: any;
     image?: string;
-    type?: 'active' | 'grey' | 'large';
+    type?: 'active' | 'grey' | 'large' | 'info';
 }
 
 const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type, action, link, text }: ItemProps) => (
