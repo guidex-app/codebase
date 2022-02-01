@@ -1,6 +1,7 @@
-import { FunctionalComponent, h } from 'preact';
-import { Route, route } from 'preact-router';
-import { Mail, Key, Navigation2, Gift } from 'react-feather';
+import { Fragment, FunctionalComponent, h } from 'preact';
+import { route } from 'preact-router';
+import { useState } from 'preact/hooks';
+import { Mail, Key, Navigation2, Gift, Phone, Type } from 'react-feather';
 import BackButton from '../../components/backButton';
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
@@ -11,13 +12,15 @@ import { setStorageKeys } from '../../data/localStorage';
 import useForm from '../../hooks/useForm';
 import { FormInit } from '../../interfaces/form';
 import { User } from '../../interfaces/user';
+import Confirmation from './confirmation';
 import style from './style.module.css';
 
 interface RegisterProps {
+    company: string;
     updateUser: (data: User) => void;
 }
 
-const Register: FunctionalComponent<RegisterProps> = ({ updateUser }: RegisterProps) => {
+const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: RegisterProps) => {
   const form: FormInit = {
     firstName: { type: 'string', required: true },
     lastName: { type: 'string', required: true },
@@ -30,6 +33,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser }: RegisterPr
     birthday: { type: 'string', required: true },
   };
   const { fields, formState, changeField, isValid } = useForm(form);
+  const [success, setSuccess] = useState(false);
 
   const updateUserKeys = (newStorageData: any) => {
     updateUserProfil({
@@ -75,7 +79,9 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser }: RegisterPr
             uid,
           };
 
-          fireDocument(`user/${uid}`, newUser, 'set');
+          fireDocument(`user/${uid}`, newUser, 'set').then(() => {
+            setSuccess(true);
+          });
 
           updateUserKeys({ email: newUser.email, displayName: newUser.displayName, interests: newUser.interests });
         } else {
@@ -85,10 +91,15 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser }: RegisterPr
     }
   };
 
+  if (!success) return <Confirmation />;
+
   return (
     <div class={`${style.register} small_size_holder`}>
       <BackButton url="/login" />
+
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
+
+      <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>{company ? 'Ihr Partner-Konto erstellen' : 'Ihr Nutzer-Konto erstellen'}</h1>
 
       <form>
         <section class="group form">
@@ -119,103 +130,149 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser }: RegisterPr
           />
         </section>
 
-        <section class="group form">
-          <h3>Für Deine Vorschläge</h3>
+        {company ? (
+          <section class="group form">
+            <h3>Ansprechpartner</h3>
 
-          <BasicInput
-            type="number"
-            label="Postleitzahl:"
-            name="plz"
-            icon={<Navigation2 />}
-            value={fields.plz}
-            placeholder="Deine Postleitzahl"
-            error={formState.plz}
-            autocomplete="postal-code"
+            <BasicInput
+              type="text"
+              label="Vorname:"
+              name="firstName"
+              icon={<Type />}
+              value={fields.plz}
+              placeholder="Dein Vorname"
+              error={formState.plz}
+              required
+              change={changeField}
+            />
+
+            <BasicInput
+              type="text"
+              label="Nachname:"
+              name="firstName"
+              icon={<Type />}
+              value={fields.plz}
+              placeholder="Dein Vorname"
+              error={formState.plz}
+              required
+              change={changeField}
+            />
+
+            <BasicInput
+              type="tel"
+              label="Telefonnummer:"
+              name="firstName"
+              icon={<Phone />}
+              value={fields.plz}
+              placeholder="Deine Telefonnummer"
+              error={formState.plz}
+              required
+              change={changeField}
+            />
+
+          </section>
+        ) : (
+          <Fragment>
+            <section class="group form">
+              <h3>Für Deine Vorschläge</h3>
+
+              <BasicInput
+                type="number"
+                label="Postleitzahl:"
+                name="plz"
+                icon={<Navigation2 />}
+                value={fields.plz}
+                placeholder="Deine Postleitzahl"
+                error={formState.plz}
+                autocomplete="postal-code"
             // errorMessage="Bitte gebe eine Postleitzahl an"
-            required
-            change={changeField}
-          />
+                required
+                change={changeField}
+              />
 
-          <BasicInput
-            type="date"
-            label="Geburtstag:"
-            name="birthday"
-            icon={<Gift />}
-            value={fields.birthday}
-            placeholder="Dein Geburtstag"
-            error={formState.birthday}
-            autocomplete="bday"
+              <BasicInput
+                type="date"
+                label="Geburtstag:"
+                name="birthday"
+                icon={<Gift />}
+                value={fields.birthday}
+                placeholder="Dein Geburtstag"
+                error={formState.birthday}
+                autocomplete="bday"
             // errorMessage="Bitte gebe Dein Geburtsdatum an"
-            required
-            change={changeField}
-          />
+                required
+                change={changeField}
+              />
 
-          <PickInput
-            label="Titel"
-            name="title"
-            options={['Herr', 'Frau']}
-            value={fields.title}
-            error={formState.title}
+              <PickInput
+                label="Titel"
+                name="title"
+                options={['Herr', 'Frau']}
+                value={fields.title}
+                error={formState.title}
             // errorMessage="Bitte wähle Deinen Titel"
-            required
-            change={changeField}
-          />
+                required
+                change={changeField}
+              />
 
-          <PickInput
-            label="Wähle Deine Interessen"
-            name="interests"
-            options={interests.map((x) => x.name)}
-            value={fields.interests}
-            error={formState.interests}
+              <PickInput
+                label="Wähle Deine Interessen"
+                name="interests"
+                options={interests.map((x) => x.name)}
+                value={fields.interests}
+                error={formState.interests}
             // errorMessage="Bitte wähle Deine Interessen"
-            required
-            change={changeField}
-          />
-        </section>
+                required
+                change={changeField}
+              />
 
-        <section class="group form">
-          <h3>Für die Reservierungen</h3>
-          <BasicInput
-            type="text"
-            label="Vorname:"
-            name="firstName"
-            autocomplete="given-name"
-            value={fields.firstName}
-            placeholder="Deinen Vornamen"
-            error={formState.firstName}
+            </section>
+
+            <section class="group form">
+              <h3>Für die Reservierungen</h3>
+              <BasicInput
+                type="text"
+                label="Vorname:"
+                name="firstName"
+                autocomplete="given-name"
+                value={fields.firstName}
+                placeholder="Deinen Vornamen"
+                error={formState.firstName}
             // errorMessage="Bitte gebe ein Vornamen an"
-            required
-            change={changeField}
-          />
+                required
+                change={changeField}
+              />
 
-          <BasicInput
-            type="text"
-            label="Nachname:"
-            name="lastName"
-            autocomplete="family-name"
-            value={fields.lastName}
-            placeholder="Deinen Nachnamen"
-            error={formState.lastName}
+              <BasicInput
+                type="text"
+                label="Nachname:"
+                name="lastName"
+                autocomplete="family-name"
+                value={fields.lastName}
+                placeholder="Deinen Nachnamen"
+                error={formState.lastName}
             // errorMessage="Bitte gebe ein Nachnamen an"
-            required
-            change={changeField}
-          />
+                required
+                change={changeField}
+              />
 
-          <BasicInput
-            type="tel"
-            label="Telefon:"
-            name="phone"
-            value={fields.phone}
-            placeholder="Deine Telefon-Nr."
-            error={formState.phone}
-            autocomplete="tel"
+              <BasicInput
+                type="tel"
+                label="Telefon:"
+                name="phone"
+                value={fields.phone}
+                placeholder="Deine Telefon-Nr."
+                error={formState.phone}
+                autocomplete="tel"
             // errorMessage="Bitte gebe eine Telefon-Nr. an"
-            required
-            change={changeField}
-          />
-        </section>
+                required
+                change={changeField}
+              />
+            </section>
+          </Fragment>
+        )}
 
-        <FormButton action={register} label="Registrieren" />
+        <FormButton action={register} label="Registrieren und loslegen" />
 
       </form>
 

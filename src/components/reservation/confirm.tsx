@@ -19,13 +19,14 @@ interface ConfirmProps {
     reservationTime: any;
     personAmount: number;
     amountRooms: number;
-    foundation: 'persPrice' | 'objectPrice';
+    foundation: 'person' | 'object';
+    activityID: string;
     changeState: (type?: 'info' | 'available' | 'confirm' | 'finished') => void;
 }
 
-const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
+const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
-  const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, service.id);
+  const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, activityID, service.id);
 
   /**
      * Reservierung Abgeschließen Button
@@ -77,45 +78,28 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, s
   };
 
   return (
-    <div style={{ padding: '0 10px' }}>
+    <Fragment>
       <TopButton action={() => changeState('available')} />
-      {isValid === 'loading' ? (
-        <div class={`${style.price} orange-bg`}>
-          Dein Preis wird berechnet...<strong>€</strong>
-        </div>
-      ) : (
-        <Fragment>
-          <div className="ion-padding">
-            <strong>
-              Deine Reservierung für {reservationTime} Uhr {amountRooms >= 2 && `(Für ${amountRooms} Räume)`} {durationList.isRound && (<>({duration} Runden)</>)}
-            </strong>
-            <br />
 
-            {isValid === 'valid' && shoppingCart && (
-
-              shoppingCart.map((cartItem: ShoppingCart) => (
-                <p key={`${cartItem.age}_${cartItem.discount}_${cartItem.room}_${cartItem.amount}`}>
-                  {`${cartItem.amount}x | ${cartItem.age} ${cartItem.discount ? `(${cartItem.discount})` : ''} für je: ${cartItem.price} €`}
-                  {amountRooms > 1 && <p style={{ opacity: '0.5' }}> (Raum: {cartItem.room} mit {cartItem.groupDiscount} Pers.)</p>}
-                </p>
-              ))
-            )}
-          </div>
-          <div className="ion-padding" style={{ background: '#FFFFFF' }}>
-            {isValid === 'valid' ? (
-              <strong><p class="green">Gesamtsumme: {totalPrice} € (Fällt vorort an)</p></strong>
-            ) : (
-              <p class="orange">Für die Konfiguration wurde kein Preis gefunden</p>
-            )}
-            <br />
-            <small>
-              <p class="grey">
-                Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.
+      <div class={`${style.price} ${isValid ? 'orange-bg' : 'red-bg'}`}>
+        {isValid === 'valid' && shoppingCart ? (
+          <Fragment>
+            {shoppingCart.map((cartItem: ShoppingCart) => (
+              <p key={`${cartItem.age}_${cartItem.discount}_${cartItem.room}_${cartItem.amount}`}>
+                {`${cartItem.amount}x | ${cartItem.age} ${cartItem.discount ? `(${cartItem.discount})` : ''} für je: ${cartItem.price} €`}
+                {amountRooms > 1 && <p style={{ opacity: '0.5' }}> (Raum: {cartItem.room} mit {cartItem.groupDiscount} Pers.)</p>}
               </p>
-            </small>
-          </div>
-        </Fragment>
-      )}
+            ))}
+            <strong>Gesamtsumme: {totalPrice} € (Fällt vorort an)</strong>
+          </Fragment>
+        ) : (
+          <strong>Es wurde kein Preis gefunden</strong>
+        )}
+
+        <small>
+          Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.
+        </small>
+      </div>
 
       {priceSpecs?.ages && priceSpecs?.ages.length !== 0 && (
       <SelectInput
@@ -132,19 +116,16 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, s
       {priceSpecs?.discounts && priceSpecs?.discounts.length !== 0 && renderDiscount()}
 
       <section class="group form">
+        <Item icon={<Clock color="#ffa500" />} type="info" label={`Deine Reservierung für ${reservationTime} Uhr ${amountRooms >= 2 ? `(Für ${amountRooms} Räume)` : ''} ${durationList.isRound ? `(${duration} Runden)` : ''}`} />
         <Item icon={<Type />} label="Leistung" text={serviceName} />
         <Item icon={<Clock />} label="Anz. Räume" text={amountRooms.toString()} />
         <Item icon={<Calendar />} label="Datum" text={date} />
         <Item icon={<Calendar />} label="Uhrzeit" text={`${reservationTime} Uhr`} />
         <Item icon={<Clock />} label={durationList.isRound ? 'Runden' : 'Dauer'} text={durationList.isRound && duration ? `${duration} Runden (ca. ${parseInt(duration, 10) * durationList.list[0]} Min.)` : `${duration} Min.`} />
       </section>
-      {/* <IonButton shape="round" disabled={!isValid || !totalPrice || !reservationTime} expand="block" color="danger" onClick={completeReservation} className="ion-margin-horizontal">
-        <IonLabel>
-          {totalPrice ? `Reservierung abschließen (${totalPrice}€)` : 'Leider nicht möglich'}
-        </IonLabel>
-      </IonButton> */}
-      <FormButton label={totalPrice ? `Reservierung abschließen (${totalPrice}€)` : 'Leider nicht möglich'} action={() => changeState()} />
-    </div>
+
+      {!!totalPrice && <FormButton label={`Reservierung abschließen (${totalPrice}€)`} action={() => changeState()} />}
+    </Fragment>
   );
 };
 

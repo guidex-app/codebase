@@ -47,7 +47,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, activit
   const [prices, setPrices] = useState<PriceItem[] | false | undefined>(); // cell array in a row array
 
   // farben
-  const colorList: string[] = ['#66d4cf', '#2fd159', '#d4be21'];
+  const colorList: string[] = ['#FFFFFF', '#d4be21', '#2fd159'];
 
   const changeDay = (value: any) => setStatus({ ...status, day: value });
 
@@ -190,7 +190,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, activit
           {status.day && (
           <Fragment>
             <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" />
-            <table class={`${style.table} ${status.hasTime ? style.time : ''}`} style={{ margin: '20px 0' }}>
+            <table class={`${style.table} ${style.prices} ${status.hasTime ? style.time : ''}`} style={{ margin: '20px 0' }}>
               <thead>
                 <tr>
                   {status.hasTime && <th>Uhrzeit</th>}

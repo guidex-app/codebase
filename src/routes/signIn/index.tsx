@@ -1,8 +1,10 @@
 import { FunctionalComponent, h } from 'preact';
-import { Link, route } from 'preact-router';
+import { route } from 'preact-router';
 import { useEffect } from 'preact/hooks';
+import { Key, LogIn } from 'react-feather';
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
+import Item from '../../components/item';
 import { loginUser, logoutUser } from '../../data/auth';
 import { setStorageKeys } from '../../data/localStorage';
 import useForm from '../../hooks/useForm';
@@ -84,9 +86,8 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
 
         <FormButton action={logIn} label="Einloggen" />
 
-        <div class={style.register}>
-          <p>Du hast noch keinen Account? <Link href="/register">Registrieren</Link></p>
-        </div>
+        <Item type="info" icon={<LogIn color="green" />} label="Als Nutzer registrieren" action={() => route('/register')} />
+        <Item type="info" icon={<Key color="orange" />} label="Ihre Freizeitunternehmung anmelden" action={() => route('/register/company')} />
 
       </form>
 

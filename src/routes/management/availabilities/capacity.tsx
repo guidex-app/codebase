@@ -8,7 +8,8 @@ import useWeekList from '../../../hooks/useWeekList';
 import style from '../../../style/table.module.css';
 
 interface CapacityProps {
-    collection: string;
+    activityID: string;
+    serviceID: string;
     openings: (string | false)[];
     defaultValue: number;
 }
@@ -19,7 +20,7 @@ interface CapacityItem {
     value: number;
 }
 
-const Capacity: FunctionalComponent<CapacityProps> = ({ collection, openings, defaultValue }: CapacityProps) => {
+const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, openings, defaultValue }: CapacityProps) => {
   const [timeRange, setTimeRange] = useState<string>(getSimpleDateString(new Date()));
   const { weekList, getWeekList } = useWeekList();
   const timeLine = useTimeLine(30, openings);
@@ -41,7 +42,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ collection, openings, de
 
   const loadCapacity = async () => {
     console.log('gestartet');
-    const getCapacity: CapacityItem[] = await getFireCollection(collection, false);
+    const getCapacity: CapacityItem[] = await getFireCollection(`activities/${activityID}/available/${serviceID}/capacity`, false);
     generateRows(getCapacity || undefined);
   };
 
@@ -49,7 +50,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ collection, openings, de
     const { value, id } = e.target;
     const [date, time] = id.split('_');
     const newItem: CapacityItem = { time, date, value };
-    fireDocument(`${collection}/${id}`, newItem, 'set').then(() => console.log('gespeichert'));
+    fireDocument(`activities/${activityID}/available/${serviceID}/capacity`, newItem, 'set').then(() => console.log('gespeichert'));
   };
 
   useEffect(() => { loadCapacity(); }, [weekList]);
@@ -71,7 +72,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ collection, openings, de
         <table class={style.table}>
           <thead>
             <tr>
-              <th>Zeit</th>
+              <th>Uhrzeit</th>
               {weekList?.map((cell: string) => <th>{cell}</th>)}
             </tr>
           </thead>
@@ -80,7 +81,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ collection, openings, de
               <tr>
                 <td>{timeLine[rowIndex]} Uhr</td>
                 {times?.map((time: number, cellIndex: number) => (
-                  <td class={time !== defaultValue ? 'green' : ''}><input id={`${weekList[cellIndex]}_${timeLine[rowIndex]}`} value={time} type="number" onChange={saveCapacity} min={0} placeholder="-" /></td>
+                  <td class={time !== defaultValue ? 'green' : ''}><input id={`${weekList[cellIndex]}_${timeLine[rowIndex]}`} value={time} type="number" onChange={saveCapacity} step={1} min={0} placeholder="-" /></td>
                 ))}
               </tr>
             ))}

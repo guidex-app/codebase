@@ -187,11 +187,12 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
         )}
 
       </main>
-      {showCapacity && data.openings && selected && (
+      {showCapacity && data.openings && selected && selected.id && (
         <Modal title="Kapazitäten bearbeiten" close={toggleShowCapacity} type="large">
           <Capacity
             openings={data.openings}
-            collection={`activities/${activityID}/services/${selected.id}/available/${selected.id}/rows`}
+            activityID={activityID}
+            serviceID={selected.id}
             defaultValue={fields.defaultCapacity || 10}
           />
         </Modal>

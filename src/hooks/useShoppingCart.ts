@@ -3,7 +3,7 @@ import { PriceTerms, IncludedPriceSpecs, ShoppingCart, UserPreferences } from '.
 import { getFireCollection } from '../data/fire';
 import { shortDay } from '../helper/date';
 
-const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: string, isRound: boolean, dayIndex: number, reservationTime: string, amountRooms: number, personAmount: number, userPreferences: UserPreferences, serviceId?: string) => {
+const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRound: boolean, dayIndex: number, reservationTime: string, amountRooms: number, personAmount: number, userPreferences: UserPreferences, activityID: string, serviceId?: string) => {
   const [priceList, setPriceList] = useState<PriceTerms[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isValid, setIsValid] = useState<'loading' | 'valid' | 'invalid'>('loading');
@@ -21,7 +21,7 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
   /**
    * Holt sich den korrekten Preis, unter berücksichtigung von rundenrabatt und personen rabatt
    */
-  const calculateCorrectPrice = (persons: number, price?: { [key: string]: number }): number => {
+  const getPriceWithProps = (persons: number, price?: { [key: string]: number }): number => {
     const nDuration = parseInt(duration, 10);
 
     const durationPrice: number | undefined = price?.[persDurationID(persons, nDuration)] || price?.[persDurationID(1, nDuration)];
@@ -34,7 +34,7 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
   /**
    * Sucht einen passenden Preis, für die angegebenen Paramter.
    */
-  const findRightPrice = (persons: number, age: string, discount?: string, prices?: PriceTerms[]) => {
+  const getSinglePrice = (persons: number, age: string, discount?: string, prices?: PriceTerms[]) => {
     const getPrices = prices || priceList;
 
     const findPrice = getPrices.find((i: PriceTerms) => {
@@ -48,7 +48,9 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
       return timeCheck && ageCheck && discountCheck && dayCheck;
     });
 
-    return calculateCorrectPrice(persons, findPrice?.persDuration);
+    console.log('Preis finden', { persons, age, discount, prices });
+
+    return getPriceWithProps(persons, findPrice?.persDuration);
   };
 
   /**
@@ -96,7 +98,7 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
 
         const groupDiscount = createPersonGroups(amount);
         groupDiscount.forEach((element) => {
-          const price = findRightPrice(personGroups[isInRoom], age, discount, priceList) || 0;
+          const price = getSinglePrice(personGroups[isInRoom], age, discount, priceList) || 0;
           newShoppingCart.push({ age, ...(discount && { discount }), amount: element, groupDiscount: personGroups[isInRoom], room: isInRoom + 1, price });
           isInRoom = isInRoom + 1 < amountRooms ? isInRoom + 1 : 0;
         });
@@ -120,14 +122,15 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
       setIsValid(isPriceValid ? 'valid' : 'invalid');
       console.log('shoppingCart', shoppingCart);
       if (isPriceValid) {
-        if (foundation === 'persPrice') setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * cur.amount), 0));
-        if (foundation === 'objectPrice') setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * 1), 0));
+        if (foundation === 'person') return setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * cur.amount), 0));
+        console.log('Preis wird für runden berechnet');
+        return setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * 1), 0));
       }
     }
   };
 
   useEffect(() => {
-    getFireCollection(`services/${serviceId}/prices`, false).then((priceData: PriceTerms[]) => {
+    getFireCollection(`activities/${activityID}/services/${serviceId}/prices`, false).then((priceData: PriceTerms[]) => {
       if (priceData) {
         const newPriceSpecs: IncludedPriceSpecs = {
           dayGroups: [],
@@ -137,7 +140,7 @@ const useShoppingCart = (foundation: 'persPrice' | 'objectPrice', duration: stri
         };
 
         priceData.forEach((x) => {
-          if (x?.dayGroup && x?.dayGroup !== 'not' && priceSpecs?.dayGroups.indexOf(x.dayGroup) === -1) priceSpecs.dayGroups.push(x.dayGroup);
+          if (x?.dayGroup && x?.dayGroup !== 'nothing' && priceSpecs?.dayGroups.indexOf(x.dayGroup) === -1) priceSpecs.dayGroups.push(x.dayGroup);
           if (x?.discount && priceSpecs?.discounts.indexOf(x.discount) === -1) priceSpecs?.discounts.push(x.discount);
           if (x?.age && priceSpecs?.ages.indexOf(x.age) === -1) priceSpecs?.ages.push(x.age);
         });

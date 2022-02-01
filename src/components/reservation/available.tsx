@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Calendar, Info } from 'react-feather';
 import { getFireCollection, getFireMultiCollection } from '../../data/fire';
@@ -40,6 +40,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   const [durationList, setDurationList] = useState<{ list: any; isRound: boolean }>();
   const [capacityList, setCapacityList] = useState<CapacityList[]>([]);
   const [duration, setDuration] = useState<string>('');
+  const [foundation, setFoundation] = useState<'person' | 'object'>('person');
   const [rooms, setRooms] = useState<number>(1);
 
   const [reservationTime, setReservationTime] = useState<string>();
@@ -149,13 +150,17 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
       getFireMultiCollection([
         { path: `activities/${activityID}/structures/${service.structureID}/fields` },
         { path: `activities/${activityID}/available/${service.id}`, isDocument: true },
-      ]).then(([priceStructure, available]: [ServiceField[], Available]) => {
-        if (priceStructure) {
+      ]).then(([structure, available]: [ServiceField[], Available]) => {
+        if (structure) {
           // generatePersons(available.countMaxRoomPerson, available.countMinPerson);
+          const choosenDate: Date = new Date(fields.calendar);
+          const dateIndex: number = choosenDate.getDay();
+          const getFoundation: 'person' | 'object' = (getQuestFormValue(shortDay[dateIndex], structure?.find((x) => x.name === 'foundation')?.answers)?.list?.[0] || 'person') as ('person' | 'object');
+          setFoundation(getFoundation);
           changeField(available.countMinPerson, 'personAmount');
           setActivityData({
             loaded: true,
-            structure: priceStructure,
+            structure,
             available,
           });
         }
@@ -163,10 +168,10 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
     }
   }, [service]);
 
-  if (modalState === 'confirm' && reservationTime && service && duration && durationList) return <Confirm foundation="persPrice" changeState={changeState} service={service} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />;
+  if (modalState === 'confirm' && reservationTime && service && duration && durationList) return <Confirm foundation={foundation} changeState={changeState} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />;
 
   return (
-    <div style={{ padding: '10px' }}>
+    <Fragment>
       <TopButton action={() => changeState('info')} />
 
       {/* {service && confirmOpen && reservationTime && duration && durationList && <ConfirmReservation foundation="persPrice" changeState={changeState} service={service} title={service.serviceName?.[0] || 'nicht angegeben'} date={fields.calendar[0]} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={reservationTime} />} */}
@@ -207,8 +212,6 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
       )}
       {activityData.loaded && !activityData.available && <p class="orange">Die Unternehmung wurde noch nicht komplett eingerichtet</p>}
 
-      {console.log({ openings, available: activityData.available, isOpen, serviceType: service?.serviceType, duration, durationList })}
-
       {isOpen && activityData.available && service?.serviceType && duration && durationList ? (
         <Slots
           duration={parseInt(duration, 10)}
@@ -227,7 +230,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
           <Item type="grey" icon={<Info />} label={`Nicht verfügbar (${fields.calendar})`} text="Bitte wähle einen geöffneten Tag aus" />
         )
       )}
-    </div>
+    </Fragment>
   );
 };
 

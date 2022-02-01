@@ -215,7 +215,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
           const { type } = question.info;
           const amountOfFields = field?.answers?.[getField]?.amountOfFields ? field?.answers?.[getField]?.amountOfFields?.split(',') : ['1'];
           const { values, onDays } = field?.answers?.[getField] || { values: undefined, onDays: undefined };
-          const exceptions = (type === 'onOpenings' && openings && getField > -1) || (type === 'onService' && service?.serviceName?.[0]) || (type === 'simple' && answer.inputType === 'dayPicker');
+          const exceptions = (type === 'onOpenings' && openings && getField > -1) || (type === 'onService' && service?.serviceName?.[0]) || (type === 'simple' && answer.inputType === 'dayPicker' && getField > -1);
 
           return (
             <Fragment key={answer.name}>
@@ -226,7 +226,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
               )}
 
               {getField > -1 && type === 'onOpenings' && !openings && <p class="red">Konfigurieren Sie zuerst Ihre Öffnungszeiten</p>}
-              {getField > -1 && (!['simple', 'onOpenings'].includes(type) || exceptions) && (
+              {((getField > -1 && !['simple', 'onOpenings'].includes(type)) || exceptions) && (
               <Fragment>
                 <p class="grey">{answer.info}</p>
                 {amountOfFields.map((amountString: string, amountIndex: number) => (

@@ -42,6 +42,7 @@ const AppRoutes: FunctionalComponent = () => {
       <Route path="/activity/:categoryID" component={ActivityList} />
       <Route path="/profile/" component={Profile} updateUser={updateUser} />
       <Route path="/register/" component={Register} updateUser={updateUser} />
+      <Route path="/register/:company" component={Register} updateUser={updateUser} />
       <Route path="/login/" component={SignIn} updateUser={updateUser} />
       <Route path="/logout" component={SignIn} updateUser={updateUser} logout="logout" />
       <Route path="/activity/:categoryID/:activityID" user={user} component={Details} />
