@@ -1,6 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Clock, Calendar } from 'react-feather';
+import { Calendar, Clock } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
 import FormButton from '../../../components/form/basicButton';
@@ -27,7 +28,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
       <TextHeader
         icon={<Clock color="#63d2ff" />}
         title="Öffnungszeiten"
-        text="Gebe die Öffnungszeiten an, damit die Nutzer wissen, wann ihr geöffnet habt"
+        text="Bitte legen sie fest, an welchen Tagen und Uhrzeiten sie geöffnet haben."
       />
     );
   }
@@ -74,7 +75,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
 
       await fireDocument(`activities/${data.title.form}`, openingFields, 'update');
 
-      route(`/company/dashboard/${data.title.form}`);
+      route(`/company/specific/${data.title.form}`);
     }
   };
 
@@ -83,23 +84,20 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
       <TextHeader
         icon={<Clock color="#63d2ff" />}
         title="Öffnungszeiten"
-        text="Gebe die Öffnungszeiten an, damit die Nutzer wissen, wann ihr geöffnet habt"
+        text="Bitte legen sie fest, an welchen Tagen und Uhrzeiten sie geöffnet haben."
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
         <form>
           <section class="group form">
-            <h3>An welchen Tagen ist geöffnet?</h3>
+            <h3>An welchen Tagen haben sie geöffnet?</h3>
 
             {dayNames.map((day, index) => (
               <Chip label={day} type={fields.openings?.[index] ? 'active' : 'inactive'} action={() => changeOpening(fields.openings?.[index] ? false : '-', index.toString())} />
             ))}
 
-            <p class="grey">
-              Markiere alle geöffneten Tage Orange. Wenn verschiedenen Tage unterschiedliche Öffnungszeiten haben,
-              setze den Haken für &quot;abweichende Zeiten&quot; und gebe dann die entsprechenden (von / bis) Zeiten an.
-            </p>
+            <p class="grey">Markiere alle geöffneten Tage in Orange.</p>
           </section>
 
           <section class="group form">
@@ -149,6 +147,8 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
             )}
 
           </section>
+
+          <p class="orange">FEIERTAGE API HINZUFÜGEN</p>
 
           <FormButton action={validateForm} label="Speichern" />
 

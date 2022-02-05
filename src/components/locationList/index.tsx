@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { MapPin, Navigation } from 'react-feather';
+
 import Item from '../item';
 
 interface LocationProps {

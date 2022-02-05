@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
+
 import FormButton from '../form/basicButton';
 
 interface MessageButtonProps {

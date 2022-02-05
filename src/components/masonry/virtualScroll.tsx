@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+
 import MasonryItem from './masonryItem';
 import style from './style.module.css';
 

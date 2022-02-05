@@ -1,24 +1,22 @@
 /* eslint-disable no-nested-ternary */
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { DollarSign, Dribbble, Home, Users } from 'react-feather';
 import { route } from 'preact-router';
-import BackButton from '../../../components/backButton';
-import QuestForm from '../../../components/form/questForm';
+import { DollarSign, Dribbble, Home, Users } from 'react-feather';
 
+import BackButton from '../../../components/backButton';
+import FormButton from '../../../components/form/basicButton';
+import QuestForm from '../../../components/form/questForm';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import Modal from '../../../container/modal';
 import { fireArray, fireDocument, getFireCollection } from '../../../data/fire';
-
 import useCompany from '../../../hooks/useCompany';
 import { Activity } from '../../../interfaces/activity';
 import { AnsDB, ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
-import StructureQuestions from './structureQuestions';
-import EditPrices from './prices';
-import Item from '../../../components/item';
-import TopButton from '../../../components/topButton';
 import ChangeStructure from './changeStructure';
-import FormButton from '../../../components/form/basicButton';
+import EditPrices from './prices';
+import StructureQuestions from './structureQuestions';
 
 interface ActivityProp {
     activityID: string;
@@ -33,7 +31,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
       <TextHeader
         icon={<DollarSign color="#fea00a" />}
         title="Preise konfigurieren"
-        text="Definiere die Preislogiken anhand der angelegten Leistungsgruppen."
+        text="Bitte definiere die Preis-Logik und passe die entsprechenden Preise an."
       />
     );
   }
@@ -154,12 +152,17 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
   const navigateToServices = () => route(`/company/services/${activityID}`);
 
+  const changeType = (newType?: 'belongs' | 'prices') => {
+    if (newType) return setType(newType);
+    return closeModal();
+  };
+
   return (
     <Fragment>
       <TextHeader
         icon={<DollarSign color="#fea00a" />}
         title="Preise konfigurieren"
-        text="Definiere die Preislogiken anhand der angelegten Leistungsgruppen."
+        text="Bitte definiere die Preis-Logik und passe die entsprechenden Preise an."
       />
 
       <BackButton url={`/company/dashboard/${activityID}`} />
@@ -174,9 +177,10 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
         )}
       </section>
 
+      <FormButton action={() => route(`/company/availabilities/${data.title.form}`)} label="Mit den Verfügbarkeiten fortfahren" />
+
       {service !== false && (
-        <Modal title="" close={() => closeModal()} type="large">
-          {service?.structureID && type !== 'structure' && <TopButton title={type === 'belongs' ? 'Preise' : 'Vorlagen'} action={() => setType(type === 'belongs' ? 'prices' : 'belongs')} />}
+        <Modal title={`(${service?.serviceName})`} close={() => closeModal()} type="large">
 
           {type === 'belongs' && service?.serviceName && (
             <ChangeStructure activityID={activityID} serviceID={service?.serviceName} select={selectPriceStructure} />
@@ -194,7 +198,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
           {type === 'prices' && service && service.id && service.structureID && (
 
-          <EditPrices structureID={service.structureID} serviceID={service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} />
+          <EditPrices structureID={service.structureID} changeType={changeType} serviceID={service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} />
           )}
         </Modal>
       )}

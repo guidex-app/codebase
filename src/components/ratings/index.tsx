@@ -1,10 +1,12 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { PlusCircle, ToggleLeft } from 'react-feather';
+import { Edit, ToggleLeft } from 'react-feather';
+
 import Modal from '../../container/modal';
 import { getFireCollection, voteItem } from '../../data/fire';
 import { RatingComment } from '../../interfaces/rating';
 import { User } from '../../interfaces/user';
+import Chip from '../chip';
 import Item from '../item';
 import AddRating from './add';
 import VisuellOverview from './overview';
@@ -49,8 +51,20 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
     <div style={{ padding: '10px', backgroundColor: 'rgba(255,255,255,0.03', borderRadius: '20px', marginBottom: '20px' }}>
 
       <Item icon={<ToggleLeft />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="grey" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
-      {segment === 'rating' && <VisuellOverview rating={rating} />}
-      <Item icon={<PlusCircle />} type="grey" label={segment === 'rating' ? 'Jetzt bewerten' : 'Neuer Tipp'} text={`Lege ein${segment === 'rating' ? ' Tipp' : 'e Bewertung'} an`} action={toggleRating} />
+      {segment === 'rating' && (
+        <Fragment>
+          <VisuellOverview rating={rating} />
+          <Chip small type="active" label="1 ★" action={toggleRating} />
+          <Chip small type="active" label="2 ★" action={toggleRating} />
+          <Chip small type="active" label="3 ★" action={toggleRating} />
+          <Chip small type="active" label="4 ★" action={toggleRating} />
+          <Chip small type="active" label="5 ★" action={toggleRating} />
+        </Fragment>
+      )}
+
+      <Item type="info" icon={<Edit />} label={`Verfasse eine${segment === 'rating' ? ' neue Bewertung' : 'n neuen Tipp'}`} text="Hast du eine Bericht oder eine Erklärung zu deiner Bewertung" action={toggleRating} />
+
+      {/* <Item icon={<PlusCircle />} type="grey" label={segment === 'rating' ? 'Jetzt bewerten' : 'Neuer Tipp'} text={`Lege ein${segment === 'rating' ? ' Tipp' : 'e Bewertung'} an`} action={toggleRating} /> */}
 
       {list?.map((rate: RatingComment) => (
         <UserCommentItem rate={rate} vote={vote} />

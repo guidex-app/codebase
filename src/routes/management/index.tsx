@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
-import Router, { route, Route } from 'preact-router';
 import { useState } from 'preact/hooks';
+import Router, { Route, route } from 'preact-router';
+
 import { Activity } from '../../interfaces/activity';
 import { User } from '../../interfaces/user';
 import NotFoundPage from '../../routes/notfound';
@@ -12,11 +13,10 @@ import Documents from './documents';
 import Images from './images';
 import List from './list';
 import Openings from './openings';
-
+import Prices from './prices';
 import Reservations from './reservations';
 import Services from './services';
 import Specific from './specific';
-import Prices from './prices';
 
 interface ManagementProps {
   user: User;

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
+
 import { getFireDocument } from '../data/fire';
 import { Activity } from '../interfaces/activity';
 

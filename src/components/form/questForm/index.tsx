@@ -2,9 +2,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { Questions, ServiceField, ServiceInfo, AnsInfo, AnsDB } from '../../../interfaces/company';
+import { AnsDB, AnsInfo, Questions, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import Chip from '../../chip';
-
 import TopButton from '../../topButton';
 import AddRemove from '../addRemove';
 import FormButton from '../basicButton';
@@ -117,7 +116,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
   useEffect(() => { validateField(); }, [field]); // new value validation
   useEffect(() => { getQuestion(); }, [serviceFields]); // init and new questions
 
-  if (showOverview) return <Overview fields={serviceFields?.map((x) => x.name)} close={toggleOverview} questions={questions} select={getQuestion} />;
+  if (showOverview) return <Overview fields={serviceFields?.map((x) => x.name)} showBackButton={!!question} close={toggleOverview} questions={questions} select={getQuestion} />;
   if (!question) return <div />;
 
   /** togglen einer checkbox */
@@ -233,7 +232,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                   <Fragment key={amountString}>
                     {answer.inputType === 'image' ? (
                       <ImgInput
-                        label={`Bild für "${amountString}"`}
+                        label={`Anzeigebild für "${service?.serviceName}"`}
                         fileName={amountString.replace(' ', '_').toLowerCase()}
                         name={`${answer.name}+${amountIndex}`}
                         folderPath={folderPath}

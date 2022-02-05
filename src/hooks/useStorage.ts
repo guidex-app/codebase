@@ -1,6 +1,7 @@
 import { getAuth } from '@firebase/auth';
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { useEffect, useState } from 'preact/hooks';
+
 import fireConfig from '../data/fireConfig';
 
 const useStorage = (): { state: 'loading' | 'error' | 'waiting', progress: number, setUpload: (img: { file: File | Blob, fileName: string, folderPath: string }) => void } => {
@@ -30,7 +31,7 @@ const useStorage = (): { state: 'loading' | 'error' | 'waiting', progress: numbe
         const progr = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setProgress(progr);
         console.log(`Upload is ${progress}% done`);
-      }, (error) => {
+      }, () => {
         setState('error');
         setProgress(0);
       }, () => {

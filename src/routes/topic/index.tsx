@@ -1,4 +1,5 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
+
 import BackButton from '../../components/backButton';
 import TextHeader from '../../components/iconTextHeader';
 import useCompany from '../../hooks/useCompany';

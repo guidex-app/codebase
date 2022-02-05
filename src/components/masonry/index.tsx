@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import Loading from './loading';
 import VirtualScroll from './virtualScroll';
 

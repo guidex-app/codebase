@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router/match';
+
 import { Activity } from '../../interfaces/activity';
 import style from './style.module.css';
 

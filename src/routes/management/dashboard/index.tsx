@@ -1,7 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { Link, route } from 'preact-router';
 import { useState } from 'preact/hooks';
+import { Link, route } from 'preact-router';
 import { Home } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
 import TextHeader from '../../../components/iconTextHeader';
@@ -25,7 +26,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
       <TextHeader
         icon={<Home color="#ff5613" />}
         title=""
-        text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie Ihr eingetragene Unternehmung verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
+        text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie ihre angegebenen Informationen verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
       />
     );
   }
@@ -36,7 +37,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
       <TextHeader
         icon={<Home color="#ff5613" />}
         title={`${data.title.name} (${data.category.name})`}
-        text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie Ihr eingetragene Unternehmung verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
+        text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie ihre angegebenen Informationen verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
       />
       <main>
         <BackButton url="/company" title="Liste" />

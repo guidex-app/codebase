@@ -1,6 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 import { Home, Key, MapPin, Navigation, PhoneCall, Type } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
@@ -25,9 +26,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
       <TextHeader
         icon={<Home color="#ff5613" />}
         title="Kontakt"
-        text="Im folgenden geben Sie bitte Ihre Kontaktdaten an,
-        damit Nutzer oder wir wissen wo Sie/wir uns bei Euch melden können.
-        Außerdem benötigen wir Eure Adresse, so dass die Kunden auch zu Euch finden."
+        text="Geben Sie den Nutzern kontaktinfos"
       />
     );
   }
@@ -43,6 +42,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
     customerContactPhone: { value: data?.customerContact?.phone, type: 'phone', required: false },
     customerContactWebsite: { value: data?.customerContact?.website, type: 'website', required: false },
 
+    hasInvoiceAddress: { value: !data?.hasInvoiceAddress || true, type: 'boolean', required: false },
     street: { value: data?.address?.street || '', type: 'string', required: true },
     houseNumber: { value: data?.address?.houseNumber || '', type: 'number', required: false },
     place: { value: data?.address?.place || '', type: 'string', required: true },
@@ -51,7 +51,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
 
   const { fields, formState, changeField, isValid } = useForm(formInit);
 
-  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && route('/company');
+  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && route(`/company/openings/${activityID}`);
 
   const validateForm = async () => {
     if (isValid()) {
@@ -68,6 +68,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
             phone: fields.customerContactPhone || '',
           },
         }),
+        hasInvoiceAddress: fields.hasInvoiceAddress,
         address: {
           street: fields?.street,
           houseNumber: fields?.houseNumber,
@@ -89,19 +90,92 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
       <TextHeader
         icon={<Home color="#ff5613" />}
         title="Kontakt"
-        text="Im folgenden geben Sie bitte Ihre Kontaktdaten an,
-        damit Nutzer oder wir wissen wo Sie/wir uns bei Euch melden können.
-        Außerdem benötigen wir Eure Adresse, so dass die Kunden auch zu Euch finden."
+        text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
         <form>
           <section class="group form">
-            <h3>Ansprechpartner für Guidex</h3>
+            <h3>Wo befindet sich Ihre Unternehmung?</h3>
 
             <CheckInput
-              label="Wir haben einen Ansprechpartner (für Guidex)"
+              label="Die angegebene Adresse ist die gleiche wie die Rechnungsadresse"
+              name="hasInvoiceAddress"
+              value={fields.hasInvoiceAddress}
+              change={changeField}
+            />
+
+            <BasicInput
+              icon={<MapPin />}
+              type="text"
+              label="Straße"
+              name="street"
+              value={fields.street}
+              placeholder="Straße bitte angeben"
+              error={formState.street}
+            //   errorMessage="Bitte gebe eine Straße an. Hausnummer im unteren Feld angeben."
+              required
+              change={changeField}
+            />
+
+            <CheckInput
+              label="Wir haben eine genaue Hausnummer"
+              name="hasHouseNumber"
+              value={fields.hasHouseNumber}
+              change={changeField}
+            />
+
+            <BasicInput
+              icon={<Key />}
+              type="number"
+              label="Haus Nr."
+              name="houseNumber"
+              disabled={fields.emptyHouseNumber}
+              value={!fields.emptyHouseNumber ? fields.houseNumber : ''}
+              placeholder="Ihre Hausnummer"
+              error={!fields.hasHouseNumber && 'Die Hausnummer ist deaktiviert' ? 'valid' : 'invalid'}
+            //   errorMessage="Bitte geben Sie eine Hausnummer an"
+              change={changeField}
+              required={fields.hasHouseNumber}
+            />
+
+            <BasicInput
+              icon={<Navigation />}
+              type="text"
+              label="Ort/Stadt"
+              name="place"
+              value={fields.place}
+              placeholder="z.B. Hamburg"
+              error={formState.place}
+            //   errorMessage="Bitte geben Sie einen Ort an"
+              required
+              change={changeField}
+            />
+
+            <BasicInput
+              icon={<Navigation />}
+              type="number"
+              label="Postleitzahl"
+              name="plz"
+              value={fields.plz}
+              placeholder="Ihre Postleitzahl"
+              error={formState.plz}
+            //   errorMessage="Bitte geben Sie eine Postleitzahl an"
+              required
+              change={changeField}
+            />
+
+            <p class="orange">Checkbox mit &quot;Angegebene Address ist gleich rechnungsadresse&quot; und zusätzlich brauchen wir die steuernummer</p>
+            <p class="grey">Bitte achten sie auf eine genaue Angabe ihrer Adresse. Denn diese wird für den Ausgabeort der Unternehmung verwendet.</p>
+
+          </section>
+
+          <section class="group form">
+            <h3>Ansprechpartner für Guidex vor Ort</h3>
+
+            <CheckInput
+              label="Wir haben einen extra Ansprechpartner vor Ort"
               name="hasGuidexContact"
               value={fields.hasGuidexContact}
               change={changeField}
@@ -137,7 +211,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
             </Fragment>
             )}
 
-            <p class="grey">Der Ansprechpartner wird für interne Fragen benötigt und wird nicht veröffentlicht.</p>
+            <p class="grey">*Der Ansprechpartner wird nur für interne Fragen benötigt und wird nicht veröffentlicht.</p>
 
           </section>
 
@@ -182,74 +256,6 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
             )}
 
             <p class="grey">Wie können Nutzer Sie finden oder fragen bezüglich Angebote stellen. Gebe dafür eine Website und Telefonnummer an.</p>
-
-          </section>
-
-          <section class="group form">
-            <h3>Wo befindet sich Ihre Aktivität?</h3>
-
-            <CheckInput
-              label="Wir haben eine genaue Hausnummer"
-              name="hasHouseNumber"
-              value={fields.hasHouseNumber}
-              change={changeField}
-            />
-
-            <BasicInput
-              icon={<MapPin />}
-              type="text"
-              label="Straße:"
-              name="street"
-              value={fields.street}
-              placeholder="Straße bitte angeben"
-              error={formState.street}
-            //   errorMessage="Bitte gebe eine Straße an. Hausnummer im unteren Feld angeben."
-              required
-              change={changeField}
-            />
-
-            <BasicInput
-              icon={<Key />}
-              type="number"
-              label="Haus Nr.:"
-              name="houseNumber"
-              disabled={fields.emptyHouseNumber}
-              value={!fields.emptyHouseNumber ? fields.houseNumber : ''}
-              placeholder="Ihre Hausnummer"
-              error={!fields.hasHouseNumber && 'Die Hausnummer ist deaktiviert' ? 'valid' : 'invalid'}
-            //   errorMessage="Bitte geben Sie eine Hausnummer an"
-              change={changeField}
-              required={fields.hasHouseNumber}
-            />
-
-            <BasicInput
-              icon={<Navigation />}
-              type="text"
-              label="Stadt:"
-              name="place"
-              value={fields.place}
-              placeholder="z.B. Hamburg"
-              error={formState.place}
-            //   errorMessage="Bitte geben Sie einen Ort an"
-              required
-              change={changeField}
-            />
-
-            <BasicInput
-              icon={<Navigation />}
-              type="number"
-              label="Plz.:"
-              name="plz"
-              value={fields.plz}
-              placeholder="Ihre Postleitzahl"
-              error={formState.plz}
-            //   errorMessage="Bitte geben Sie eine Postleitzahl an"
-              required
-              change={changeField}
-            />
-
-            <p class="orange">Checkbox mit &quot;Angegebene Address ist gleich rechnungsadresse&quot; und zusätzlich brauchen wir die steuernummer</p>
-            <p class="grey">Gebe hier eine Adresse an. Anhand dieser Adresse wird Ihr Ausgabeort bestimmt und somit der Umkreis in dem Nutzer Sie finden können.</p>
 
           </section>
 

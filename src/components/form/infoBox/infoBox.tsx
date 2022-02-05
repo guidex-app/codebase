@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { MessageCircle } from 'react-feather';
+
 import style from './style.module.css';
 
 interface InfoBoxProps {

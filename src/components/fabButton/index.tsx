@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
+
 import style from './style.module.css';
 
 interface FabButtonProps {

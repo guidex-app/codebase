@@ -1,11 +1,13 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
-import { Image } from 'react-feather';
+import { route } from 'preact-router';
+import { Image, Info } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import ImgInput from '../../../components/form/imgInput';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import useCompany from '../../../hooks/useCompany';
@@ -26,7 +28,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
       <TextHeader
         icon={<Image color="#ff375e" />}
         title="Bilder"
-        text="Im folgenden geben Sie bitte Ihre Kontaktdaten an, damit Nutzer oder wir wissen wo Sie/wir uns bei Euch melden können. Außerdem benötigen wir Eure Adresse, so dass die Kunden auch zu Euch finden."
+        text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
       />
     );
   }
@@ -43,7 +45,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
   const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
   const [finished, setFinished] = useState<string[]>([]);
 
-  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`company/dashboard/${data.title.form}`);
+  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`/company/documents/${data.title.form}`);
 
   const uploadFinished = (name: string) => {
     const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false));
@@ -73,16 +75,14 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
       <TextHeader
         icon={<Image color="#ff375e" />}
         title="Bilder"
-        text="Im folgenden geben Sie bitte Ihre Kontaktdaten an, damit Nutzer oder wir wissen wo Sie/wir uns bei Euch melden können. Außerdem benötigen wir Eure Adresse, so dass die Kunden auch zu Euch finden."
+        text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
         <form>
           <section class="group form">
-            <h3>Einrichtung und Zuweisung</h3>
-
-            <p>(Die Bilder sollten mind. den maßen 1200x900px entsprechen)</p>
+            <Item type="info" icon={<Info color="orange" />} label="Die Bilder sollten mind. den Maßen 1200x900px entsprechen" />
             <ImgInput
               fileName="image1"
               label="Bild 1 auswählen (JPG/JPEG)."
@@ -132,7 +132,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
             />
           </section>
 
-          <FormButton action={validateForm} label="Speichern" />
+          <FormButton action={validateForm} label="Speichern und weiter" />
 
         </form>
 

@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useStorage from '../../../hooks/useStorage';
 import Item from '../../item';
-
 import style from './style.module.css';
 
 interface ImgInputProps {

@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
+
 import style from './style.module.css';
 
 interface TextHeaderProps {
@@ -12,7 +13,7 @@ const TextHeader: FunctionalComponent<TextHeaderProps> = ({ title, text, icon }:
     {icon && icon}
     <div>
       <h1>{title}&nbsp;</h1>
-      <p><strong>{text}</strong></p>
+      <p>{text}</p>
     </div>
   </header>
 );

@@ -12,6 +12,11 @@
 
     will-change: background;
     transition: background 0.3s ease-in-out;
+
+    -ms-user-select: None;
+    -moz-user-select: None;
+    -webkit-user-select: None;
+    user-select: None;
 }
 
 .list {

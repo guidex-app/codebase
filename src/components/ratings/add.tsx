@@ -1,6 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Star } from 'react-feather';
+
 import { getFireDocument, setNewRating } from '../../data/fire';
 import { User } from '../../interfaces/user';
 import FormButton from '../form/basicButton';

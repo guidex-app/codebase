@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import { Calendar, Users, Clock, Settings, Star, UserPlus } from 'react-feather';
+import { Calendar, Clock, Settings, Star, UserPlus, Users } from 'react-feather';
+
 import { Questions } from '../../../interfaces/company';
 
 const StructureQuestions: Questions[] = [

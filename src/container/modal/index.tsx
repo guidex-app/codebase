@@ -1,5 +1,6 @@
 import { ComponentChildren, Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
+
 import Header from '../../components/header';
 import Overlay from '../../components/overlay';
 import style from './style.module.css';

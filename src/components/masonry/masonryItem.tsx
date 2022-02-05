@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { h } from 'preact';
 import { Link } from 'preact-router';
+
 import style from './style.module.css';
 
 // interface MasonryItemProps {

@@ -1,8 +1,9 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import BasicInput from '../../../components/form/basicInput';
 import { fireDocument, getFireCollection } from '../../../data/fire';
-import { generateDateString, getSimpleDateString } from '../../../helper/date';
+import { getSimpleDateString } from '../../../helper/date';
 import useTimeLine from '../../../hooks/useTimeLine';
 import useWeekList from '../../../hooks/useWeekList';
 import style from './style.module.css';

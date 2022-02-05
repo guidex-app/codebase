@@ -1,9 +1,10 @@
 import { FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Clock, Image, Columns, DollarSign, Home, Info } from 'react-feather';
-import style from './style.module.css';
+import { Clock, Columns, DollarSign, Home, Image, Info } from 'react-feather';
+
 import Item from '../../../../components/item';
 import { Activity } from '../../../../interfaces/activity';
+import style from './style.module.css';
 
 interface CheckProp {
     activity: Activity;

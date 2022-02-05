@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
+
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
 import PickInput from '../../components/form/pickInput';

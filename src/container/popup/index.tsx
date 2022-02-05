@@ -1,5 +1,6 @@
 import { ComponentChildren, Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
+
 import style from './style.module.css';
 
 interface PopupProps {

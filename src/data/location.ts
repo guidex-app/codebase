@@ -1,4 +1,5 @@
 import { geohashForLocation } from 'geofire-common';
+
 import { Location } from '../interfaces/user';
 
 const formatPos = async (lat: number, lng: number): Promise<Location> => {

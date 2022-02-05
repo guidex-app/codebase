@@ -1,9 +1,9 @@
-import { getAuth } from '@firebase/auth';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Globe, Grid, Home, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
-import fireConfig from '../../data/fireConfig';
+
+import { getUser } from '../../data/auth';
 import Item from '../item';
 import Overlay from '../overlay';
 import style from './style.module.css';
@@ -28,55 +28,47 @@ const Menu: FunctionalComponent = () => {
     { title: 'Verwaltung', link: '/company', icon: <Paperclip /> },
   ];
 
-  const checkUserState = () => {
-    const auth = getAuth(fireConfig);
-    console.log('check userState', auth);
-    const { displayName, email } = auth.currentUser || {};
-    console.log(displayName, email);
-    return setUser(displayName && email ? { displayName, email } : undefined);
+  const checkUserState = async (): Promise<void> => {
+    const { displayName, email } = await getUser();
+    container.current = typeof window !== 'undefined' && document?.getElementById('modals');
+    if (displayName && email) setUser(displayName && email ? { displayName, email } : undefined);
   };
 
-  useEffect(() => {
-    if (!user) checkUserState();
-  }, [show]);
+  useEffect(() => { if (!user) checkUserState(); }, [show]);
 
-  useEffect(() => {
-    container.current = typeof window !== 'undefined' && document?.getElementById('modals');
-  }, []);
-
-  const close = () => setShow(false);
+  const toggleModal = () => setShow(!show);
 
   return (
     <Fragment>
-      <button class={style.button} onClick={() => setShow(true)} type="button" aria-label="Menü">
+      <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
         <Grid color="#FFFFFF" size="24" />
       </button>
 
       {show && container.current && createPortal(
         (
           <Fragment>
-            <Overlay action={close} />
+            <Overlay action={toggleModal} />
             <aside class={style.menu}>
               <h1 class={style.title}>Guidex</h1>
               {user && <small>Willkommen {user?.displayName?.split(' ')?.[0] || ''}</small>}
               <nav>
                 {routes.map((item: { title: string; link: string; icon: any }) => (
-                  <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={close} />
+                  <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                 ))}
 
                 {user ? (
                   <Fragment>
                     <h4>Account</h4>
                     {userRoutes.map((item: { title: string; link: string; icon: any }) => (
-                      <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={close} />
+                      <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                     ))}
                     {user.email.endsWith('@guidex.app') && (
-                    <Item label="Admin" icon={<Lock />} link="/admin" action={close} />
+                    <Item label="Admin" icon={<Lock />} link="/admin" action={toggleModal} />
                     )}
-                    <Item label="Ausloggen" icon={<LogOut />} link="/logout" action={close} />
+                    <Item label="Ausloggen" icon={<LogOut />} link="/logout" action={toggleModal} />
                   </Fragment>
                 ) : (
-                  <Item label="Einloggen" icon={<LogIn />} link="/login/" action={close} />
+                  <Item label="Einloggen" icon={<LogIn />} link="/login/" action={toggleModal} />
                 )}
 
               </nav>

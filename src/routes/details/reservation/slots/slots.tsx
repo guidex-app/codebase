@@ -1,33 +1,35 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import useTimeLine, { calculateTime } from '../../../hooks/useTimeLine';
-import { Available, Reserved, CapacityList } from '../../../interfaces/reservation';
+
+import useTimeLine, { calculateTime } from '../../../../hooks/useTimeLine';
+import { Available, Capacity, Reserved } from '../../../../interfaces/reservation';
 import style from './style.module.css';
 
 interface SlotsProps {
   available: Available;
-  reserved: Reserved[];
   personAmount: number;
   amountRooms: number;
   serviceType: 'entry' | 'section' | 'object';
   durationList: { list: any; isRound: boolean };
   duration: number;
   openings: (string | false)[];
-  capacityList: CapacityList[];
+
+  capacitys?: Capacity[];
+  reservations?: Reserved[];
   chooseTime: (time: string) => void;
 }
 
-const Slots: FunctionalComponent<SlotsProps> = ({ capacityList, available, serviceType, amountRooms, duration, durationList, reserved, personAmount, openings, chooseTime }: SlotsProps) => {
+const Slots: FunctionalComponent<SlotsProps> = ({ capacitys, available, serviceType, amountRooms, duration, durationList, reservations, personAmount, openings, chooseTime }: SlotsProps) => {
   const timeLine = useTimeLine(30, openings);
 
-  const getDefaultCapacity = (time: string): number => capacityList.find((x) => x.time === time)?.value || available.defaultCapacity;
+  const getDefaultCapacity = (time: string): number => capacitys?.find((x) => x.time === time)?.value || available.defaultCapacity;
 
   /**
    * Gibt die noch freien Plätze der aktuellen Zeit und capacity als Zahl zurück.
    * Die defaultCapacity - die schon reservierten plätze rechnen.
    */
   const getFreePlaces = (time: string, capacity: number): number => {
-    const reservedSlots: number = reserved.find((x) => x.time === time)?.amountReserved || 0;
-    return capacity - reservedSlots;
+    const reservationsSlots: number = reservations?.find((x) => x.time === time)?.amountReserved || 0;
+    return capacity - reservationsSlots;
   };
 
   /**
@@ -89,11 +91,11 @@ const Slots: FunctionalComponent<SlotsProps> = ({ capacityList, available, servi
         return (
           <div role="button" tabIndex={0} onClick={() => userInputCapacity > 0 && chooseTime(time)} key={time}>
             <p><strong>{time}</strong>&nbsp;
-              {availCapacity > 5 && userInputCapacity >= 0 && <span class="green">Noch ausreichend {serviceType !== 'entry' ? 'Räume' : 'Plätze'} verfügbar</span>}
-              {((availCapacity >= 1 && userInputCapacity < 0) || availCapacity === -100) && <span class="orange">Für Deine Auswahl nicht verfügbar</span>}
+              {availCapacity > 5 && userInputCapacity >= 0 && <span class="green">Es sind noch ausreichend {serviceType !== 'entry' ? 'Räume' : 'Plätze'} verfügbar</span>}
+              {((availCapacity >= 1 && userInputCapacity < 0) || availCapacity === -100) && <span class="orange">Für Deine Auswahl nicht mehr verfügbar</span>}
               {availCapacity <= 5 && userInputCapacity >= 0 && (
               <span class="red">
-                Nur noch {`${availCapacity} ${serviceType !== 'entry' ? 'Räume' : 'Plätze'}`} verfügbar
+                Es sind nur noch {`${availCapacity} ${serviceType !== 'entry' ? 'Räume' : 'Plätze'}`} verfügbar
               </span>
               )}
 
@@ -103,8 +105,6 @@ const Slots: FunctionalComponent<SlotsProps> = ({ capacityList, available, servi
                 <span class="grey"><small>Diese Uhrzeit ist leider nicht mehr Verfügbar</small></span>
               </Fragment>
               )}
-              &nbsp;
-              <button type="button">Auswählen</button>
             </p>
           </div>
         );

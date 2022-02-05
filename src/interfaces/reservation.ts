@@ -2,12 +2,14 @@
  * Preise mit ihren Bedingungen, zur Ausgabe
  */
 export interface PriceTerms {
-    priceId: string;
-    persDuration: { [key:string]: number };
-    serviceName: string[];
-    dayGroup?: string;
-    serviceType: any; // serviceType: 'entry'|'roomGame'|'object';
-    countRounds?: number;
+    id: string;
+    duration: number;
+    persons: number;
+
+    value: number;
+
+    day?: string;
+    rounds?: number;
     discount?: string;
     age?: string;
     time?: string;
@@ -16,7 +18,7 @@ export interface PriceTerms {
 /**
    * Preise mit ihren Bedingungen, zur Ausgabe
    */
-export interface CapacityList {
+export interface Capacity {
     availableID: string;
     time: string;
     date: string;
@@ -24,7 +26,7 @@ export interface CapacityList {
   }
 
 export interface IncludedPriceSpecs {
-    dayGroups: string[];
+    days: string[];
     ages: string[];
     discounts: string[];
     times: string[];

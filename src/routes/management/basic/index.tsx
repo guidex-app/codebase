@@ -1,7 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { route } from 'preact-router';
 import { useEffect, useState } from 'preact/hooks';
-import { Book, CheckCircle, Info, MousePointer } from 'react-feather';
+import { route } from 'preact-router';
+import { Book, CheckCircle, Info, Type } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
@@ -30,7 +31,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     return (
       <TextHeader
         icon={<Info color="#63e6e1" />}
-        title="Einrichtung"
+        title="Unternehmungs-Informationen"
         text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
         Der Name Ihrer Unternehmung ist ihr öffentliches Label"
       />
@@ -59,7 +60,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     }
   }, []);
 
-  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && route('/company');
+  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && fields.title && route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
 
   const validateForm = async () => {
     if (isValid()) {
@@ -74,7 +75,6 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
         ...((fields.description || activity.description) && { description: fields.description }),
       };
 
-      console.log(basic);
       await fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update');
 
       navigate();
@@ -98,23 +98,21 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     <Fragment>
       <TextHeader
         icon={<Info color="#63e6e1" />}
-        title="Einrichtung"
-        text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
-        Der Name Ihrer Unternehmung ist ihr öffentliches Label"
+        title={activityID === 'new' ? 'Unternehmung anlegen' : 'Unternehmungs-Informationen'}
+        text="Es ist Zeit sich unseren Nutzern vorzustellen."
       />
       <main class="small_size_holder">
         <BackButton url={activityID !== 'new' ? `/company/dashboard/${activityID}` : '/company'} />
 
         <form>
           <section class="group form">
-            <h3>Einrichtung und Zuweisung</h3>
             <BasicInput
-              icon={<CheckCircle />}
+              icon={<CheckCircle color="#fea00a" />}
               type="text"
-              label="Anzeigename:"
+              label="Name Ihrer Unternehmung"
               name="title"
               value={fields.title}
-              placeholder="Der Titel der Unternehmung"
+              placeholder="Wie lautet der Titel ihrer Unternehmung"
               error={formState.title}
               disabled={activityID !== 'new'}
             //   errorMessage="Bitte geben Sie einen Namen an"
@@ -124,9 +122,10 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
             />
 
             <SelectInput
-              label="Kategorie:"
+              label="Kategorie"
               name="category"
-              icon={<Book />}
+              placeholder="Ordnen Sie sich einer Kategorie zu"
+              icon={<Book color="#fea00a" />}
               value={fields.category}
               options={categoryList?.map((x) => x.title.name)}
               error={formState.category}
@@ -150,9 +149,9 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
           </section>
 
           <section class="group form">
-            <h3>Präsentation</h3>
 
             <ImgInput
+              label="Anzeigebild"
               fileName={fields.title}
               folderPath="activities"
               name="image"
@@ -167,21 +166,17 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
             <BasicInput
             //   icon={textOutline}
             // type="textarea"
-              icon={<MousePointer />}
-              label="Wer sind wir?"
+              icon={<Type />}
+              label="Was sollten Nutzer über sie wissen?"
               name="description"
               type="textarea"
               value={fields.description}
-              placeholder="Beschreibung und Alleinstellungsmerkmal der Unternehmung"
+              placeholder="Die Beschreibung gibt einen kurzen Überblick über die Unternehmung. Probieren sie eine kurze aber genaue Beschreibung aller wichtigen
+              Merkmale zu definieren."
               error={formState.description}
             // errorMessage="Bitte geben Sie eine Beschreibung an"
               change={changeField}
             />
-
-            <p class="grey">
-              Die Beschreibung gibt einen kurzen Überblick über die Unternehmung. Probieren sie eine kurze aber genaue Beschreibung aller wichtigen
-              Merkmale zu definieren.
-            </p>
 
           </section>
 

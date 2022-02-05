@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { Calendar, Clock, Coffee, DollarSign, Feather, Home, Sun, Thermometer, UserCheck, UserPlus } from 'react-feather';
+
 import { Filter } from '../interfaces/filter';
 
 const catFilter: Filter[][] = [[

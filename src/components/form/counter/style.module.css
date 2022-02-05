@@ -5,16 +5,19 @@
     margin-bottom: 15px;
 }
 
+.large {
+    width: 100%;
+    max-width: 100%;
+}
+
 .counter + .counter {
     margin-left: 15px;
 }
 
 .counter > div {
-    background-color: #2b303d;
     border-radius: 15px;
     overflow: hidden;
     display: flex;
-    border: 1px solid rgba(0, 210, 91, 0.5);
 }
 
 .counter input {
@@ -55,4 +58,21 @@
     border: none;
     cursor: pointer;
     font-weight: 700;
+}
+
+
+.small > div { background-color: #2b303d; }
+
+.large > div {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.large button {
+    width: 70px;
+    height: 70px;
+    border-radius: 25px;
+    background-color: orange;
+    color: white;
+    line-height: 70px;
 }

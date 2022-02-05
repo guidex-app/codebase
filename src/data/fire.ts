@@ -1,4 +1,5 @@
-import { getFirestore, collection, getDocs, query, limit, updateDoc, doc, setDoc, where, startAt, getDoc, runTransaction, increment, deleteDoc, arrayUnion, arrayRemove } from 'firebase/firestore/lite';
+import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, increment, limit, query, runTransaction, setDoc, startAt, updateDoc, where } from 'firebase/firestore/lite';
+
 import fireConfig from './fireConfig';
 
 const db = getFirestore(fireConfig);
@@ -44,7 +45,7 @@ export const getFireMultiCollection = async (items: { path:string, isDocument?: 
   })
 );
 
-export const fireDocument = async (path: string, fields: any, type: 'set' | 'update'): Promise<void> => {
+export const fireDocument = async (path: string, fields: any, type: 'set' | 'update' | 'merge'): Promise<void> => {
   const docRef = doc(db, path);
   try {
     if (type === 'set') setDoc(docRef, fields);

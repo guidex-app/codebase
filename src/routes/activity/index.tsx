@@ -1,6 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Feather, Info } from 'react-feather';
+
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
 import TextHeader from '../../components/iconTextHeader';

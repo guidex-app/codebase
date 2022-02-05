@@ -1,7 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
+
+import { Filter } from '../../interfaces/filter';
 import Chip from '../chip';
 import Item from '../item';
-import { Filter } from '../../interfaces/filter';
 
 interface FilterProps {
   filter: string[]

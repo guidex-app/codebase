@@ -1,4 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, updateProfile, UserCredential } from 'firebase/auth';
+
 import fireConfig from './fireConfig';
 
 export const loginUser = (email: string, password: string) => {
@@ -6,10 +7,13 @@ export const loginUser = (email: string, password: string) => {
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => userCredential.user)
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
       console.log(error.message);
     });
+};
+
+export const getUser = (): any => {
+  const auth = getAuth(fireConfig);
+  return auth.currentUser || {};
 };
 
 export const logoutUser = () => {
@@ -17,7 +21,7 @@ export const logoutUser = () => {
   signOut(auth).then(() => {
     // Sign-out successful.
 
-  }).catch((error) => {
+  }).catch(() => {
     // An error happened.
   });
 };

@@ -1,5 +1,6 @@
-import { useState, useReducer, useEffect } from 'preact/hooks';
-import { isPhone, isEmail, isPlz, isURL } from '../helper/formCheck';
+import { useEffect, useReducer, useState } from 'preact/hooks';
+
+import { isEmail, isPhone, isPlz, isURL } from '../helper/formCheck';
 import { FormInit, FormType } from '../interfaces/form';
 
 const useForm = (init: FormInit): {

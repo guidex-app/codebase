@@ -1,11 +1,11 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
+
 import AddRemove from '../../../components/form/addRemove';
 import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
 import ImgInput from '../../../components/form/imgInput';
 import SelectInput from '../../../components/form/selectInput';
-
 import { fireDocument } from '../../../data/fire';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useForm from '../../../hooks/useForm';

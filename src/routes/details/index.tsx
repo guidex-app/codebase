@@ -1,14 +1,15 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { MapPin, Star } from 'react-feather';
+
 import BackButton from '../../components/backButton';
-import TextHeader from '../../components/iconTextHeader';
-import Reservation from '../../components/reservation';
-import useCompany from '../../hooks/useCompany';
-import OpeningsList from '../../components/openingList/openings';
 import IconScrollList from '../../components/iconScrollList';
+import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
+import OpeningsList from '../../components/openingList/openings';
 import Rating from '../../components/ratings';
+import useCompany from '../../hooks/useCompany';
 import { User } from '../../interfaces/user';
+import Reservation from './reservation';
 
 interface DetailsProps {
     activityID: string;

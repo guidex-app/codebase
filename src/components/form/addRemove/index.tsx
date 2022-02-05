@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
+
 import Chip from '../../chip';
 
 interface AddRemoveProps {

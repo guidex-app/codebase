@@ -1,14 +1,15 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { Calendar, Clock, Type } from 'react-feather';
-import { ServiceInfo } from '../../interfaces/company';
-import { ShoppingCart, UserPreferences } from '../../interfaces/reservation';
-import FormButton from '../form/basicButton';
-import SelectInput from '../form/selectInput';
-import Item from '../item';
-import useShoppingCart from '../../hooks/useShoppingCart';
+
+import FormButton from '../../../components/form/basicButton';
+import SelectInput from '../../../components/form/selectInput';
+import Item from '../../../components/item';
+import TopButton from '../../../components/topButton';
+import useShoppingCart from '../../../hooks/useShoppingCart';
+import { ServiceInfo } from '../../../interfaces/company';
+import { ShoppingCart, UserPreferences } from '../../../interfaces/reservation';
 import style from './style.module.css';
-import TopButton from '../topButton';
 
 interface ConfirmProps {
     service: ServiceInfo;
@@ -26,7 +27,7 @@ interface ConfirmProps {
 
 const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
-  const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, activityID, service.id);
+  const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, `activities/${activityID}/services/${service.id}/prices`);
 
   /**
      * Reservierung Abgeschließen Button
@@ -95,10 +96,6 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, a
         ) : (
           <strong>Es wurde kein Preis gefunden</strong>
         )}
-
-        <small>
-          Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.
-        </small>
       </div>
 
       {priceSpecs?.ages && priceSpecs?.ages.length !== 0 && (
@@ -125,6 +122,10 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, a
       </section>
 
       {!!totalPrice && <FormButton label={`Reservierung abschließen (${totalPrice}€)`} action={() => changeState()} />}
+
+      <small class="grey">
+        Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.
+      </small>
     </Fragment>
   );
 };

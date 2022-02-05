@@ -1,12 +1,14 @@
 /* eslint-disable no-nested-ternary */
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { route } from 'preact-router';
 import { Archive, Dribbble, Home, PlusCircle, Users } from 'react-feather';
-import BackButton from '../../../components/backButton';
-import QuestForm from '../../../components/form/questForm';
 
-import Item from '../../../components/item';
+import BackButton from '../../../components/backButton';
+import FormButton from '../../../components/form/basicButton';
+import QuestForm from '../../../components/form/questForm';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import Modal from '../../../container/modal';
 import { fireDocument, getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
@@ -22,7 +24,7 @@ interface ActivityProp {
 
 const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
   const data = useCompany(activityID, activity);
-  if (!data || !uid) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Definiere alle Angebote die du zur verfügung stellen willst" />;
+  if (!data || !uid) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
     entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
@@ -123,7 +125,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
 
   return (
     <Fragment>
-      <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Definiere alle Angebote die du zur verfügung stellen willst. Du kannst Angebote mit gleicher Preis-Logik kombinieren, ansonsten müssen diese einzelnt angelegt werden. Um die Preise später korrekt bestimmen zu können." />
+      <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
 
       <BackButton url={`/company/dashboard/${activityID}`} />
       <section class="group form small_size_holder">
@@ -133,6 +135,8 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
           <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />
         ))}
       </section>
+
+      <FormButton action={() => route(`/company/prices/${data.title.form}`)} label="Speichern und weiter" />
 
       {service !== false && serviceFields !== false && (
       <Modal title="" close={() => closeService()} type="large">

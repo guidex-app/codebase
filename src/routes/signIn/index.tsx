@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from 'preact';
-import { route } from 'preact-router';
 import { useEffect } from 'preact/hooks';
+import { route } from 'preact-router';
 import { Key, LogIn } from 'react-feather';
+
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
 import Item from '../../components/item';
@@ -67,7 +68,7 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
           value={fields.email}
           error={formState.email}
           autocomplete="username"
-          placeholder="Gebe eine E-Mail an"
+          placeholder="Bitte gebe deine E-Mail an"
           required
           change={changeField}
         />
@@ -79,7 +80,7 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
           value={fields.password}
           error={formState.password}
           autocomplete="new-password"
-          placeholder="Dein Passwort"
+          placeholder="Bitte gebe dein Passwort ein"
           required
           change={changeField}
         />

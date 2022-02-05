@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
 import { CheckCircle } from 'react-feather';
-import Chip from '../../chip';
 
+import Chip from '../../chip';
 import style from './style.module.css';
 
 interface PickInputProps {

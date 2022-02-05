@@ -1,7 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import FormButton from '../form/basicButton';
+
 import { Filter } from '../../interfaces/filter';
+import FormButton from '../form/basicButton';
 import FilterItem from './filterItem';
 
 interface FilterListProps {

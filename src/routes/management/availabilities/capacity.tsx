@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import BasicInput from '../../../components/form/basicInput';
 import { fireDocument, getFireCollection } from '../../../data/fire';
 import { getSimpleDateString } from '../../../helper/date';
@@ -37,7 +38,6 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
       ))
     ));
     setRows(getRows);
-    console.log(getRows);
   };
 
   const loadCapacity = async () => {
@@ -50,7 +50,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
     const { value, id } = e.target;
     const [date, time] = id.split('_');
     const newItem: CapacityItem = { time, date, value };
-    fireDocument(`activities/${activityID}/available/${serviceID}/capacity`, newItem, 'set').then(() => console.log('gespeichert'));
+    fireDocument(`activities/${activityID}/available/${serviceID}/capacity/${time}_${date}`, newItem, 'set').then(() => console.log('gespeichert'));
   };
 
   useEffect(() => { loadCapacity(); }, [weekList]);

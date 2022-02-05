@@ -29,6 +29,7 @@
 .container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
 
 .container button {
+    position: relative;
     display: block;
     padding: 5px 10px;
     width: 100%;
@@ -45,8 +46,33 @@
     outline: none;
 }
 
+.container button::before {
+    content: "";
+    display: block;
+
+    height: 0.45em;
+    width: 0.45em;
+
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%) rotate(135deg) scale(1.5);
+
+
+    border-style: solid;
+    border-width: 1px 1px 0 0;
+    border-color: rgba(255,255,255,0.3);
+
+    transition: 0.3s transform ease-out, border-color 0.6s ease-out;
+}
+
+.container button:hover::before {
+    transform: translateY(-50%) rotate(135deg) scale(1.6);
+    border-color: white;
+}
+
 .container button:empty::after {
-    content: 'Klicke zum auswählen';
+    content: attr(placeholder);
     color: #6c7293;
 }
 
@@ -66,7 +92,7 @@
     display: block;
     width: calc(100% - 20px);
     border: none;
-    margin: 0 10px 10px 10px;
+    margin-bottom: 10px;
     padding: 10px;
     height: 40px;
     border-radius: 10px;

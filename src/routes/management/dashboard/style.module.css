@@ -4,12 +4,13 @@
     grid-row-gap: 10px;
     grid-column-gap: 10px;
 
-    padding: 0 10px;
+    padding: 10px;
 }
 
-.tools { grid-template-columns: repeat(1, 1fr); }
-.basic { grid-template-columns: repeat(1, 1fr); }
-.reservation { grid-template-columns: repeat(1, 1fr); padding-bottom: 30px; }
+/* columns */
+.tools { grid-template-columns: repeat(1, 1fr); padding: 20px; }
+.basic { grid-template-columns: repeat(2, 1fr); }
+.reservation { grid-template-columns: repeat(1, 1fr); }
 
 .dashItem {
     border-radius: 10px;
@@ -26,11 +27,7 @@
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-/* .basic .item svg { width: 23px; opacity: 0.8; } */
-/* .basic .item {
-    padding: 20px 0 10px 0;
-    height: 50px;
-} */
+.dashItem small { display: inline-block; color: #6c7293; font-size: 14px; padding-top: 2px; }
 
 .dashItem:hover {
     background-color: #333948;
@@ -39,17 +36,15 @@
 
 .dashItem svg {
     display: block;
-    text-align: center;
     width: 30px;
     padding-bottom: 5px;
     height: auto;
     margin: 0 auto;
 }
 
-.dashItem small { display: inline-block; color: #6c7293; font-size: 14px; padding-top: 2px; }
+.tools > div:nth-child(2) { text-align: right; }
 
-.tools { padding: 20px; }
-.tools > div:nth-child(even) { text-align: right; }
+.basic a { margin-bottom: 0; } /* removes item margin */
 
 @media (min-width: 693px) {
     .basic a > div { border-color: transparent; }

@@ -5,14 +5,13 @@
 
 .overlay {
     position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
+    top: 0; right: 0; left: 0; bottom: 0;
+    z-index: 66;
+
+    min-height: -webkit-fill-available;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 60;
     cursor: pointer;
+
     animation: 0.3s ease 0s 1 easeIn;
-    min-height: -webkit-fill-available;
 }

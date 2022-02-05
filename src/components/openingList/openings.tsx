@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import { shortDay } from '../../helper/date';
 import style from './style.module.css';
 

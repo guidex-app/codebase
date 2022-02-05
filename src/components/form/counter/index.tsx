@@ -11,14 +11,15 @@ interface CounterProps {
     min?: number;
     max?: number;
     steps?: number;
+    type?: 'small' | 'large';
     change: (value: any, key: string) => void,
 }
 
-const Counter: FunctionalComponent<CounterProps> = ({ label, name, min = 1, max = 10000, value = 0, steps = 1, change }: CounterProps) => {
-  const newValue = (type: 'add' | 'remove') => {
-    const checkAdd: boolean = type === 'add' && (+value + steps) <= max;
-    const checkRemove: boolean = type === 'remove' && (+value - steps) >= min;
-    if (checkAdd || checkRemove) change(type === 'add' ? (+value + steps) : (+value - steps), name);
+const Counter: FunctionalComponent<CounterProps> = ({ label, name, min = 1, type = 'small', max = 10000, value = 0, steps = 1, change }: CounterProps) => {
+  const newValue = (typ: 'add' | 'remove') => {
+    const checkAdd: boolean = typ === 'add' && (+value + steps) <= max;
+    const checkRemove: boolean = typ === 'remove' && (+value - steps) >= min;
+    if (checkAdd || checkRemove) change(typ === 'add' ? (+value + steps) : (+value - steps), name);
   };
 
   const setValue = (e: any) => {
@@ -27,7 +28,7 @@ const Counter: FunctionalComponent<CounterProps> = ({ label, name, min = 1, max 
   };
 
   return (
-    <div class={style.counter}>
+    <div class={`${style.counter} ${style[type]}`}>
       <label for={name}>{label}</label>
       <div>
         <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, color: '#ccc' }}><Minus /></button>

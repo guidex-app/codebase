@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import Modal from '../../../container/modal';
 import CheckInput from '../checkInput';
-
 import style from './style.module.css';
 
 interface SelectInputProps {
@@ -11,13 +11,14 @@ interface SelectInputProps {
     options: string[];
     value?: string;
     disabled?: boolean;
+    placeholder?: string;
     icon?: any;
     error?: 'invalid' | 'error' | 'valid';
     required?: true;
     change: (value: any, key: string) => void,
 }
 
-const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon, disabled, options, error, required, value, change }: SelectInputProps) => {
+const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon, disabled, placeholder = 'Klicke zum auswählen', options, error, required, value, change }: SelectInputProps) => {
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState<string>('');
   const [list, setList] = useState<string[]>(options);
@@ -42,7 +43,7 @@ const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon,
         {icon && icon}
         <div>
           <label for={name} class={disabled ? style.disabled : undefined}>{required && '*'}{label}</label>
-          <button type="button" onClick={() => setOpen(true)} aria-label="Auswählen">{value}</button>
+          <button type="button" onClick={() => setOpen(true)} placeholder={placeholder} aria-label="Auswählen">{value}</button>
         </div>
       </div>
       {error === 'error' && <small class={style.errorMessage}>Bitte mache eine korrekte eingabe</small>}

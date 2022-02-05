@@ -1,9 +1,10 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { Archive } from 'react-feather';
-import { ServiceInfo } from '../../../interfaces/company';
-import FormButton from '../../form/basicButton';
-import SelectInput from '../../form/selectInput';
-import Item from '../../item';
+
+import FormButton from '../../../../components/form/basicButton';
+import SelectInput from '../../../../components/form/selectInput';
+import Item from '../../../../components/item';
+import { ServiceInfo } from '../../../../interfaces/company';
 import style from './style.module.css';
 
 interface ReserveInfoProps {

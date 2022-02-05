@@ -1,11 +1,12 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Calendar } from 'react-feather';
-import Modal from '../../container/modal';
-import { getFireCollection } from '../../data/fire';
-import { ServiceInfo } from '../../interfaces/company';
-import FabButton from '../fabButton';
-import Item from '../item';
+
+import FabButton from '../../../components/fabButton';
+import Item from '../../../components/item';
+import Modal from '../../../container/modal';
+import { getFireCollection } from '../../../data/fire';
+import { ServiceInfo } from '../../../interfaces/company';
 import ReserveAvailable from './available';
 import ReserveInfo from './info/info';
 
@@ -53,7 +54,7 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
           {['available', 'confirm'].includes(modalState) && selectedService?.serviceName && <ReserveAvailable service={selectedService} modalState={modalState} activityID={activityID} openings={openings} changeState={setModalState} />}
         </Modal>
       )}
-      <FabButton icon={<Calendar />} action={() => setModalState('info')} />
+      <FabButton icon={<Calendar color="black" />} action={() => setModalState('info')} />
     </Fragment>
   );
 };

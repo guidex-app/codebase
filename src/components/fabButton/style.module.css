@@ -12,6 +12,7 @@
     cursor: pointer;
     transition: transform 0.3s ease-out, opacity 0.3s ease-in;
     will-change: transform, opacity;
+    z-index: 65;
 }
 
 .hide {

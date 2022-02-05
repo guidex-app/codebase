@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router';
+
 import style from './style.module.css';
 
 interface FabButtonProps {
@@ -11,6 +12,7 @@ const BackButton: FunctionalComponent<FabButtonProps> = ({ url, title = 'Zurück
   <Link class={style.backButton} href={url}>
     <span>{title}</span>
   </Link>
+
 );
 
 export default BackButton;

@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from 'preact';
 import { ChevronDown, ChevronUp } from 'react-feather';
-import style from './style.module.css';
+
 import { RatingComment } from '../../../interfaces/rating';
+import style from './style.module.css';
 
 interface UserCommentItemProps {
   rate: RatingComment;

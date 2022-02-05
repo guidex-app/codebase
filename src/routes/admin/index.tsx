@@ -1,9 +1,10 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Lock, PlusCircle, ToggleLeft } from 'react-feather';
+
 import FilterList from '../../components/filter';
-import Item from '../../components/item';
 import TextHeader from '../../components/iconTextHeader';
+import Item from '../../components/item';
 import Modal from '../../container/modal';
 import catFilter from '../../data/catFilter';
 import { getFireCollection } from '../../data/fire';

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'preact/hooks';
-import { PriceTerms, IncludedPriceSpecs, ShoppingCart, UserPreferences } from '../interfaces/reservation';
+import { useEffect, useState } from 'preact/hooks';
+
 import { getFireCollection } from '../data/fire';
 import { shortDay } from '../helper/date';
+import { IncludedPriceSpecs, PriceTerms, ShoppingCart, UserPreferences } from '../interfaces/reservation';
 
-const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRound: boolean, dayIndex: number, reservationTime: string, amountRooms: number, personAmount: number, userPreferences: UserPreferences, activityID: string, serviceId?: string) => {
+const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRound: boolean, dayIndex: number, reservationTime: string, amountRooms: number, personAmount: number, userPreferences: UserPreferences, pricePath: string) => {
   const [priceList, setPriceList] = useState<PriceTerms[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isValid, setIsValid] = useState<'loading' | 'valid' | 'invalid'>('loading');
@@ -15,42 +16,39 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
    * Wenn es Runde ist, wird zuerst gecheck ob rundenrabatte vorhanden sind,
    * sonst wird der Preis für eine Runde genommen.
    */
-  const persDurationID = (amountPers: number, durationOrRound: number): string => `_${amountPers}_${durationOrRound}`;
+  // const persDurationID = (amountPers: number, durationOrRound: number): string => `_${amountPers}_${durationOrRound}`;
   const getPrice = (price: number) => (isRound ? price * parseInt(duration, 10) : price);
 
   /**
    * Holt sich den korrekten Preis, unter berücksichtigung von rundenrabatt und personen rabatt
    */
-  const getPriceWithProps = (persons: number, price?: { [key: string]: number }): number => {
-    const nDuration = parseInt(duration, 10);
+  // const getPriceWithProps = (persons: number, price?: number): number => {
+  //   const nDuration = parseInt(duration, 10);
 
-    const durationPrice: number | undefined = price?.[persDurationID(persons, nDuration)] || price?.[persDurationID(1, nDuration)];
-    if (durationPrice) return getPrice(durationPrice);
+  //   const durationPrice: number | undefined = price?.[persDurationID(persons, nDuration)] || price?.[persDurationID(1, nDuration)];
+  //   if (durationPrice) return getPrice(durationPrice);
 
-    const personPrice: number | undefined = price?.[persDurationID(persons, 1)] || price?.[persDurationID(1, 1)];
-    return personPrice ? getPrice(personPrice) : 0;
-  };
+  //   const personPrice: number | undefined = price?.[persDurationID(persons, 1)] || price?.[persDurationID(1, 1)];
+  //   return personPrice ? getPrice(personPrice) : 0;
+  // };
 
   /**
    * Sucht einen passenden Preis, für die angegebenen Paramter.
    */
-  const getSinglePrice = (persons: number, age: string, discount?: string, prices?: PriceTerms[]) => {
-    const getPrices = prices || priceList;
-
-    const findPrice = getPrices.find((i: PriceTerms) => {
-      const dayCheck = priceSpecs?.dayGroups.length === 0 || i.dayGroup?.indexOf(shortDay[dayIndex]) !== -1;
+  const getSinglePrice = (persons: number, age: string, discount?: string) => {
+    const findPrice: number = priceList.find((i: PriceTerms) => {
+      const dayCheck = priceSpecs?.days.length === 0 || i.day?.indexOf(shortDay[dayIndex]) !== -1;
       const timeSplitted = i.time?.split('-');
       const timeCompare = timeSplitted && reservationTime >= timeSplitted[0] && reservationTime <= timeSplitted[1];
       const timeCheck = !i.time || timeCompare;
       const ageCheck = (age === 'Erwachsene' && !i.age) || i.age === age;
       const discountCheck = (!discount && !i.discount) || discount === i.discount;
 
+      console.log('Preis finden', { timeCheck, ageCheck, discountCheck, dayCheck });
       return timeCheck && ageCheck && discountCheck && dayCheck;
-    });
+    })?.value || 0;
 
-    console.log('Preis finden', { persons, age, discount, prices });
-
-    return getPriceWithProps(persons, findPrice?.persDuration);
+    return getPrice(findPrice);
   };
 
   /**
@@ -74,6 +72,11 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
     return personAmount - (newPrf ? Object.values(newPrf).reduce((a, b) => a + b, 0) : 0);
   };
 
+  const arePricesValid = (newCart: ShoppingCart[]): boolean => {
+    const isInvalid = newCart.findIndex((x) => x.price === 0) > -1;
+    return !isInvalid;
+  };
+
   /**
      * Es wird ein Shoppingcart erstellt, welcher für alle angegebenen
      * Personen den Preis berechnet, dabei wird rücksicht auf jegliche
@@ -82,7 +85,10 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
      * unterschiedlich: discount, alter, personen)
      */
   const createShoppingCart = () => {
-    const adultsNr: number = getAdults(userPreferences.ages);
+    if (!priceList?.[0]) setIsValid('invalid');
+    setIsValid('loading');
+
+    const adultsNr: number = getAdults(userPreferences.ages); // erwachsene
     const otherAgesAreThere: boolean = !!(personAmount !== adultsNr && userPreferences.ages && priceSpecs?.ages.length !== 0); // wenn nicht alles erwachsene sind und noch andere ages definiert sind
     const createAges: { [key: string]: number } = otherAgesAreThere ? { ...userPreferences.ages, Erwachsene: adultsNr } : { Erwachsene: personAmount };
 
@@ -98,7 +104,7 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
 
         const groupDiscount = createPersonGroups(amount);
         groupDiscount.forEach((element) => {
-          const price = getSinglePrice(personGroups[isInRoom], age, discount, priceList) || 0;
+          const price = getSinglePrice(personGroups[isInRoom], age, discount) || 0;
           newShoppingCart.push({ age, ...(discount && { discount }), amount: element, groupDiscount: personGroups[isInRoom], room: isInRoom + 1, price });
           isInRoom = isInRoom + 1 < amountRooms ? isInRoom + 1 : 0;
         });
@@ -113,34 +119,31 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
       pushToCart(age, getNothingAge);
     });
 
-    setShoppingCart(newShoppingCart);
-  };
-
-  const checkIfPriceIsValid = () => {
-    if (shoppingCart) {
-      const isPriceValid = shoppingCart.findIndex((x) => x.price === 0) === -1;
-      setIsValid(isPriceValid ? 'valid' : 'invalid');
-      console.log('shoppingCart', shoppingCart);
-      if (isPriceValid) {
-        if (foundation === 'person') return setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * cur.amount), 0));
-        console.log('Preis wird für runden berechnet');
-        return setTotalPrice(shoppingCart.reduce((prev, cur) => prev + (cur.price * 1), 0));
+    if (arePricesValid(newShoppingCart)) {
+      setShoppingCart(newShoppingCart);
+      if (foundation === 'person') {
+        setTotalPrice(newShoppingCart.reduce((prev, cur) => prev + (cur.price * cur.amount), 0));
+      } else {
+        setTotalPrice(newShoppingCart.reduce((prev, cur) => prev + (cur.price * 1), 0));
       }
+
+      return setIsValid('valid');
     }
+    setIsValid('invalid');
   };
 
-  useEffect(() => {
-    getFireCollection(`activities/${activityID}/services/${serviceId}/prices`, false).then((priceData: PriceTerms[]) => {
+  const loadPriceData = () => {
+    getFireCollection(pricePath, false).then((priceData: PriceTerms[]) => {
       if (priceData) {
         const newPriceSpecs: IncludedPriceSpecs = {
-          dayGroups: [],
+          days: [],
           times: [],
           discounts: [],
           ages: [],
         };
 
         priceData.forEach((x) => {
-          if (x?.dayGroup && x?.dayGroup !== 'nothing' && priceSpecs?.dayGroups.indexOf(x.dayGroup) === -1) priceSpecs.dayGroups.push(x.dayGroup);
+          if (x?.day && x?.day !== 'nothing' && priceSpecs?.days.indexOf(x.day) === -1) priceSpecs.days.push(x.day);
           if (x?.discount && priceSpecs?.discounts.indexOf(x.discount) === -1) priceSpecs?.discounts.push(x.discount);
           if (x?.age && priceSpecs?.ages.indexOf(x.age) === -1) priceSpecs?.ages.push(x.age);
         });
@@ -149,16 +152,10 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
         setPriceSpecs(newPriceSpecs);
       }
     });
-  }, [serviceId]);
+  };
 
-  useEffect(() => {
-    if (priceList.length > 0) createShoppingCart();
-  }, [userPreferences, priceSpecs]);
-
-  useEffect(() => {
-    setIsValid('loading');
-    checkIfPriceIsValid();
-  }, [shoppingCart]);
+  useEffect(() => { createShoppingCart(); }, [userPreferences, priceSpecs]); // Preise werden neu berechnet
+  useEffect(() => { loadPriceData(); }, [pricePath]); // init (Preise werden geladen)
 
   return { shoppingCart, isValid, totalPrice, priceSpecs, getAdults };
 };

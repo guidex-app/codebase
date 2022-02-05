@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Home, Clock, Star, Archive, CreditCard, Info, DollarSign, Columns, Image, Monitor } from 'react-feather';
+import { Archive, Clock, Columns, CreditCard, DollarSign, Home, Image, Info, Monitor, Star } from 'react-feather';
 
 export interface Pages {
     title: string,

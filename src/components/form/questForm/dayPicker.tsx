@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { FunctionalComponent, h } from 'preact';
+
 import Chip from '../../chip';
 
 interface DayPickerProps {

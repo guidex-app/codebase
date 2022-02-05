@@ -1,11 +1,12 @@
 import { h } from 'preact';
-import { Flag, UserPlus, Type, Image, Dribbble, Home, Users } from 'react-feather';
+import { Dribbble, Flag, Home, Image, Type, UserPlus, Users } from 'react-feather';
+
 import { Questions } from '../../../interfaces/company';
 
 const ServiceQuestions: Questions[] = [{
   info: {
-    title: { name: 'Typ', form: 'serviceName' },
-    question: 'Welche Leistung legen sie an?',
+    title: { name: 'Leistungen', form: 'serviceName' },
+    question: 'Welche Leistung möchten sie anlegen?',
     explanation: 'Definieren sie hier die Art Ihrer Leistungsgruppe. Wenn Sie mehrere Optionen vertreten, legen sie diese Einzelnt an.',
     example: 'Wenn sie z.B. ein Abenteuerspielplatz sind und ein Eintritt definieren wollen, wählen sie Eintritt(e) aus. Wenn sie verschieden Räume zur verfügung stellen, wählen sie stattdessen Räume/Bereich(e)',
     advice: 'Wird die Anzahl in Räumen, Objekten oder Eintrittsangeboten definiert',
@@ -51,7 +52,7 @@ const ServiceQuestions: Questions[] = [{
     availableText: 'Keine Beschreibung',
   },
   answers: [
-    { icon: <Flag />, label: 'Beschreibung', name: 'description', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
+    { icon: <Type />, label: 'Beschreibung', name: 'description', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
   ],
 },
 {
@@ -67,13 +68,13 @@ const ServiceQuestions: Questions[] = [{
     availableText: '',
   },
   answers: [
-    { icon: <Flag />, label: 'Was muss mitgebracht werden', name: 'bringWith', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Badehose, Wechselklamotten, Sonnenschutze, ...' },
+    { icon: <Type />, label: 'Was muss mitgebracht werden', name: 'bringWith', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Badehose, Wechselklamotten, Sonnenschutze, ...' },
   ],
 },
 {
   info: {
     title: { name: 'Bild', form: 'image' },
-    question: 'Füge ein Bild hinzu',
+    question: 'Bitte füge ein Bild für die Leistung hinzu',
     explanation: 'Geben Sie Ihren Kunden einen Einblick in die gebotene Leistung.',
     example: 'Ein Bild sagt mehr als tausend Worte, wählen sie daher Bilder, die Ihre Leistung gut veranschaulichen. Die Bilder sollten mind. den maßen 1200x900px entsprechen.',
     advice: 'Wählen sie Helle und kontrastreiche Bilder und achten sie auf eine positive Bildstimmung.',
@@ -83,7 +84,7 @@ const ServiceQuestions: Questions[] = [{
     availableText: 'Keine Beschreibung',
   },
   answers: [
-    { icon: <Flag />, label: 'Bild', name: 'image', inputType: 'image', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
+    { icon: <Image />, label: 'Bild', name: 'image', inputType: 'image', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
   ],
 },
 ];

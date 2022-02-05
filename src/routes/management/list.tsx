@@ -1,8 +1,9 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { PlayCircle } from 'react-feather';
-import Item from '../../components/item';
+
 import TextHeader from '../../components/iconTextHeader';
+import Item from '../../components/item';
 import { getFireCollection } from '../../data/fire';
 import { Activity } from '../../interfaces/activity';
 

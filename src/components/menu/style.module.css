@@ -20,6 +20,7 @@
     padding: 30px 0;
     overflow-y: auto;
     z-index: 70;
+    will-change: transform;
     animation: 0.3s ease 0s 1 slideInFromLeft;
 }
 

@@ -25,6 +25,7 @@ module.exports = {
   plugins: [
     'react',
     '@typescript-eslint',
+    'simple-import-sort',
   ],
   rules: {
     '@typescript-eslint/no-unused-vars': 'error',
@@ -44,5 +45,11 @@ module.exports = {
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'object-curly-newline': ['error', { consistent: true }],
     'jsx-a11y/click-events-have-key-events': 'off',
+
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
   },
 };

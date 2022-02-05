@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+
 import { sumOf } from '../../../helper/array';
 import { getPerfectNumber } from '../../../helper/number';
 import style from './style.module.css';

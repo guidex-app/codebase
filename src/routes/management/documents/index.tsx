@@ -1,7 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
+import { route } from 'preact-router';
 import { CreditCard } from 'react-feather';
+
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import ImgInput from '../../../components/form/imgInput';
@@ -26,7 +27,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
       <TextHeader
         icon={<CreditCard color="#ff375e" />}
         title="Dokumente"
-        text="Lade Dokumente hoch"
+        text="Bitte lade alle nötigen Dokumente hoch"
       />
     );
   }
@@ -43,7 +44,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
   const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
   const [finished, setFinished] = useState<string[]>([]);
 
-  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`company/dashboard/${data.title.form}`);
+  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`/company/services/${data.title.form}`);
 
   const uploadFinished = (name: string) => {
     const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false));
@@ -122,7 +123,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
             />
           </section>
 
-          <FormButton action={validateForm} label="Speichern" />
+          <FormButton action={validateForm} label="Speichern und weiter" />
 
         </form>
 

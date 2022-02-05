@@ -1,11 +1,13 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
-import { Mail, Key, Navigation2, Gift, Phone, Type } from 'react-feather';
+import { route } from 'preact-router';
+import { Gift, Key, Mail, Navigation2, Phone, Type } from 'react-feather';
+
 import BackButton from '../../components/backButton';
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
 import PickInput from '../../components/form/pickInput';
+import Modal from '../../container/modal';
 import { createUser, updateUserProfil } from '../../data/auth';
 import { fireDocument } from '../../data/fire';
 import { setStorageKeys } from '../../data/localStorage';
@@ -90,8 +92,6 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
       });
     }
   };
-
-  if (!success) return <Confirmation />;
 
   return (
     <div class={`${style.register} small_size_holder`}>
@@ -275,6 +275,12 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
         <FormButton action={register} label="Registrieren und loslegen" />
 
       </form>
+
+      {success && (
+        <Modal title="" close={() => setSuccess(false)}>
+          <Confirmation />
+        </Modal>
+      )}
 
     </div>
   );
