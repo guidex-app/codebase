@@ -18,7 +18,7 @@ interface ReservationProps {
 const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openings }: ReservationProps) => {
   const [selectedService, setSelectedService] = useState<ServiceInfo>();
   const [serviceList, setServiceList] = useState<ServiceInfo[]>();
-  const [modalState, setModalState] = useState<'info' | 'available' | 'confirm' | 'finished' | undefined>(undefined);
+  const [modalState, setModalState] = useState<'info' | 'available' | 'finished' | undefined>(undefined);
 
   const loadServiceList = () => {
     getFireCollection(`activities/${activityID}/services/`, false, [['structureID', '!=', false]]).then((d) => {
@@ -49,9 +49,9 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
         ))}
       </section>
       {modalState && openings && (
-        <Modal title={modalState === 'available' ? 'Verfügbarkeiten' : ''} close={closeReserve} type={modalState === 'available' ? 'large' : undefined}>
+        <Modal title={modalState === 'available' ? `Verfügbarkeiten für ${selectedService?.serviceName || ''}` : ''} close={closeReserve} type={modalState === 'available' ? 'large' : undefined}>
           {modalState === 'info' && <ReserveInfo service={selectedService} list={serviceList} changeState={setModalState} />}
-          {['available', 'confirm'].includes(modalState) && selectedService?.serviceName && <ReserveAvailable service={selectedService} modalState={modalState} activityID={activityID} openings={openings} changeState={setModalState} />}
+          {modalState === 'available' && selectedService?.serviceName && <ReserveAvailable service={selectedService} activityID={activityID} openings={openings} changeState={setModalState} />}
         </Modal>
       )}
       <FabButton icon={<Calendar color="black" />} action={() => setModalState('info')} />

@@ -163,9 +163,10 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
   const loadStructureFields = async () => {
     const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structureID}/fields`, false);
     if (serviceFieldData) {
-      const { list: days } = getQuestFormValue(status.day, serviceFieldData?.find((x) => x.name === 'days')?.answers);
-      setDayList(days?.[1] ? days : []);
-      if (!days?.[1]) setStatus({ ...status, day: days[0] || 'nothing' });
+      const days = getQuestFormValue(status.day, serviceFieldData?.find((x) => x.name === 'days')?.answers).list
+      setDayList(days || []);
+      setStatus({ ...status, day: !days?.[1] && days?.[0] ? days[0] : 'nothing' });
+      console.log(!days?.[1] && days?.[0] ? days[0] : 'nothing');
       setStructureFields(serviceFieldData);
     }
   };
@@ -189,9 +190,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
     <Fragment>
       <h1 style={{ marginBottom: '20px' }}>Preis anpassen</h1>
 
-      {questionLength === structureFields?.length && (
-        <Fragment>
-          {dayList?.[1] && (
+          {dayList?.[1] && questionLength === structureFields?.length && (
             <SelectInput
               label="Wähle eine Tagesgruppe"
               name="day"
@@ -203,19 +202,19 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
             />
           )}
 
-          {status.day && (
-          <Fragment>
-            <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" />
-
-            <Chip small type="grey" label={questionLength === structureFields?.length ? 'Verwendete Vorlage bearbeiten' : 'Verwendete Vorlage abschließen'} action={editCurrentFields} />
+<Chip small type="grey" label={questionLength === structureFields?.length ? 'Verwendete Vorlage bearbeiten' : 'Verwendete Vorlage abschließen'} action={editCurrentFields} />
             <Chip small type="delete" label="Verwendete Vorlage entfernen" action={() => changeType('belongs')} />
+
+
+          {status.day && questionLength === structureFields?.length && (
+          <Fragment>
 
             <table class={`${style.table} ${style.prices} ${status.hasTime ? style.time : ''}`} style={{ margin: '0 0 20px 0' }}>
               <thead>
                 <tr>
                   {status.hasTime && <th>Uhrzeit</th>}
                   <th style={{ padding: '5px 0' }}>Rabatte</th>
-                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. {duration}</th>)}
+                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. für {duration} Min.</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -230,11 +229,12 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
                 ))}
               </tbody>
             </table>
+            {/* <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" /> */}
+
             <FormButton action={() => changeType()} />
           </Fragment>
           )}
-        </Fragment>
-      )}
+
     </Fragment>
   );
 };

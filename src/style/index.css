@@ -1,6 +1,7 @@
 @import './holder.css';
 @import './colors.css';
 @import './scrollBar.css';
+@import './text.css';
 /* || ALLGEMEINE STYLES */
 
 html, body {
@@ -27,15 +28,6 @@ body {
 * { box-sizing: border-box; }
 
 #app { padding-bottom: 40px; }
-
-h1, h2, h3, h4 { 
-	letter-spacing: -.025em;
-	font-weight: bolder;
-	margin: 0;
-}
-
-blockquote { background-color: #6c7293; }
-a { color: white; text-decoration: none; }
 
 button {
 	touch-action: manipulation; /* prevents double tap zooming */
@@ -71,13 +63,3 @@ section.group.form {
 
 section.group > div:last-child { margin-bottom: 0; }
 
-code {
-	display: block;
-	font-size: 12px;
-    background: rgba(255,255,255,0.05);
-    padding: 15px;
-    border-radius: 15px;
-	margin-bottom: 10px;
-}
-
-code span { display: block; }

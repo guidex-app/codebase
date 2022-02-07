@@ -1,0 +1,33 @@
+
+/* ÜBERSCHRIFTEN */
+h1, h2, h3, h4 {
+	letter-spacing: -.025em;
+	font-weight: bolder;
+	margin: 0;
+}
+
+h1 { font-size: 2em; }
+
+/* FLIESSTEXT */
+
+p { font-size: 1.12em; }
+article p { font-size: 1.2em; line-height: calc(1ex / 0.32); }
+
+/* LINKS */
+
+a { color: white; text-decoration: none; }
+
+/* HERVORHEBUNGEN */
+
+blockquote { background-color: #6c7293; }
+
+code {
+	display: block;
+	font-size: 12px;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 15px;
+	margin-bottom: 10px;
+}
+
+code span { display: block; }

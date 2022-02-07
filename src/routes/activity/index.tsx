@@ -5,6 +5,7 @@ import { Feather, Info } from 'react-feather';
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
 import TextHeader from '../../components/iconTextHeader';
+import Item from '../../components/item';
 import { getFireCollection, getFireDocument } from '../../data/fire';
 import { Activity } from '../../interfaces/activity';
 import { Cat } from '../../interfaces/categorie';
@@ -24,7 +25,7 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID }: Acti
   const getActivityList = () => {
     if (categoryID) {
       getFireCollection('activities', false, [['category.form', '==', categoryID]]).then((listData: Activity[]) => {
-        if (listData) setList(listData);
+        setList(listData?.[0] ? listData : undefined);
       });
     }
   };
@@ -55,7 +56,11 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID }: Acti
       <main style={{ padding: '20px 10px' }} class="size_holder">
         <BackButton url="/" title="Zurück" />
         <div class={style.list}>
-          {list && list?.map((x: Activity) => <ActivityItem activity={x} />)}
+          {list !== undefined ? (
+            list && list?.map((x: Activity) => <ActivityItem activity={x} />)
+          ) : (
+            <Item icon={<Info />} type="info" label="Es wurde nichts in deiner Nähe gefunden" />
+          )}
         </div>
 
         <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => console.log('test')} />

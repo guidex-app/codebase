@@ -1,5 +1,5 @@
-export const shortDay: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-export const dayNames: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+export const shortDay: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+export const dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
 /** gibt true zurück wenn heute größer als der angegebene Tag ist  */
 export const isDayGreater = (date: number, days: number): boolean => {

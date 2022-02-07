@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Globe, Grid, Home, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
+import { Compass, Globe, Grid, Home, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
 
 import { getUser } from '../../data/auth';
 import Item from '../item';
@@ -17,7 +17,7 @@ const Menu: FunctionalComponent = () => {
   const container = useRef<any>(null);
 
   const routes: { title: string; link: string; icon: any }[] = [
-    { title: 'Für mich', link: '/', icon: <Home /> },
+    { title: 'Für mich', link: '/', icon: <Compass /> },
     { title: 'Entdecken', link: '/explore', icon: <Globe /> },
   ];
 

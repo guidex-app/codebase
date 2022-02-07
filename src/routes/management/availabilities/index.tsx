@@ -5,7 +5,6 @@ import { Calendar, Columns } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
-import BasicInput from '../../../components/form/basicInput';
 import Counter from '../../../components/form/counter';
 import PickInput from '../../../components/form/pickInput';
 import SelectInput from '../../../components/form/selectInput';
@@ -42,8 +41,10 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
   const formInit: FormInit = {
     countMinPerson: { value: 1, type: 'number', required: false },
     countMaxRoomPerson: { value: 10, type: 'number', required: false },
+
     leadTimeInMin: { value: 30, type: 'number', required: false },
     minAge: { value: 1, type: 'number', required: false },
+
     defaultCapacity: { value: 10, type: 'number', required: true },
     storno: { value: '24 Std.', type: 'string', required: false },
   };
@@ -55,7 +56,10 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
 
   const loadListData = () => {
     getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceName', '!=', false]]).then((listData: ServiceInfo[]) => {
-      if (listData) setSelectList(listData);
+      if (listData) {
+        setSelectList(listData);
+        if (!listData[1] && listData[0]) setSelected(listData[0]);
+      }
     });
   };
 
@@ -101,25 +105,19 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
           <Fragment>
             <form>
               <section class="group form">
-                <h3>Kapazitäten</h3>
-                <BasicInput
-                  type="number"
-                  label="Min. anzahl Pers."
+                <h3>Kapazitäten {formState.countMinPerson}</h3>
+                <Counter
+                  label="Mindest Personenanzahl"
                   name="countMinPerson"
                   value={fields.countMinPerson}
-                  placeholder="Die Persohnenanzahl"
-                  error={formState.countMinPerson}
                   required
                   change={changeField}
                 />
                 {selected.serviceType !== 'entry' && (
-                <BasicInput
-                  type="number"
-                  label="Max. anzahl Pers."
+                <Counter
+                  label="Maximale Personenanzahl"
                   name="countMaxRoomPerson"
                   value={fields.countMaxRoomPerson}
-                  placeholder="Die Persohnenanzahl"
-                  error={formState.countMaxRoomPerson}
                   required
                   change={changeField}
                 />

@@ -2,16 +2,17 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, si
 
 import fireConfig from './fireConfig';
 
-export const loginUser = (email: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   const auth = getAuth(fireConfig);
-  return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => userCredential.user)
-    .catch((error) => {
-      console.log(error.message);
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error: any) {
+    console.log(error.message);
+  }
 };
 
-export const getUser = (): any => {
+export const getUser = async (): Promise<any> => {
   const auth = getAuth(fireConfig);
   return auth.currentUser || {};
 };
@@ -27,7 +28,7 @@ export const logoutUser = () => {
 };
 
 export const createUser = async (email: string, password: string): Promise<UserCredential> => {
-  const auth = await getAuth(fireConfig);
+  const auth = getAuth(fireConfig);
   return createUserWithEmailAndPassword(auth, email, password);
 };
 
@@ -35,7 +36,7 @@ export const updateUserProfil = async (data: {
   displayName?: string | null;
   photoURL?: string | null;
 }) => {
-  const auth: any = await getAuth(fireConfig);
+  const auth: any = getAuth(fireConfig);
   updateProfile(auth.currentUser, {
     ...data,
   });

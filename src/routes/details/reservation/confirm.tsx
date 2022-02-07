@@ -22,10 +22,10 @@ interface ConfirmProps {
     amountRooms: number;
     foundation: 'person' | 'object';
     activityID: string;
-    changeState: (type?: 'info' | 'available' | 'confirm' | 'finished') => void;
+    goBack: () => void;
 }
 
-const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
+const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
   const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, `activities/${activityID}/services/${service.id}/prices`);
 
@@ -80,7 +80,7 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, a
 
   return (
     <Fragment>
-      <TopButton action={() => changeState('available')} />
+      <TopButton action={goBack} />
 
       <div class={`${style.price} ${isValid ? 'orange-bg' : 'red-bg'}`}>
         {isValid === 'valid' && shoppingCart ? (
@@ -121,7 +121,7 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ changeState, foundation, a
         <Item icon={<Clock />} label={durationList.isRound ? 'Runden' : 'Dauer'} text={durationList.isRound && duration ? `${duration} Runden (ca. ${parseInt(duration, 10) * durationList.list[0]} Min.)` : `${duration} Min.`} />
       </section>
 
-      {!!totalPrice && <FormButton label={`Reservierung abschließen (${totalPrice}€)`} action={() => changeState()} />}
+      {!!totalPrice && <FormButton label={`Reservierung abschließen (${totalPrice}€)`} />}
 
       <small class="grey">
         Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.

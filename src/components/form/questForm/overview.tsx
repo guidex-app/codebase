@@ -15,8 +15,7 @@ interface OverviewProps {
 
 const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, showBackButton, select, close }: OverviewProps) => (
   <Fragment>
-    <h2 style={{ padding: '10px' }}>Welche Frage möchtest du bearbeiten</h2>
-    {console.log('overview', fields)}
+    <h2 style={{ padding: '10px' }}>Was möchtest du bearbeiten?</h2>
 
     <section class="form group" style={{ margin: '10px' }}>
       {showBackButton && <TopButton action={close} title="Zurück" />}

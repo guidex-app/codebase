@@ -10,7 +10,7 @@ import style from './style.module.css';
 interface ReserveInfoProps {
   service?: ServiceInfo;
   list?: ServiceInfo[] | undefined;
-  changeState: (type: 'info' | 'available' | 'confirm') => void;
+  changeState: (type: 'info' | 'available') => void;
 }
 
 const ReserveInfo: FunctionalComponent<ReserveInfoProps> = ({ list, service, changeState }: ReserveInfoProps) => (

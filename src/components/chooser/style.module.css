@@ -37,9 +37,9 @@
   font-weight: 900;
   letter-spacing: 3px;
   font-size: 8px;
-  color: rgba(252, 66, 74, 0.8);
+  color: #fc424a;
 }
   
-  .first { grid-area: first; }
-  .second { grid-area: second;  }
-  .third { grid-area: third; }
+.first { grid-area: first; }
+.second { grid-area: second;  }
+.third { grid-area: third; }

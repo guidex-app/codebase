@@ -7,10 +7,8 @@ const useForm = (init: FormInit): {
   fields: { [key: string]: any },
   formState: { [key: string]: 'invalid' | 'error' | 'valid' },
   changeField: (value: any, key: string, indexNr?: number) => void,
-  isLoading: boolean,
   isValid: () => boolean,
 } => {
-  const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {});
   const [formState, setFormState] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {});
 
@@ -26,6 +24,7 @@ const useForm = (init: FormInit): {
       case 'string': { if (typeof value === 'string' && value && value.length > 3) return 'valid'; break; }
       case 'string[]': { if (value && value.length > 0) return 'valid'; break; }
       case 'website': { if (isURL(value)) return 'valid'; break; }
+      case 'number': { if (value) return 'valid'; break; }
       case 'range[]': { if (value && value.length > 0 && value.every((x: string | false) => x === false || (x && !x.startsWith('-') && !x.endsWith('-')))) return 'valid'; break; }
       default: { if (typeof value === fieldType) return 'valid'; break; }
     }
@@ -45,10 +44,6 @@ const useForm = (init: FormInit): {
     setFormState({ ...state });
     setFields({ ...vals });
   };
-
-  useEffect(() => {
-    setUpInitialValue();
-  }, []);
 
   const changeArray = (value: any, key: string, indexNr: number) => {
     const oldArray: string[] = fields[key] || [];
@@ -85,13 +80,13 @@ const useForm = (init: FormInit): {
       }
     });
 
-    console.log('validation', invalid);
     if (!valid) setFormState({ ...invalid });
-    else setIsLoading(true);
     return valid;
   };
 
-  return { fields, formState, changeField, isValid, isLoading };
+  useEffect(() => { setUpInitialValue(); }, []); // init
+
+  return { fields, formState, changeField, isValid };
 };
 
 export default useForm;

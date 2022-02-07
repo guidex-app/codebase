@@ -11,11 +11,13 @@ interface CounterProps {
     min?: number;
     max?: number;
     steps?: number;
+    icon?: any;
     type?: 'small' | 'large';
+    required?: true;
     change: (value: any, key: string) => void,
 }
 
-const Counter: FunctionalComponent<CounterProps> = ({ label, name, min = 1, type = 'small', max = 10000, value = 0, steps = 1, change }: CounterProps) => {
+const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, required, min = 1, type = 'small', max = 10000, value = 0, steps = 1, change }: CounterProps) => {
   const newValue = (typ: 'add' | 'remove') => {
     const checkAdd: boolean = typ === 'add' && (+value + steps) <= max;
     const checkRemove: boolean = typ === 'remove' && (+value - steps) >= min;
@@ -28,8 +30,9 @@ const Counter: FunctionalComponent<CounterProps> = ({ label, name, min = 1, type
   };
 
   return (
-    <div class={`${style.counter} ${style[type]}`}>
-      <label for={name}>{label}</label>
+    <div class={`${style.counter} ${type ? style[type] : ''}`}>
+              {icon && icon}
+      <label for={name}>{required && '*'}{label}</label>
       <div>
         <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, color: '#ccc' }}><Minus /></button>
         <input id={name} type="number" value={value} min={min} max={max} onInput={setValue} />
