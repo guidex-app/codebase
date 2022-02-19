@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, si
 import fireConfig from './fireConfig';
 
 export const loginUser = async (email: string, password: string) => {
-  const auth = getAuth(fireConfig);
+  const auth = await getAuth(fireConfig);
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
@@ -13,12 +13,12 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const getUser = async (): Promise<any> => {
-  const auth = getAuth(fireConfig);
+  const auth = await getAuth(fireConfig);
   return auth.currentUser || {};
 };
 
-export const logoutUser = () => {
-  const auth = getAuth(fireConfig);
+export const logoutUser = async () => {
+  const auth = await getAuth(fireConfig);
   signOut(auth).then(() => {
     // Sign-out successful.
 
@@ -28,7 +28,7 @@ export const logoutUser = () => {
 };
 
 export const createUser = async (email: string, password: string): Promise<UserCredential> => {
-  const auth = getAuth(fireConfig);
+  const auth = await getAuth(fireConfig);
   return createUserWithEmailAndPassword(auth, email, password);
 };
 
@@ -36,7 +36,7 @@ export const updateUserProfil = async (data: {
   displayName?: string | null;
   photoURL?: string | null;
 }) => {
-  const auth: any = getAuth(fireConfig);
+  const auth: any = await getAuth(fireConfig);
   updateProfile(auth.currentUser, {
     ...data,
   });

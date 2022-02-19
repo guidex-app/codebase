@@ -9,7 +9,7 @@ import style from './style.module.css';
 
 interface ReserveInfoProps {
   service?: ServiceInfo;
-  list?: ServiceInfo[] | undefined;
+  list: ServiceInfo[];
   changeState: (type: 'info' | 'available') => void;
 }
 

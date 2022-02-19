@@ -44,7 +44,7 @@
 
 .tools > div:nth-child(2) { text-align: right; }
 
-.basic a { margin-bottom: 0; } /* removes item margin */
+.basic a { margin-bottom: 0; background-color: #2e5d67; } /* removes item margin */
 
 @media (min-width: 693px) {
     .basic a > div { border-color: transparent; }

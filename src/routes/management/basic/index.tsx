@@ -72,7 +72,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
         category: { name: fields.category, form: replaceSpecialCharacters(fields.category) },
         filter: fields.filter,
         ...(fields.image > 0 && { state: mergeUnique(['thumbnail'], activity?.state || []) }),
-        ...((fields.description || activity.description) && { description: fields.description }),
+        ...(fields.description && { description: fields.description }),
       };
 
       await fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update');

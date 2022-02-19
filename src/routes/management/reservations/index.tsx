@@ -1,13 +1,13 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import { Columns } from 'react-feather';
+import { useState } from 'preact/hooks';
+import { Columns, Dribbble, Home, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
-import SelectInput from '../../../components/form/selectInput';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import Modal from '../../../container/modal';
-import { getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
+import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceInfo } from '../../../interfaces/company';
 import Reservations from './reservations';
@@ -38,22 +38,14 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, 
   // };
 
   const [selected, setSelected] = useState<ServiceInfo | false>(false);
-  const [selectList, setSelectList] = useState<ServiceInfo[] | false>(false);
+  const { serviceList } = useServiceList(activityID);
   const [showReservation, setShowReservation] = useState(false);
-
-  const loadListData = () => {
-    getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceName', '!=', false]]).then((listData: ServiceInfo[]) => {
-      if (listData) setSelectList(listData);
-    });
-  };
-
-  const changeSelect = (value: string) => {
-    setSelected(selectList ? selectList?.find((x: ServiceInfo) => x.serviceName === value) || false : false);
-  };
 
   const toggleShowReservation = () => setShowReservation(!showReservation);
 
-  useEffect(() => { if (data.title.form) loadListData(); }, [data]);
+  const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
+    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
+  };
 
   return (
     <Fragment>
@@ -64,16 +56,12 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, 
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
-        {selectList !== false && (
-          <SelectInput
-            label="Wähle eine Leistung:"
-            name="select"
-            value={selected ? selected?.serviceName : undefined}
-            options={selectList.map((x: any) => x.serviceName)}
-            error={selected !== false ? 'valid' : 'invalid'}
-            required
-            change={changeSelect}
-          />
+        {serviceList !== undefined && (
+          <section class="group form small_size_holder">
+            {serviceList?.map((x: ServiceInfo) => (
+              <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />
+            ))}
+          </section>
         )}
 
       </main>

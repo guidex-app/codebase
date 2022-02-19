@@ -55,12 +55,10 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID }: Acti
       />
       <main style={{ padding: '20px 10px' }} class="size_holder">
         <BackButton url="/" title="Zurück" />
+
+        {list === undefined && <Item icon={<Info />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
         <div class={style.list}>
-          {list !== undefined ? (
-            list && list?.map((x: Activity) => <ActivityItem activity={x} />)
-          ) : (
-            <Item icon={<Info />} type="info" label="Es wurde nichts in deiner Nähe gefunden" />
-          )}
+          {list && list?.map((x: Activity) => <ActivityItem activity={x} />)}
         </div>
 
         <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => console.log('test')} />

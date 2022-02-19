@@ -20,12 +20,12 @@ const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, showB
     <section class="form group" style={{ margin: '10px' }}>
       {showBackButton && <TopButton action={close} title="Zurück" />}
       {fields?.includes(questions[0].info.title.form) ? questions.map((x: Questions, index: number) => (
-        fields?.includes(x.info.title.form) && <Item icon={x.info.icon} label={x.info.title.name} type="large" text={x.info.question} action={() => select(index)} />
+        fields?.includes(x.info.title.form) && <Item icon={x.info.icon} label={x.info.title.name} text={x.info.question} action={() => select(index)} />
       )) : (
         <Item icon={<Info />} label="Bitte beantworten Sie zuerst die Fragen." action={close} />
       )}
 
-      {fields && fields?.length !== questions.length && <Item icon={questions[fields.length].info.icon} label={`${questions[fields.length].info.title.name} (Nächste Frage)`} type="large" text={questions[fields.length].info.question} action={() => select(fields.length)} />}
+      {fields && fields?.length !== questions.length && questions[fields.length] && <Item icon={questions[fields.length].info.icon} label={`${questions[fields.length].info.title.name} (Nächste Frage)`} type="large" text={questions[fields.length]?.info.question} action={() => select(fields.length)} />}
     </section>
   </Fragment>
 );

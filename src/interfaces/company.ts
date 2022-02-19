@@ -22,6 +22,10 @@ export interface Structure {
   id?: number;
   services?: string[];
   description?: string;
+
+  foundation?: 'object' | 'person';
+  duration?: 'round' | 'fixed';
+  days?: string[];
 }
 
 /**

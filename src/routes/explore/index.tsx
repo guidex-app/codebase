@@ -12,14 +12,11 @@ const Explore: FunctionalComponent = () => {
   const [topicList, setTopicList] = useState<any[]>([]);
 
   const fetchTopics = async () => {
-    // const topics: any = await getFireCollection('topics', false, [['type', 'in', ['topicpage', 'topictext']]]);
-    const topics: any = await getFireCollection('topics', false);
+    const topics: any = await getFireCollection('topics', false, [['type', '==', 'topicpage']]);
     if (topics) setTopicList(topics);
   };
 
-  useEffect(() => {
-    fetchTopics();
-  }, []);
+  useEffect(() => { fetchTopics(); }, []);
 
   return (
     <Fragment>

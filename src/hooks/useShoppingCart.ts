@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'preact/hooks';
 
 import { getFireCollection } from '../data/fire';
-import { shortDay } from '../helper/date';
-import { IncludedPriceSpecs, PriceTerms, ShoppingCart, UserPreferences } from '../interfaces/reservation';
+import { ContainsList, PriceItem, ShoppingCart, UserValues } from '../interfaces/reservation';
 
-const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRound: boolean, dayIndex: number, reservationTime: string, amountRooms: number, personAmount: number, userPreferences: UserPreferences, pricePath: string) => {
-  const [priceList, setPriceList] = useState<PriceTerms[]>([]);
+const useShoppingCart = (foundation: 'person' | 'object', duration: string, shortDay: string, isRound: boolean, time: string, amountRooms: number, personAmount: number, discounts: UserValues, pricePath: string) => {
+  const [priceList, setPriceList] = useState<PriceItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isValid, setIsValid] = useState<'loading' | 'valid' | 'invalid'>('loading');
-  const [priceSpecs, setPriceSpecs] = useState<IncludedPriceSpecs>();
+  const [contains, setContains] = useState<ContainsList>();
   const [shoppingCart, setShoppingCart] = useState<ShoppingCart[]>();
 
   /**
@@ -35,26 +34,38 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
   /**
    * Sucht einen passenden Preis, für die angegebenen Paramter.
    */
-  const getSinglePrice = (persons: number, age: string, discount?: string) => {
-    const findPrice: number = priceList.find((i: PriceTerms) => {
-      const dayCheck = priceSpecs?.days.length === 0 || i.day?.indexOf(shortDay[dayIndex]) !== -1;
-      const timeSplitted = i.time?.split('-');
-      const timeCompare = timeSplitted && reservationTime >= timeSplitted[0] && reservationTime <= timeSplitted[1];
-      const timeCheck = !i.time || timeCompare;
-      const ageCheck = (age === 'Erwachsene' && !i.age) || i.age === age;
-      const discountCheck = (!discount && !i.discount) || discount === i.discount;
+  const getSinglePrice = (terms: { persons: number, discount: (false | string), age: string, day: string }) => {
+    const included = {
+      day: contains?.day.indexOf(shortDay) !== -1,
+      time: contains?.time.indexOf(time) !== -1,
 
-      console.log('Preis finden', { timeCheck, ageCheck, discountCheck, dayCheck });
-      return timeCheck && ageCheck && discountCheck && dayCheck;
-    })?.value || 0;
+      age: contains?.age.includes(terms.age),
+      persons: contains?.persons.includes(terms.persons),
+      discount: terms.discount && contains?.discount.includes(terms.discount),
+    };
 
-    return getPrice(findPrice);
+    const findPrice: PriceItem | undefined = priceList.find((item: PriceItem) => {
+      const timeSplitted = item.time && item.time.split('-');
+      const timeCompare = timeSplitted && (time >= timeSplitted[0] && time <= timeSplitted[1]);
+
+      if ((included.time && !timeCompare) || +duration !== item.duration) return false;
+
+      const checkList: ['persons', 'discount', 'age', 'day'] = ['persons', 'discount', 'age', 'day'];
+      const defaultValues = { day: 'nothing', persons: 1, discount: false, age: false };
+      return checkList.every((v) => {
+        if (included[v]) return item[v] === terms[v] || (v === 'day' && item.day.indexOf(terms.day) !== -1);
+        return item[v] === defaultValues[v];
+      });
+    });
+
+    console.log('Preis gefunden', findPrice?.price);
+    return getPrice(findPrice?.price || 0);
   };
 
   /**
    * [12, 11] wir erstellen die gruppengrößen (für den möglichen gruppenrabatt)
    */
-  const createPersonGroups = (maxPersons: number): number[] => {
+  const splitInGroups = (maxPersons: number): number[] => {
     const group: number[] = [];
     let room = 0;
     for (let index = 0; index < maxPersons; index += 1) {
@@ -68,7 +79,7 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
      * Berechnet die Anzahl der überbleibenden Erwachsenen
      */
   const getAdults = (prf?: { [key: string]: number }): number => {
-    const newPrf = prf || userPreferences.ages;
+    const newPrf = prf || discounts.ages;
     return personAmount - (newPrf ? Object.values(newPrf).reduce((a, b) => a + b, 0) : 0);
   };
 
@@ -88,13 +99,13 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
     if (!priceList?.[0]) setIsValid('invalid');
     setIsValid('loading');
 
-    const adultsNr: number = getAdults(userPreferences.ages); // erwachsene
-    const otherAgesAreThere: boolean = !!(personAmount !== adultsNr && userPreferences.ages && priceSpecs?.ages.length !== 0); // wenn nicht alles erwachsene sind und noch andere ages definiert sind
-    const createAges: { [key: string]: number } = otherAgesAreThere ? { ...userPreferences.ages, Erwachsene: adultsNr } : { Erwachsene: personAmount };
+    const adultsNr: number = getAdults(discounts.ages); // erwachsene
+    const otherAgesAreThere: boolean = !!(personAmount !== adultsNr && discounts.ages && contains?.age.length !== 0); // wenn nicht alles erwachsene sind und noch andere ages definiert sind
+    const createAges: { [key: string]: number } = otherAgesAreThere ? { ...discounts.ages, Erwachsene: adultsNr } : { Erwachsene: personAmount };
 
     const newShoppingCart: ShoppingCart[] = [];
-    const allDiscounts: [string, number][] = Object.entries(userPreferences.discountName || {});
-    const personGroups = createPersonGroups(personAmount);
+    const allDiscounts: [string, number][] = Object.entries(discounts.discountName || {});
+    const grouSizes: number[] = splitInGroups(personAmount);
     const isInUse: { [key: string]: number } = {};
     let isInRoom = 0;
 
@@ -102,10 +113,10 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
       if (amount >= 1) {
         isInUse[age] = (isInUse[age] || 0) + amount;
 
-        const groupDiscount = createPersonGroups(amount);
+        const groupDiscount: number[] = splitInGroups(amount);
         groupDiscount.forEach((element) => {
-          const price = getSinglePrice(personGroups[isInRoom], age, discount) || 0;
-          newShoppingCart.push({ age, ...(discount && { discount }), amount: element, groupDiscount: personGroups[isInRoom], room: isInRoom + 1, price });
+          const price = getSinglePrice({ persons: grouSizes[isInRoom], age, discount: discount || false, day: shortDay }) || 0;
+          newShoppingCart.push({ age, ...(discount && { discount }), amount: element, groupDiscount: grouSizes[isInRoom], room: isInRoom + 1, price });
           isInRoom = isInRoom + 1 < amountRooms ? isInRoom + 1 : 0;
         });
       }
@@ -118,6 +129,9 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
       const getNothingAge = ageNr - (isInUse[age] || 0);
       pushToCart(age, getNothingAge);
     });
+
+    console.log('Cart', newShoppingCart);
+    console.log('Preise', priceList);
 
     if (arePricesValid(newShoppingCart)) {
       setShoppingCart(newShoppingCart);
@@ -133,31 +147,34 @@ const useShoppingCart = (foundation: 'person' | 'object', duration: string, isRo
   };
 
   const loadPriceData = () => {
-    getFireCollection(pricePath, false).then((priceData: PriceTerms[]) => {
+    getFireCollection(pricePath, false).then((priceData: PriceItem[]) => {
       if (priceData) {
-        const newPriceSpecs: IncludedPriceSpecs = {
-          days: [],
-          times: [],
-          discounts: [],
-          ages: [],
+        const isThere: ContainsList = {
+          day: [],
+          time: [],
+          discount: [],
+          age: [],
+          persons: [],
         };
 
         priceData.forEach((x) => {
-          if (x?.day && x?.day !== 'nothing' && priceSpecs?.days.indexOf(x.day) === -1) priceSpecs.days.push(x.day);
-          if (x?.discount && priceSpecs?.discounts.indexOf(x.discount) === -1) priceSpecs?.discounts.push(x.discount);
-          if (x?.age && priceSpecs?.ages.indexOf(x.age) === -1) priceSpecs?.ages.push(x.age);
+          if (x?.persons && x.persons !== 1 && !isThere?.persons.includes(x.persons)) isThere.persons.push(x.persons);
+          if (x?.day && x?.day !== 'nothing' && !isThere?.day.includes(x.day)) isThere.day.push(x.day);
+          if (x?.time && !isThere?.time.includes(x.time)) isThere.day.push(x.time);
+          if (x?.discount && isThere?.discount.indexOf(x.discount) === -1) isThere?.discount.push(x.discount);
+          if (x?.age && isThere?.age.indexOf(x.age) === -1) isThere?.age.push(x.age);
         });
 
         setPriceList(priceData);
-        setPriceSpecs(newPriceSpecs);
+        setContains(isThere);
       }
     });
   };
 
-  useEffect(() => { createShoppingCart(); }, [userPreferences, priceSpecs]); // Preise werden neu berechnet
+  useEffect(() => { if (priceList[0] && contains) createShoppingCart(); }, [contains, discounts]); // Preise werden neu berechnet
   useEffect(() => { loadPriceData(); }, [pricePath]); // init (Preise werden geladen)
 
-  return { shoppingCart, isValid, totalPrice, priceSpecs, getAdults };
+  return { shoppingCart, isValid, totalPrice, contains, getAdults };
 };
 
 export default useShoppingCart;

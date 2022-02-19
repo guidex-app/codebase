@@ -17,18 +17,16 @@ interface ReservationProps {
 
 const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openings }: ReservationProps) => {
   const [selectedService, setSelectedService] = useState<ServiceInfo>();
-  const [serviceList, setServiceList] = useState<ServiceInfo[]>();
+  const [serviceList, setServiceList] = useState<ServiceInfo[] | false | undefined>(false);
   const [modalState, setModalState] = useState<'info' | 'available' | 'finished' | undefined>(undefined);
 
   const loadServiceList = () => {
     getFireCollection(`activities/${activityID}/services/`, false, [['structureID', '!=', false]]).then((d) => {
-      if (d) setServiceList(d);
+      setServiceList(d[0] ? d : undefined);
     });
   };
 
-  useEffect(() => {
-    loadServiceList();
-  }, [activityID]);
+  useEffect(() => { loadServiceList(); }, [activityID]);
 
   const selectService = (x: ServiceInfo) => {
     setSelectedService(x);
@@ -42,13 +40,15 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
 
   return (
     <Fragment>
+      {serviceList && (
       <section class="group form">
         <h3>Leistungen</h3>
-        {serviceList?.map((x) => (
+        {serviceList.map((x) => (
           <Item image="https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/categories%2Fautokino%2Fautokino_250x200" text={x.description || 'Verfügbarkeit Checken'} label={x.serviceName || ''} action={() => selectService(x)} />
         ))}
       </section>
-      {modalState && openings && (
+      )}
+      {modalState && openings && serviceList && (
         <Modal title={modalState === 'available' ? `Verfügbarkeiten für ${selectedService?.serviceName || ''}` : ''} close={closeReserve} type={modalState === 'available' ? 'large' : undefined}>
           {modalState === 'info' && <ReserveInfo service={selectedService} list={serviceList} changeState={setModalState} />}
           {modalState === 'available' && selectedService?.serviceName && <ReserveAvailable service={selectedService} activityID={activityID} openings={openings} changeState={setModalState} />}

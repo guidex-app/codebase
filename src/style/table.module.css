@@ -19,7 +19,15 @@
 .table span {
     display: inline-block;
     font-size: 12px;
+    line-height: 25px;
+    border-radius: 10px;
     min-width: 100px;
+    margin: 0 2px;
+    background-color: black;
+}
+
+.table tr:nth-child(even) span {
+    background-color: #1a1a1a;
 }
 
 /* INPUT */
@@ -54,6 +62,10 @@
     content: '€';
 }
 
+.time td:nth-child(2)::after {
+    display: none;
+}
+
 /* ROW / CELL DIFFERENCE */
 .table tr:nth-child(odd) {
     background-color: rgb(238, 238, 238);
@@ -66,13 +78,13 @@
 .table td:first-child, .table th {
     margin: 0;
     padding: 0.5rem;
-    background-color: #44818e;
+    background-color: #5d838c;
     font-size: 14px;
     min-width: 100px;
 }
 
 .table th:nth-child(odd), .table tr:nth-child(even) td:first-child {
-    background-color: hsl(191, 35%, 45%);
+    background-color: #66919b;
 }
 
 /* RABATT ZELL ANSICHT */
@@ -92,7 +104,8 @@
 
 /* ZEILEN FOCUS */
 .table tr:focus-within { background-color: #ffe0c4; }
-.table tr:focus-within td:first-child { background-color: orange; font-weight: bolder; }
+.table tr:focus-within td:first-child,
+.time tr:focus-within td:nth-child(2) { background-color: orange; }
 
 /* .table tr::-moz-focus-inner {
     background-color: #ffe0c4;

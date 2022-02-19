@@ -19,11 +19,9 @@ interface RatingProps {
 }
 
 const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [0, 0, 0, 0, 0] }: RatingProps) => {
-  const [newRating, setNewRating] = useState<boolean>(false);
+  const [newRating, setNewRating] = useState<number | false>(false);
   const [segment, setSegment] = useState<'tipps' | 'rating'>('rating');
   const [list, setList] = useState<RatingComment[]>([]);
-
-  const toggleRating = (): void => setNewRating(!newRating);
 
   useEffect(() => {
     if (segment && activityId) {
@@ -50,19 +48,19 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
   return (
     <div style={{ padding: '10px', backgroundColor: 'rgba(255,255,255,0.03', borderRadius: '20px', marginBottom: '20px' }}>
 
-      <Item icon={<ToggleLeft />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="grey" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
+      <Item icon={<ToggleLeft color="#ffab00" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
       {segment === 'rating' && (
         <Fragment>
           <VisuellOverview rating={rating} />
-          <Chip small type="active" label="1 ★" action={toggleRating} />
-          <Chip small type="active" label="2 ★" action={toggleRating} />
-          <Chip small type="active" label="3 ★" action={toggleRating} />
-          <Chip small type="active" label="4 ★" action={toggleRating} />
-          <Chip small type="active" label="5 ★" action={toggleRating} />
+          <Chip small type="active" label="1 ★" action={() => setNewRating(1)} />
+          <Chip small type="active" label="2 ★" action={() => setNewRating(2)} />
+          <Chip small type="active" label="3 ★" action={() => setNewRating(3)} />
+          <Chip small type="active" label="4 ★" action={() => setNewRating(4)} />
+          <Chip small type="active" label="5 ★" action={() => setNewRating(5)} />
         </Fragment>
       )}
 
-      <Item type="info" icon={<Edit />} label={`Verfasse eine${segment === 'rating' ? ' neue Bewertung' : 'n neuen Tipp'}`} text="Hast du eine Bericht oder eine Erklärung zu deiner Bewertung" action={toggleRating} />
+      <Item type="info" icon={<Edit />} label={`Verfasse eine${segment === 'rating' ? ' neue Bewertung' : 'n neuen Tipp'}`} text="Hast du eine Bericht oder eine Erklärung zu deiner Bewertung" action={() => setNewRating(3)} />
 
       {/* <Item icon={<PlusCircle />} type="grey" label={segment === 'rating' ? 'Jetzt bewerten' : 'Neuer Tipp'} text={`Lege ein${segment === 'rating' ? ' Tipp' : 'e Bewertung'} an`} action={toggleRating} /> */}
 
@@ -71,8 +69,8 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
       ))}
 
       {newRating && (
-        <Modal title={`${segment === 'rating' ? 'Bewertung' : 'Tipp'} schreiben (${user.displayName})`} close={toggleRating}>
-          <AddRating user={user} type={segment} activityId={activityId} close={toggleRating} />
+        <Modal title={`${segment === 'rating' ? 'Bewertung' : 'Tipp'} schreiben (${user.displayName})`} close={() => setNewRating(false)}>
+          <AddRating user={user} rating={newRating} type={segment} activityId={activityId} close={() => setNewRating(false)} />
         </Modal>
       )}
     </div>

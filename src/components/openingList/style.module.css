@@ -5,19 +5,23 @@
     color: rgba(255,255,255,0.8);
     font-size: 14px;
     border-radius: 10px;
-    overflow: hidden;
     border: 1px solid #232732;
     margin-bottom: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    align-content: flex-start;
 }
 
-.openings td {
-    height: 35px;
+.openings div {
+    display: block;
     line-height: 1.5em;
-    padding: 5px;
-    vertical-align: top;
+    padding: 7px 10px;
+    min-width: 175px;
+    flex-grow: 1;
 }
 
-.openings tr:first-child td:nth-child(even),
-.openings tr:nth-child(2) td:nth-child(odd) {
+.openings div:nth-child(even) {
     background-color: rgba(255,255,255,0.01);
 }

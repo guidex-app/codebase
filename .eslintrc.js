@@ -13,7 +13,6 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
-    "stylelint-config-standard",
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

@@ -21,8 +21,8 @@ const companyRoutes: { [key: string]: Pages[] } = {
     { title: 'Dokumente', path: '/company/documents', subTitle: 'Dokumene hochladen', color: 'danger', icon: <CreditCard color="#d4be21" /> },
   ],
   reservation: [
-    { title: 'Leistungen verwalten', path: '/company/services', subTitle: 'Lege deine Leistungen an', color: 'warning', icon: <Archive color="#0983fe" /> },
-    { title: 'Preise konfigurieren', path: '/company/prices', subTitle: 'Preisstrucktur der Leistungen', color: 'info', icon: <DollarSign color="#fea00a" /> },
+    { title: 'Leistungen', path: '/company/services', subTitle: 'Lege deine Leistungen an', color: 'warning', icon: <Archive color="#0983fe" /> },
+    { title: 'Preis-Tabellen', path: '/company/prices', subTitle: 'Preisstrucktur der Leistungen', color: 'info', icon: <DollarSign color="#fea00a" /> },
     { title: 'Verfügbarkeiten', path: '/company/availabilities', subTitle: 'Verfügbarkeiten der Leistungen', color: 'warning', icon: <Columns color="#bf5bf3" /> },
     { title: 'Reservierungen', path: '/company/reservations', subTitle: 'Reservierungen einsehen', color: 'danger', icon: <Columns color="#d4be21" /> },
   ],

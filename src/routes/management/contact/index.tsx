@@ -44,7 +44,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
 
     hasInvoiceAddress: { value: !data?.hasInvoiceAddress || true, type: 'boolean', required: false },
     street: { value: data?.address?.street || '', type: 'string', required: true },
-    houseNumber: { value: data?.address?.houseNumber || '', type: 'number', required: false },
+    houseNumber: { value: data?.address?.houseNumber || '', type: 'string', required: false },
     place: { value: data?.address?.place || '', type: 'string', required: true },
     plz: { value: data?.address?.plz || '', type: 'plz', required: true },
   };

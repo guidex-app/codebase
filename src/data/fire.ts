@@ -12,7 +12,7 @@ const db = getFirestore(fireConfig);
 //   });
 // };
 
-const getQuery = (item: { path:string, order: string | false, w?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | 'in' | '>' | '>=' | '<=', any][], limited?: number, start?: (string | number)[] }) => {
+const getQuery = (item: { path:string, order: string | false, w?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | 'in' | '>' | 'not-in' | '>=' | '<=', any][], limited?: number, start?: (string | number)[] }) => {
   const whereFields = item.w?.map((i) => where(...i)) || [];
   return query(
     collection(db, item.path),
@@ -23,7 +23,7 @@ const getQuery = (item: { path:string, order: string | false, w?: [string, 'arra
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getFireCollection = async (path:string, order: string | false, whereField?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | '>' | 'in' | '>=' | '<=', any][], limited?: number, start?: (string | number)[]): Promise<any[]> => {
+export const getFireCollection = async (path:string, order: string | false, whereField?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | '>' | 'in' | '>=' | 'not-in' | '<=', any][], limited?: number, start?: (string | number)[]): Promise<any[]> => {
   const snapshot = await getDocs(getQuery({ path, order, w: whereField, limited, start }));
   return snapshot.docs.map((snap: any) => snap.data());
 };

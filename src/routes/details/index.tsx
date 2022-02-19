@@ -7,6 +7,7 @@ import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
 import OpeningsList from '../../components/openingList/openings';
 import Rating from '../../components/ratings';
+import Slider from '../../components/slider';
 import useCompany from '../../hooks/useCompany';
 import { User } from '../../interfaces/user';
 import Reservation from './reservation';
@@ -28,15 +29,24 @@ const Details: FunctionalComponent<DetailsProps> = ({ activityID, user }: Detail
     );
   }
 
+  const generateImageStrings = (): string[] => {
+    const images = ['image1', 'image2', 'image3', 'image4'];
+    const newImages: string[] = [];
+    images.forEach((x) => { if (data.state?.includes(x)) newImages.push(`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${activityID}%2F${x}%2F${x}_600x450.jpeg?alt=media`); });
+    return newImages;
+  };
+
   return (
     <Fragment>
-      <TextHeader
-        icon={<Star color="#2fd159" />}
-        title={data.title.name}
-        text={data.description}
+      <Slider
+        images={generateImageStrings()}
+        height={300}
       />
+
       <main class="small_size_holder">
         <BackButton url={`/activity/${data.category.form}`} />
+        <h1 style={{ marginTop: '20px' }}>{data.title.name}</h1>
+        <p class="grey">{data.description}</p>
         <OpeningsList openings={data.openings} />
         <Item icon={<MapPin />} label="Adresse" text={`${data.address?.street}`} type="grey" />
         <Item icon={<MapPin />} label="15 km Distanz" text="Klicke um den Weg zu berechnen" type="grey" />

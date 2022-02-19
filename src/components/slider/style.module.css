@@ -1,0 +1,26 @@
+.slider {
+    white-space: nowrap;
+
+    scroll-snap-type: x mandatory;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+
+    -webkit-overflow-scrolling: touch;
+    text-align: center;
+    scroll-padding: 0;
+    width: 100%;
+    background: #323643;
+    background: linear-gradient(145deg, #201b29, #272031);
+}
+
+.slider::-webkit-scrollbar { height: 0; }
+
+.slider > div, .slider > img {
+    display: inline-block;
+    margin: 0 2.5px; padding: 0;
+    scroll-snap-align: start;
+    height: 100%;
+}

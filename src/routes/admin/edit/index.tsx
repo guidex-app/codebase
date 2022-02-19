@@ -23,7 +23,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
   const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
 
   const form: FormInit = {
-    title: { value: data !== 'new' && data?.title ? { name: data.title.name || '', form: data.title.form || '' } : { name: '', form: '' }, type: 'title', required: true },
+    title: { value: data !== 'new' && data?.title.name, type: 'string', required: true },
     type: { value: data !== 'new' && data?.type ? data.type : 'seopage', type: 'string', required: true },
     description: { value: data !== 'new' && data?.description ? data.description : '', type: 'string', required: false },
     partitions: { value: data !== 'new' && data?.partitions ? data.partitions : [''], type: 'string[]', required: false },
@@ -33,12 +33,8 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
   };
   const { formState, fields, isValid, changeField } = useForm(form);
 
-  const changeTitleValue = (value:any) => {
-    changeField({ name: value, form: replaceSpecialCharacters(value) }, 'title');
-  };
-
   const getCorrectFields = () => ({
-    ...(data === 'new' && { title: fields.title }),
+    ...(data === undefined ? { title: { name: fields.title, form: replaceSpecialCharacters(fields.title) } } : { title: data.title }),
     filter: fields.filter,
     description: fields.description,
     ...(type === 'topics' && {
@@ -85,15 +81,13 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     changeField(getPartition, 'partitions');
   };
 
-  const editTopicForm = async () => {
+  const validation = async () => {
     if (isValid()) {
       if (formState.image === 'valid') setImageState('loading');
 
       const newFields = getCorrectFields();
-      console.log(newFields, data);
 
-      fireDocument(`${type}/${data.title.form || fields.title.form}`, newFields, data !== 'new' ? 'update' : 'set')
-        .then(() => navigate());
+      fireDocument(`${type}/${newFields.title.form}`, newFields, data === undefined ? 'set' : 'update').then(() => navigate());
     }
   };
 
@@ -113,14 +107,12 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         type="text"
         label="Name:"
         name="title"
-        value={fields.title?.name}
+        value={fields.title}
         disabled={data !== undefined}
-                //   disabled={data !== 'new' ? 'Bereits definiert' : undefined}
         placeholder="Name der Unternehmung"
         error={formState.title}
-                //   errorMessage="Bitte gebe einen Namen an"
         required
-        change={changeTitleValue}
+        change={changeField}
       />
 
       {type === 'topics' && (
@@ -185,16 +177,12 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         ))}
 
         <AddRemove action={addPartition} name="add" isFirst={!(fields.partitions?.[1])} />
-
-        <p class="grey">
-          Hier wird der Haupttext definiert. Bei der SeoPage, werden die Abschnitte in Kacheln, versetzt angeordnet. Ansonsten wird ein neuer Absatz erstellt. Wenn ein Abschnitt leer gelassen wird, wird er beim speichern automatisch entfernt.
-        </p>
       </Fragment>
       )}
 
-      {fields.type !== 'notlisted' && fields.title?.form && (
+      {fields.type !== 'notlisted' && fields.title && (
       <ImgInput
-        fileName={fields.title.form}
+        fileName={fields.title}
         folderPath={type}
         name="image"
         error={formState.image}
@@ -208,7 +196,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       />
       )}
 
-      <FormButton action={editTopicForm} />
+      <FormButton action={validation} />
       <FormButton label="Löschen" type="outline" action={deleteTopic} />
     </Fragment>
   );

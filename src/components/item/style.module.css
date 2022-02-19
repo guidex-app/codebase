@@ -1,132 +1,64 @@
-.link {
-    position: relative;
+.item {
     display: block;
-    color: #FFFFFF;
-    text-decoration: none;
-    padding: 2.5px 5px;
-    margin: 2.5px 5px;
+    position: relative;
     cursor: pointer;
-    border-radius: 10px;
+    padding: 5px 10px;
     will-change: background;
-    transition: background 0.3s ease-in-out;
+    transition: background 0.3s ease-in-out, 0.5s ease-out border-image;
 }
 
-.info { margin: 2.5px 0; }
+.item:hover { background-color: rgba(255,255,255,0.03); }
 
-.grey, .info {
-    background-color: rgba(255,255,255,0.04);
-    margin-bottom: 10px;
-    padding-left: 10px;
-}
-
-.link:hover {
-    background-color: rgba(255,255,255,0.03);
-}
-
-.link:hover .label, .info .label, .grey .label {
-    border-color: transparent; 
-}
-
-.link:last-child .label {
-    border: none;
-}
-
-.link svg {
+.item svg, .image {
     display: inline-block;
     vertical-align: middle;
-    padding-right: 10px;
-    width: 30px;
-    height: 50px;
 }
 
-.link svg:not([color]) {
-    color: #6c7293;
-}
+.item svg { width: 20px; height: 45px; }
+.item svg:not([color]) { color: #6c7293; }
+.grey svg, .current svg { color: #fc424a !important; }
 
-.active, .current svg, .current .label, .grey, .active.link svg, .grey.link svg {
-    color: #fc424a;
-}
-
-.large { position: relative; }
-
-.large svg {
-    width: 40px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.label {
-    display: inline-block;
-    height: 100%;
-    width: 100%;
-	line-height: 23px;
-    vertical-align: top;
-    padding: 13.5px 15px;
-    border-bottom: 1px solid #373349;
-    transition: border-color 0.3s ease-in-out;
-}
-
-.label.text { padding: 2px 15px; }
-
-.label p { margin: 0; }
-
-.label small { color: #6c7293; }
-
-.link svg + .label {
-    width: calc(100% - 30px);
-    padding-left: 0;
-}
-
-.large svg + .label {
-    width: calc(100% - 45px);
-    margin-left: 45px;
-    padding: 10px 0;
-}
-
+.image img { width: 100%; height: auto; }
 .image {
     width: 50px;
     height: 50px;
     overflow: hidden;
-    display: inline-block;
     border-radius: 10px;
     background-color: #323643;
-    margin-right: 15px;
     color: transparent;
 }
 
-.image img { width: 100%; height: auto; }
-
-.image + .label {
-    width: calc(100% - 65px);
-    padding-left: 0;
+.item p {
+    display: inline-block;
+    max-width: 100%;
+	line-height: 22px;
+    vertical-align: middle;
+    padding: 5px 0;
+    margin: 0;
 }
 
-.link:last-child .label {
-    border-bottom: 1px solid transparent !important;
+.item svg + p, .item .image + p { padding-left: 12.5px; max-width: calc(100% - 30px); }
+.item small { display: block; color: #6c7293; font-size: 0.86em; }
+
+.item .image + p {
+    max-width: calc(100% - 50px);
 }
 
-.link:not(.grey, .info):after {
-    content: "";
-    display: block;
-
-    height: 0.45em;
-    width: 0.45em;
-
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%) rotate(45deg);
-
-
+.clean { 
+    background-color: transparent;
+    border-width: 1px;
     border-style: solid;
-    border-width: 2px 2px 0 0;
-    border-color: rgba(255,255,255,0.3);
-
-    transition: 0.3s right ease-out, border-color 0.6s ease-out;
+    border-image: linear-gradient(to right, transparent, #373349) 0 1 100%;
 }
 
-.link:not(.grey):hover:after {
-    right: 15px;
-    border-color: #FFFFFF;
+.clean:last-child, .clean:hover { border-image: linear-gradient(to right, transparent, transparent) 0 1 100%; border-radius: 10px; }
+
+.info, .grey {
+    background-color: rgba(255,255,255,0.04);
+    margin-bottom: 10px;
+    border-radius: 10px;
 }
+
+.grey, .current { color: #fc424a; }
+
+

@@ -1,20 +1,20 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Calendar, Columns } from 'react-feather';
+import { Calendar, Columns, Dribbble, Home, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import Counter from '../../../components/form/counter';
 import PickInput from '../../../components/form/pickInput';
-import SelectInput from '../../../components/form/selectInput';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
 import Modal from '../../../container/modal';
-import { fireDocument, getFireCollection } from '../../../data/fire';
+import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
+import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceInfo } from '../../../interfaces/company';
 import { FormInit } from '../../../interfaces/form';
@@ -48,28 +48,15 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
     defaultCapacity: { value: 10, type: 'number', required: true },
     storno: { value: '24 Std.', type: 'string', required: false },
   };
-
-  const [selected, setSelected] = useState<ServiceInfo | false>(false);
-  const [selectList, setSelectList] = useState<ServiceInfo[] | false>(false);
-  const [showCapacity, setShowCapacity] = useState(false);
   const { fields, formState, changeField, isValid } = useForm(formInit);
 
-  const loadListData = () => {
-    getFireCollection(`activities/${data.title.form}/services/`, false, [['serviceName', '!=', false]]).then((listData: ServiceInfo[]) => {
-      if (listData) {
-        setSelectList(listData);
-        if (!listData[1] && listData[0]) setSelected(listData[0]);
-      }
-    });
-  };
-
-  const changeSelect = (value: string) => {
-    setSelected(selectList ? selectList?.find((x: ServiceInfo) => x.serviceName === value) || false : false);
-  };
+  const [selected, setSelected] = useState<ServiceInfo | false>(false);
+  const { serviceList } = useServiceList(activityID);
+  const [showCapacity, setShowCapacity] = useState(false);
 
   const toggleShowCapacity = () => setShowCapacity(!showCapacity);
 
-  useEffect(() => { if (data.title.form) loadListData(); }, [data]);
+  useEffect(() => { if (!serviceList?.[1] && serviceList?.[0]) setSelected(serviceList[0]); }, [serviceList]);
 
   const validateForm = () => {
     if (selected && selected.id && isValid()) {
@@ -78,6 +65,10 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
         route(`/company/dashboard/${activityID}`);
       });
     }
+  };
+
+  const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
+    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
   };
 
   return (
@@ -89,16 +80,12 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
-        {selectList !== false && (
-          <SelectInput
-            label="Wähle eine Leistung:"
-            name="select"
-            value={selected ? selected?.serviceName : undefined}
-            options={selectList.map((x: ServiceInfo) => x.serviceName || 'Name nicht definiert')}
-            error={selected !== false ? 'valid' : 'invalid'}
-            required
-            change={changeSelect}
-          />
+        {serviceList !== undefined && !selected && (
+          <section class="group form small_size_holder">
+            {serviceList?.map((x: ServiceInfo) => (
+              <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />
+            ))}
+          </section>
         )}
 
         {selected !== false && (
@@ -127,30 +114,8 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
               <section class="group form">
                 <h3>Reservierung</h3>
 
-                {/* <BasicInput
-                  type="number"
-                  label="Vorlaufzeit (Minuten)"
-                  name="leadTimeInMin"
-                  value={fields.leadTimeInMin}
-                  placeholder="Vorlaufzeit für die Reservierungen"
-                  error={formState.leadTimeInMin}
-                  required
-                  change={changeField}
-                /> */}
-
                 <Counter label="Vorlaufzeit (Minuten)" name="leadTimeInMin" value={fields.leadTimeInMin} change={changeField} />
                 <Counter label="Welches Mindestalter ist erforderlich" name="minAge" value={fields.minAge} change={changeField} />
-
-                {/* <BasicInput
-                  type="number"
-                  label="Welches Mindestalter ist erforderlich"
-                  name="minAge"
-                  value={fields.minAge}
-                  placeholder="Vorlaufzeit für die Reservierungen"
-                  error={formState.minAge}
-                  required
-                  change={changeField}
-                /> */}
 
                 <PickInput
                   label="Stornierungs-Möglichkeiten"
@@ -165,18 +130,8 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
 
               <section class="group form">
                 <h3>Anzahl der Verfügbarkeiten</h3>
-                {/* <BasicInput
-                  type="number"
-                  label="Standartverfügbarkeiten"
-                  name="defaultCapacity"
-                  value={fields.defaultCapacity}
-                  placeholder="Geben sie Ihre Standartverfügbarkeiten an"
-                  error={formState.defaultCapacity}
-                  required
-                  change={changeField}
-                /> */}
-                <Counter label="Standartverfügbarkeiten" name="defaultCapacity" value={fields.defaultCapacity} change={changeField} />
 
+                <Counter label="Standartverfügbarkeiten" name="defaultCapacity" value={fields.defaultCapacity} change={changeField} />
                 <Item icon={<Calendar />} label="Individuell konfigurieren (Tag / Uhrzeit)" text="Klicke um für bestimmte Uhrzeiten oder Tage eine Individuelle verfügbarkeit anzugeben" type="grey" action={toggleShowCapacity} />
               </section>
             </form>

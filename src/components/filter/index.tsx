@@ -8,26 +8,26 @@ import FilterItem from './filterItem';
 interface FilterListProps {
   data: Filter[][];
   values: string[];
+  change: (newFilter: string[]) => void;
 }
 
-const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: FilterListProps) => {
-  const [activeSection, setActiveSection] = useState<string[]>(['we']);
-  const [activeFilter, setActiveFilter] = useState<string[]>([]);
+const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, change }: FilterListProps) => {
+  const [activeSection, setActiveSection] = useState<string[]>([]);
 
   useEffect(() => {
-    if (activeFilter.length === 0 && values.length > 0) {
+    if (activeSection.length === 0 && values.length > 0) {
       const newActiveSection: string[] = [];
       values.forEach((x) => {
         const prefix = x.substring(0, 2);
         if (newActiveSection.indexOf(prefix) === -1) newActiveSection.push(prefix);
       });
       if (newActiveSection.length > 0) setActiveSection([...newActiveSection]);
-      setActiveFilter(values);
+      // setActiveFilter(values);
     }
   }, [values]);
 
   const toggleTags = (tag: string, filterIndex: number, isRadio: boolean) => {
-    let newFilter: string[] = activeFilter;
+    let newFilter: string[] = values;
 
     if (filterIndex !== -1) {
       newFilter.splice(filterIndex, 1);
@@ -37,7 +37,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: Filt
       if (tag !== prefix) newFilter.push(tag);
     }
 
-    setActiveFilter([...newFilter]);
+    change([...newFilter]);
   };
 
   const activate = (sectionIndx: number, prefix: string) => {
@@ -53,7 +53,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: Filt
 
   const reset = async () => {
     setActiveSection([]);
-    setActiveFilter([]);
+    change([]);
   };
 
   return (
@@ -62,7 +62,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values }: Filt
         <div key={groupIndex.toString()} style={{ backgroundColor: '#2b303d', borderRadius: '20px', marginBottom: '15px' }}>
           {group.map((item: Filter) => (
             <FilterItem
-              filter={activeFilter}
+              filter={values}
               activate={activate}
               toggleTags={toggleTags}
               sectionIndx={activeSection.indexOf(item.title.form)}

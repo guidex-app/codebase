@@ -10,22 +10,20 @@ interface ItemProps {
     link?: string;
     icon?: any;
     image?: string;
-    type?: 'active' | 'grey' | 'large' | 'info';
+    type?: 'grey' | 'large' | 'info' | 'clean';
 }
 
-const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type, action, link, text }: ItemProps) => (
-  <Link class={`${style.link} ${type ? style[type] : ''}`} href={link} activeClassName={link ? style.current : undefined} onClick={action}>
+const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type = 'clean', action, link, text }: ItemProps) => (
+  <Link class={`${style.item} ${style[type] || ''}`} href={link} activeClassName={link ? style.current : undefined} onClick={action}>
     {image ? (
-      <div class={style.image}>
-        <picture>
-          <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
-          <img loading="lazy" src={`${image}.jpeg?alt=media`} alt={label} />
-        </picture>
-      </div>
+      <picture class={style.image}>
+        <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
+        <img loading="lazy" src={`${image}.jpeg?alt=media`} alt={label} />
+      </picture>
     ) : (
       icon && icon
     )}
-    <div class={`${style.label} ${text ? style.text : ''}`}><p>{label}</p>{text && <small>{text}</small>}</div>
+    <p>{label} {text && <small>{text}</small>}</p>
   </Link>
 );
 

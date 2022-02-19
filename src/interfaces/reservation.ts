@@ -1,18 +1,18 @@
 /**
  * Preise mit ihren Bedingungen, zur Ausgabe
  */
-export interface PriceTerms {
-    id: string;
+export interface PriceItem {
+    id?: string;
+    price?: number;
+
     duration: number;
     persons: number;
 
-    value: number;
-
-    day?: string;
-    rounds?: number;
-    discount?: string;
-    age?: string;
-    time?: string;
+    day: string;
+    rounds?: number | false;
+    discount: string | false;
+    age: string | false;
+    time: string | false;
   }
 
 /**
@@ -25,11 +25,12 @@ export interface Capacity {
     value: number;
   }
 
-export interface IncludedPriceSpecs {
-    days: string[];
-    ages: string[];
-    discounts: string[];
-    times: string[];
+export interface ContainsList {
+    day: string[];
+    age: string[];
+    discount: string[];
+    time: string[];
+    persons: number[];
   }
 
 // export interface ReserveItem {
@@ -93,7 +94,7 @@ export interface ShoppingCart {
     room?: number,
   }
 
-export interface UserPreferences {
+export interface UserValues {
     ages?: { [key: string]: number },
     discountName?: { [key: string]: number },
     onDuration?: string;

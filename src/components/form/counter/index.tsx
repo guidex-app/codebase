@@ -12,12 +12,12 @@ interface CounterProps {
     max?: number;
     steps?: number;
     icon?: any;
-    type?: 'small' | 'large';
     required?: true;
+    large?: true;
     change: (value: any, key: string) => void,
 }
 
-const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, required, min = 1, type = 'small', max = 10000, value = 0, steps = 1, change }: CounterProps) => {
+const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, required, min = 1, large, max = 10000, value = 0, steps = 1, change }: CounterProps) => {
   const newValue = (typ: 'add' | 'remove') => {
     const checkAdd: boolean = typ === 'add' && (+value + steps) <= max;
     const checkRemove: boolean = typ === 'remove' && (+value - steps) >= min;
@@ -30,7 +30,7 @@ const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, require
   };
 
   return (
-    <div class={`${style.counter} ${type ? style[type] : ''}`}>
+    <div class={`${style.counter} ${large ? style.large : ''}`}>
               {icon && icon}
       <label for={name}>{required && '*'}{label}</label>
       <div>

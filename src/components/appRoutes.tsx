@@ -49,7 +49,7 @@ const AppRoutes: FunctionalComponent = () => {
     <Router>
       <Route path="/" component={Cats} user={user} />
       <Route path="/explore/" component={Explore} />
-      <Route path="/explore/:topicID" component={TopicPage} />
+      <Route path="/explore/:topicID" component={TopicPage} user={user} />
 
       <Route path="/admin/" component={Admin} />
 

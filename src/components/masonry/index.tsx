@@ -21,6 +21,7 @@ const Masonry: FunctionalComponent<MasonryProps> = ({ items, type }: MasonryProp
   );
 
   useEffect(() => {
+    console.log('generateChunks');
     if (items?.[0]) setChunks(generateChunks(items, 10));
   }, [items]);
 

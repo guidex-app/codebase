@@ -1,5 +1,35 @@
-.topics {
-    padding: 60px 15px;
+.topic { padding: 0; }
+
+.topic header {
+    background-position: center;
+    background-size: 100% auto;
+
+    border-radius: 0 0 20px 20px;
+    padding: 0;
 }
 
-.topics p { padding-bottom: 20px; }
+.topic header div {
+    background: linear-gradient(180deg, rgba(243, 118, 22, 0.7) 0%, rgba(43, 0, 121, 0.7) 100%);
+    padding: calc((100vh / 2) - 80px) 10px 20px 10px;
+    border-radius: 0 0 20px 20px;
+}
+
+.topic header p {
+    margin: 0;
+    color: #b9afca;
+}
+
+.topic article {
+    padding: 10px;
+}
+
+.topic article p:first-child::first-letter {
+    padding: 0 .3rem 0 0;
+    margin: 0 .3rem 0 0;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 4rem;
+    float: left;
+    line-height: 0.9;
+  }
+
+/* .topic article p { padding-bottom: 20px; } */

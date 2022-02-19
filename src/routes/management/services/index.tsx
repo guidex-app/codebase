@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
 import { Archive, Dribbble, Home, PlusCircle, Users } from 'react-feather';
 
@@ -10,8 +10,9 @@ import QuestForm from '../../../components/form/questForm';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
 import Modal from '../../../container/modal';
-import { fireDocument, getFireCollection } from '../../../data/fire';
+import { fireArray, fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
+import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
 import { AnsDB, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import ServiceQuestions from './serviceQuestions';
@@ -33,14 +34,9 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
   const fields = ['serviceName', 'structure', 'description', 'image', 'bringWith'];
 
   const [service, setService] = useState<ServiceInfo | false | undefined>(false);
-  const [serviceList, setServiceList] = useState<ServiceInfo[]>([]);
   const [serviceFields, setServiceFields] = useState<ServiceField[] | false | undefined>(false);
 
-  /** Lade alle services von der activity ID */
-  const getServiceList = async () => {
-    const serviceListData = await getFireCollection(`activities/${data.title.form}/services/`, false);
-    if (serviceListData) setServiceList(serviceListData);
-  };
+  const { serviceList, updateServiceList } = useServiceList(activityID);
 
   /** Lade alle services von der activity ID */
   const generateFields = (select: ServiceInfo | undefined) => {
@@ -57,8 +53,6 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
 
     setServiceFields(newFields[0] ? newFields : undefined);
   };
-
-  useEffect(() => { getServiceList(); }, [data]); // load servicelist
 
   const selectService = (select?: ServiceInfo) => {
     setService(select);
@@ -79,23 +73,9 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
     return setServiceFields([newField]);
   };
 
-  const updateServiceList = (newService?: ServiceInfo | false) => {
-    if (newService) {
-      const newList = serviceList || [];
-      const findIndex: number = newList.findIndex((x) => x.id === newService.id);
-      if (findIndex > -1) {
-        newList.splice(findIndex, 1, newService);
-      } else {
-        newList.push(newService);
-      }
-
-      setServiceList([...newList]);
-      console.log('neue lsite', [...newList]);
-    }
-  };
-
   const closeService = (newService?: ServiceInfo) => {
-    updateServiceList(newService || service);
+    updateServiceList(newService);
+    if (!serviceList?.[0]) fireArray(`activities/${activityID}`, 'state', 'services', 'add');
     setServiceFields(false);
     setService(false);
   };
@@ -110,9 +90,10 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
       const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.answers?.[0]?.values?.[0] };
 
       fireDocument(`activities/${activityID}/services/${getServiceID}`, updatedField, isInitial ? 'set' : 'update').then(() => {
-        setService({ ...(!isInitial ? service : []), ...updatedField });
+        const newService = { ...(!isInitial ? service : []), ...updatedField };
+        if (newField.name === 'image') return closeService(newService);
+        setService(newService);
         updateServiceFields(newField);
-        if (newField.name === 'image') setService(false);
       });
     }
   };

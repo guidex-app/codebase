@@ -47,8 +47,8 @@
 
 .button {
     position: fixed;
-    right: 5px;
-    top: 5px;
+    right: 7.5px;
+    top: 7.5px;
     z-index: 50;
     border: none;
     height: 55px;

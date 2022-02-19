@@ -1,5 +1,5 @@
 type Images = 'thumbnail' | 'image1' | 'image2' | 'image3' | 'image4';
-type IsComplete = 'service' | 'available' | 'prices';
+type IsComplete = 'services' | 'available' | 'prices';
 
 export interface ActBasic {
   title: { name: string, form: string },

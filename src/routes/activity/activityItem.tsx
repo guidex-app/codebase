@@ -26,7 +26,7 @@ const ActivityItem: FunctionalComponent<ActivityItemProps> = ({ activity }: Acti
         <h2>
           {activity.title.name}&nbsp;
           <span class="orange">{[1, 2, 3, 4, 5].map((x) => (
-            x <= (activity.rating?.reduce((a, b, index: number) => a + (b * (index + 1)), 0) || 0) ? <span key={x} class="orange">⋆</span> : <span key={x} class="grey">⋆</span>
+            x <= (activity.rating?.reduce((a, b, index: number) => a + (b * (index + 1)), 0) || 0) ? <span key={x} class="orange">★</span> : <span key={x} class="grey">★</span>
           ))}
           </span>
         </h2>

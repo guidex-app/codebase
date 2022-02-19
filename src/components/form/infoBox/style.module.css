@@ -1,8 +1,7 @@
 .box {
     position: relative;
-    background: rgba(255,255,255,0.05);
+    background: #382954;
     padding: 10px 20px 10px 65px;
-    border: 1px solid rgba(255,255,255,0.15);
     border-radius: 4px;
     margin: 60px 5px 0 5px;
 }

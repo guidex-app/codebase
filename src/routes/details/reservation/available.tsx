@@ -17,7 +17,6 @@ import { ServiceField, ServiceInfo } from '../../../interfaces/company';
 import { FormInit } from '../../../interfaces/form';
 import { Available, Capacity, Reserved } from '../../../interfaces/reservation';
 import Confirm from './confirm';
-import EditPersons from './editPersons';
 import Slots from './slots/slots';
 
 interface ReserveAvailableProps {
@@ -43,7 +42,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   };
 
   const { fields, changeField } = useForm(formInit);
-  const [show, setShow] = useState<'confirm' | 'personAmount' | 'slots'>('slots');
+  const [show, setShow] = useState<'confirm' | 'slots'>('slots');
   const [reservationData, setReservationData] = useState<{
     structure?: ServiceField[]; // Preisstrukture
     available?: Available; // Verfügbarkeitsinfos
@@ -64,7 +63,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
     }
   };
 
-  /** Berechnet die Raum Anzahl **/
+  /** Berechnet die Raum Anzahl * */
   const calculateRooms = (from: number, maxPersons: number) => Math.ceil(from / maxPersons);
   const choosePerson = (amount: number) => {
     const maxPersons = reservationData.available?.countMaxRoomPerson || 1;
@@ -72,7 +71,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
       changeField(amount, 'personAmount');
       changeField(calculateRooms(amount, maxPersons), 'amountRooms');
     }
-  }
+  };
 
   const chooseDay = (newDay: string) => {
     changeField(newDay, 'selectedDay');
@@ -90,7 +89,6 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
     if (list.length >= 1) setDuration(isRound ? '1' : list[0]);
     setDurationList({ list, isRound });
   };
-
 
   //   const displayPersFunction = (item: string) => {
   //     if (activityData.available?.countMaxRoomPerson) {
@@ -127,34 +125,19 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   const loadDayData = () => {
     if (reservationData.structure) {
       const currentDay: Date = new Date(fields.selectedDay);
-
-
-        const currentDayID = generateDateString(currentDay);
-        getFireMultiCollection([
-          { path: `activities/${activityID}/services/${service.id}/reserved`, where: [['date', '==', currentDayID]] },
-          { path: `activities/${activityID}/available/${service.id}/capacity`, where: [['date', '==', currentDayID]] },
-        ]).then(([reservations, capacities]: [Reserved[], Capacity[]]) => {
-          setUpDuration();
-          setReservationData({
-            ...reservationData,
-            reservations,
-            capacities,
-          });
+      const currentDayID = generateDateString(currentDay);
+      getFireMultiCollection([
+        { path: `activities/${activityID}/services/${service.id}/reserved`, where: [['date', '==', currentDayID]] },
+        { path: `activities/${activityID}/available/${service.id}/capacity`, where: [['date', '==', currentDayID]] },
+      ]).then(([reservations, capacities]: [Reserved[], Capacity[]]) => {
+        setUpDuration();
+        setReservationData({
+          ...reservationData,
+          reservations,
+          capacities,
         });
-
+      });
     }
-  };
-
-  const generatePersonAges = () => {
-    // age: erwachsenene und evtl. andere
-    // rabatte: keine oder evtl. andere
-
-    // runden rabatte
-    // zeit rabatte
-    // tages rabatte
-    // const specs;
-    // changeField(specs, 'personAmount');
-
   };
 
   const loadReservationData = () => {
@@ -173,7 +156,6 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
         setReservationData({ loaded: true, structure, available, ageList, isOpened });
       }
     });
-
   };
 
   useEffect(() => {
@@ -187,8 +169,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   useEffect(() => { chooseDay(getSimpleDateString(new Date())); }, []); // init
 
   if (!reservationData.loaded && reservationData.isOpened) return <Item icon={<Info />} type="info" label="Die Unternehmung ist noch nicht reservierbar" />;
-  if (show === 'personAmount') return <EditPersons value={fields.personAmount} ageList={reservationData.ageList} change={changeField} />;
-  if (show === 'confirm' && fields.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} reservationTime={fields.reservationTime} />;
+  if (show === 'confirm' && fields.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} time={fields.reservationTime} />;
 
   return (
     <Fragment>
@@ -196,20 +177,12 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
 
       <BasicInput
         name="selectedDay"
+        label="Tag auswählen"
         icon={<Calendar />}
         change={chooseDay}
         value={fields.selectedDay}
         type="date"
       />
-
-      {/* <Counter
-        label={`Wie viele Personen? (max.: ${reservationData.available?.countMaxRoomPerson || 1} Pers.)`}
-        name="personAmount"
-        value={+fields.personAmount}
-        min={1}
-        max={reservationData.available?.countMaxRoomPerson || 1}
-        change={changeField}
-      /> */}
 
       {durationList?.isRound ? (
         <Counter label="Für wie viele Runden?" name="duration" value={+duration} change={changeField} max={10} min={1} />
@@ -225,17 +198,16 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
 
       {reservationData.isOpened && reservationData.available && service?.serviceType && duration && durationList ? (
         <Fragment>
-                <Counter
-        name="personAmount"
-        label={`Personen Anzahl (max.: ${reservationData.available?.countMaxRoomPerson || 1} Pers.)`}
-        max={reservationData.available?.countMaxRoomPerson || 1}
-        icon={<UserPlus />}
-        change={choosePerson}
-        value={fields.personAmount}
-      />
-          {/* <Item icon={<UserPlus />} label="1 Raum, 2 Gäste" text="Passe die teilnehmenden Personen an" type="info" action={() => setShow('personAmount')} /> */}
+          <Counter
+            name="personAmount"
+            label={`Personen Anzahl (max.: ${reservationData.available?.countMaxRoomPerson || 1} Pers.)`}
+            max={reservationData.available?.countMaxRoomPerson || 1}
+            icon={<UserPlus />}
+            change={choosePerson}
+            value={fields.personAmount}
+          />
 
-          <Chip small type="active" label={`Die ${durationList.isRound ? 'Rundendauer' : 'Standartdauer'} beträgt ${durationList.isRound ? durationList.list[0] : duration} Min. ${durationList.isRound && duration !== '1' ? `(${durationList.list[0] * parseInt(duration, 10)} Min.` : ''}`} action={() => console.log('s')} />
+          {!durationList.list[1] && <Chip small type="active" label={`Die ${durationList.isRound ? 'Rundendauer' : 'Standartdauer'} beträgt ${durationList.isRound ? durationList.list[0] : duration} Min. ${durationList.isRound && duration !== '1' ? `(${durationList.list[0] * parseInt(duration, 10)} Min.` : ''}`} action={() => console.log('s')} />}
           {foundation === 'object' && <Chip small type="active" label={`Anzahl der Räume ${fields.amountRooms || '1'}`} action={() => console.log('s')} />}
 
           <Slots
@@ -252,10 +224,11 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
           />
         </Fragment>
       ) : (
-        reservationData.isOpened ? (<p class="red">Bitte wähle alle optionen</p>) : (
-          <Item type="grey" icon={<Info />} label={`Nicht für ${fields.selectedShortDay}. verfügbar`} text="Bitte wähle einen geöffneten Tag aus" />
+        !reservationData.isOpened && (
+          <Chip small type="inactive" label={`Am ${fields.selectedShortDay}. ist leider nicht geöffnet`} action={() => console.log('')} />
         )
       )}
+
     </Fragment>
   );
 };

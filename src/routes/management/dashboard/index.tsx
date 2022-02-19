@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { Link, route } from 'preact-router';
-import { Home } from 'react-feather';
+import { Home, Info } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
@@ -52,6 +52,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
             <Chip label="Alles Löschen" small type="delete" action={() => console.log('da')} />
           </div>
         </div>
+        <Item icon={<Info />} type="info" label="Deine Unternehmung ist jetzt bereit. Stelle sie Online!" action={() => setOpenModal(true)} />
         <div class={`${style.basic} size_holder`}>
           {companyRoutes.basic.map((x) => (
             <Item icon={x.icon} label={x.title} type="info" action={() => route(`${x.path}/${data.title.form}`)} />

@@ -9,15 +9,15 @@ interface IconScrollListProp {
 
 const IconScrollList: FunctionalComponent<IconScrollListProp> = ({ filter }: IconScrollListProp) => {
   const iconMap: any = {
-    Geburtstagsfeiern: <PieChart />,
-    'Öffentliche Toiletten': <MapPin />,
+    Geburtstagsfeiern: <PieChart color="#6c7293" />,
+    'Öffentliche Toiletten': <MapPin color="#6c7293" />,
     Outdoor: <Sun />,
   };
 
   return (
     <div class={style.slider}>
       {filter?.map((x: string) => (
-        <div>{iconMap[x] || <Sun />}<br /><small>{x}</small></div>
+        <div>{iconMap[x] || <Sun color="#6c7293" />}<br /><small>{x}</small></div>
       ))}
     </div>
   );

@@ -1,14 +1,15 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
-import { Calendar, Clock, Type } from 'react-feather';
+import { Archive, Calendar, Clock, UserPlus } from 'react-feather';
 
 import FormButton from '../../../components/form/basicButton';
-import SelectInput from '../../../components/form/selectInput';
 import Item from '../../../components/item';
 import TopButton from '../../../components/topButton';
+import Popup from '../../../container/popup';
 import useShoppingCart from '../../../hooks/useShoppingCart';
 import { ServiceInfo } from '../../../interfaces/company';
-import { ShoppingCart, UserPreferences } from '../../../interfaces/reservation';
+import { ShoppingCart, UserValues } from '../../../interfaces/reservation';
+import Discounts from './discounts';
 import style from './style.module.css';
 
 interface ConfirmProps {
@@ -17,7 +18,7 @@ interface ConfirmProps {
     date: string;
     durationList: { list: any; isRound: boolean; };
     duration: string;
-    reservationTime: any;
+    time: any;
     personAmount: number;
     amountRooms: number;
     foundation: 'person' | 'object';
@@ -25,9 +26,10 @@ interface ConfirmProps {
     goBack: () => void;
 }
 
-const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, reservationTime }: ConfirmProps) => {
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
-  const { shoppingCart, isValid, totalPrice, priceSpecs, getAdults } = useShoppingCart(foundation, duration, durationList.isRound, new Date(date).getDay(), reservationTime, amountRooms, personAmount, userPreferences, `activities/${activityID}/services/${service.id}/prices`);
+const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activityID, service, duration, durationList, serviceName, date, personAmount, amountRooms, time }: ConfirmProps) => {
+  const [discounts, setDiscounts] = useState<UserValues>({});
+  const [showDiscount, setShowDiscount] = useState<boolean>(false);
+  const { shoppingCart, isValid, totalPrice, contains } = useShoppingCart(foundation, duration, date, durationList.isRound, time, amountRooms, personAmount, discounts, `activities/${activityID}/services/${service.id}/prices`);
 
   /**
      * Reservierung Abgeschließen Button
@@ -37,87 +39,53 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activi
   //     changeState('finished');
   //   };
 
-  const changeValue = (value: any, key: 'ages' | 'discountName' | 'countGames' | 'onDuration' | string) => {
-    if (key === 'discountName') {
-      let isTruthy: boolean = true;
-      const newValues: [string, number][] = Object.entries(value);
-      newValues.forEach(([discountKeys, discountVal]: [string, number]) => {
-        const getAge: string = discountKeys !== 'nothing' ? discountKeys.split('_')[0] : 'Erwachsene';
-        const checkAge = (userPreferences.ages?.[getAge] && discountVal <= userPreferences.ages[getAge]) || !userPreferences.ages?.[getAge];
-        isTruthy = checkAge && checkAge !== undefined ? checkAge : false;
-      });
+  // const changeValue = (value: any, key: 'ages' | 'discountName' | 'countGames' | 'onDuration' | string) => {
+  //   if (key === 'discountName') {
+  //     let isTruthy: boolean = true;
+  //     const newValues: [string, number][] = Object.entries(value);
+  //     newValues.forEach(([discountKeys, discountVal]: [string, number]) => {
+  //       const getAge: string = discountKeys !== 'nothing' ? discountKeys.split('_')[0] : 'Erwachsene';
+  //       const checkAge = (userValues.ages?.[getAge] && discountVal <= userValues.ages[getAge]) || !userValues.ages?.[getAge];
+  //       isTruthy = checkAge && checkAge !== undefined ? checkAge : false;
+  //     });
 
-      if (isTruthy) {
-        const newPrefs = { ...userPreferences, [key]: value };
-        setUserPreferences(newPrefs);
-      }
-    } else {
-      const newPrefs = { ...userPreferences, [key]: value, ...(key === 'ages' && { discountName: undefined }) };
-      setUserPreferences(newPrefs);
-    }
-  };
-
-  const renderDiscount = () => {
-    const getAges: string[] | undefined = userPreferences.ages && Object.entries(userPreferences.ages)
-      .filter(([, value]: [string, number]) => value >= 1)
-      .map(([key]: [string, number]) => key);
-    if (getAges && getAdults() >= 1) getAges.push('Erwachsene');
-    if (priceSpecs && priceSpecs.discounts?.length !== 0) {
-      const getDiscountList: string[] = getAges ? getAges.map((ageName: string | undefined) => priceSpecs?.discounts.map((x: string) => `${ageName}_${x}`)).flat() : priceSpecs.discounts;
-      return (
-        <SelectInput
-          name="discountName"
-        //   maxNumber={personAmount}
-        //   value={userPreferences.discountName}
-          options={getDiscountList}
-          label="Bitte wählen sie Ihre Rabatte aus"
-        //   submitted={false}
-          change={changeValue}
-        />
-      );
-    }
-  };
+  //     if (isTruthy) {
+  //       const newPrefs = { ...userValues, [key]: value };
+  //       setUserValues(newPrefs);
+  //     }
+  //   } else {
+  //     const newPrefs = { ...userValues, [key]: value, ...(key === 'ages' && { discountName: undefined }) };
+  //     setUserValues(newPrefs);
+  //   }
+  // };
 
   return (
     <Fragment>
       <TopButton action={goBack} />
 
       <div class={`${style.price} ${isValid ? 'orange-bg' : 'red-bg'}`}>
-        {isValid === 'valid' && shoppingCart ? (
+        {isValid === 'valid' && shoppingCart && (
           <Fragment>
+            <div>
             {shoppingCart.map((cartItem: ShoppingCart) => (
               <p key={`${cartItem.age}_${cartItem.discount}_${cartItem.room}_${cartItem.amount}`}>
                 {`${cartItem.amount}x | ${cartItem.age} ${cartItem.discount ? `(${cartItem.discount})` : ''} für je: ${cartItem.price} €`}
                 {amountRooms > 1 && <p style={{ opacity: '0.5' }}> (Raum: {cartItem.room} mit {cartItem.groupDiscount} Pers.)</p>}
               </p>
             ))}
-            <strong>Gesamtsumme: {totalPrice} € (Fällt vorort an)</strong>
+            </div>
+            <strong>{totalPrice} €</strong>
           </Fragment>
-        ) : (
-          <strong>Es wurde kein Preis gefunden</strong>
         )}
       </div>
 
-      {priceSpecs?.ages && priceSpecs?.ages.length !== 0 && (
-      <SelectInput
-        name="ages"
-            // prefix={`Erwachsene: ${getAdults()}`}
-        // maxNumber={personAmount}
-        // value={userPreferences.ages}
-        options={priceSpecs.ages}
-        label="Bitte ordnen Sie sich zu"
-        // submitted={false}
-        change={changeValue}
-      />
-      )}
-      {priceSpecs?.discounts && priceSpecs?.discounts.length !== 0 && renderDiscount()}
-
       <section class="group form">
-        <Item icon={<Clock color="#ffa500" />} type="info" label={`Deine Reservierung für ${reservationTime} Uhr ${amountRooms >= 2 ? `(Für ${amountRooms} Räume)` : ''} ${durationList.isRound ? `(${duration} Runden)` : ''}`} />
-        <Item icon={<Type />} label="Leistung" text={serviceName} />
-        <Item icon={<Clock />} label="Anz. Räume" text={amountRooms.toString()} />
+        {!!contains?.discount?.[0] || !!contains?.age?.[0] && <Item label="Rabatt hinzufügen" text="Klick um einen Rabatt auszuwählen" action={() => setShowDiscount(true)} />}
+        {/* <Item icon={<Clock color="#ffa500" />} type="info" label={`Deine Reservierung für ${reservationTime} Uhr ${amountRooms >= 2 ? `(Für ${amountRooms} Räume)` : ''} ${durationList.isRound ? `(${duration} Runden)` : ''}`} /> */}
+        <Item icon={<Archive />} label="Leistung" text={serviceName} />
+        <Item icon={<UserPlus />} label="3 Personen (2 Räume)" text={amountRooms.toString()} />
         <Item icon={<Calendar />} label="Datum" text={date} />
-        <Item icon={<Calendar />} label="Uhrzeit" text={`${reservationTime} Uhr`} />
+        <Item icon={<Clock />} label="Uhrzeit" text={`${time} Uhr`} />
         <Item icon={<Clock />} label={durationList.isRound ? 'Runden' : 'Dauer'} text={durationList.isRound && duration ? `${duration} Runden (ca. ${parseInt(duration, 10) * durationList.list[0]} Min.)` : `${duration} Min.`} />
       </section>
 
@@ -126,6 +94,12 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activi
       <small class="grey">
         Der Preis kann vorort leicht abweichen. Alle Informationen erhalten Sie per E-Mail, welche Sie in Ihrem Account angegeben haben.
       </small>
+
+      {showDiscount && (
+      <Popup close={() => setShowDiscount(false)}>
+        <Discounts maxPersons={2} ageList={[]} discountList={[]} values={{}} change={() => console.log('s')} />
+        </Popup>
+      )}
     </Fragment>
   );
 };

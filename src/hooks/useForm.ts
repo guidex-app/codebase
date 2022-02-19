@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'preact/hooks';
+import { useEffect, useReducer } from 'preact/hooks';
 
 import { isEmail, isPhone, isPlz, isURL } from '../helper/formCheck';
 import { FormInit, FormType } from '../interfaces/form';
@@ -15,7 +15,6 @@ const useForm = (init: FormInit): {
   const getState = (fieldType: FormType, value?: any): 'valid' | 'invalid' => {
     switch (fieldType) {
       case 'phone': { if (isPhone(value)) return 'valid'; break; }
-      case 'title': { if (value?.form && value?.name) return 'valid'; break; }
       case 'image': { if (value > 0) return 'valid'; break; }
       case 'email': { if (isEmail(value)) return 'valid'; break; }
       case 'plz': { if (isPlz(value)) return 'valid'; break; }

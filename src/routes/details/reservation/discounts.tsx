@@ -3,14 +3,15 @@ import { useState } from 'preact/hooks';
 
 import Counter from '../../../components/form/counter';
 
-interface EditPersonsProps {
-    maxPersons?: number;
-    ageList?: string[];
-    value: any;
+interface DiscountsProps {
+    maxPersons: number;
+    ageList: string[];
+    discountList: string[];
+    values: { [key: string]: number };
     change: (value: number, key: string) => void;
 }
 
-const EditPersons: FunctionalComponent<EditPersonsProps> = ({ maxPersons, ageList, value, change }: EditPersonsProps) => {
+const Discounts: FunctionalComponent<DiscountsProps> = ({ maxPersons, ageList, discountList, values, change }: DiscountsProps) => {
   const [showSelect, setShowSelect] = useState(false);
 
   const presentSelect = () => {
@@ -22,9 +23,9 @@ const EditPersons: FunctionalComponent<EditPersonsProps> = ({ maxPersons, ageLis
   };
 
   const getAllNumbers = (): number => {
-    if (value) {
+    if (values) {
       let newCount: number = 0;
-      const newObjects: number[] = Object.values(value);
+      const newObjects: number[] = Object.values(values);
       for (let index = 0; index < newObjects.length; index += 1) {
         if (newObjects?.[index]) newCount = newObjects[index] + newCount;
       }
@@ -42,10 +43,10 @@ const EditPersons: FunctionalComponent<EditPersonsProps> = ({ maxPersons, ageLis
                 <Counter
                 label={age}
                 name={age}
-                type="large"
                 value={1}
                 min={1}
                 max={maxPersons || 1}
+                large
                 change={generateNewAges}
               />
               ))}
@@ -54,5 +55,5 @@ const EditPersons: FunctionalComponent<EditPersonsProps> = ({ maxPersons, ageLis
   );
 };
 
-export default EditPersons;
+export default Discounts;
 

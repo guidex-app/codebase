@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Compass, Globe, Grid, Home, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
+import { Compass, Globe, Grid, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
 
 import { getUser } from '../../data/auth';
 import Item from '../item';
@@ -30,11 +30,15 @@ const Menu: FunctionalComponent = () => {
 
   const checkUserState = async (): Promise<void> => {
     const { displayName, email } = await getUser();
-    container.current = typeof window !== 'undefined' && document?.getElementById('modals');
     if (displayName && email) setUser(displayName && email ? { displayName, email } : undefined);
   };
 
-  useEffect(() => { if (!user) checkUserState(); }, [show]);
+  const getElement = () => {
+    container.current = typeof window !== 'undefined' && document?.getElementById('modals');
+  };
+
+  useEffect(() => { if (!user?.email) checkUserState(); }, [show]);
+  useEffect(() => { if (!container.current) getElement(); }, []);
 
   const toggleModal = () => setShow(!show);
 

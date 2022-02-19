@@ -11,16 +11,17 @@ import style from './style.module.css';
 interface AddRatingProps {
   user: User;
   activityId: string;
+  rating: number;
   type: 'rating' | 'tipps';
   close: () => void;
 }
 
-const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, type, close }: AddRatingProps) => {
+const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rating, type, close }: AddRatingProps) => {
   const [ownComment, setOwnComment] = useState<{ comment: string, capture: string, oldRating?: number, rating?:number }>({
     comment: '',
     capture: '',
     oldRating: 0,
-    rating: 0,
+    rating,
   });
 
   const changeValue = async (value: any, key:string) => {
@@ -52,33 +53,38 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, type
     }
   }, [activityId]);
 
+  // if (ownComment.rating && starNum <= ownComment.rating && ownComment.rating !== 0) {
+  //   return (
+  //     <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
+  //       <Star fill="#ffab00" />
+  //     </button>
+  //   );
+  // }
+
+  // if (starNum - 0.5 === ownComment.rating) {
+  //   return (
+  //     <button type="button" key={starNum - 0.5} onClick={() => changeValue(starNum - 0.5, 'rating')}>
+  //       <Star fill="#ffab00" />
+  //     </button>
+  //   );
+  // }
+
+  // return (
+  //   <button type="button" key={starNum} onClick={() => changeValue(starNum, 'rating')}>
+  //     <Star />
+  //   </button>
+  // );
+
   return (
     <Fragment>
       {type === 'rating' && (
         <div class={style.rate}>
-          {[1, 2, 3, 4, 5].map((starNum: number) => {
-            if (ownComment.rating && starNum <= ownComment.rating && ownComment.rating !== 0) {
-              return (
-                <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
-                  <Star fill="#ffab00" />
-                </button>
-              );
-            }
+          {[1, 2, 3, 4, 5].map((starNum: number) => (
+            <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
+              <Star fill={(starNum <= (ownComment.rating || 0) || starNum - 0.5 === ownComment.rating) ? '#ffab00' : 'white'} />
+            </button>
+          ))}
 
-            if (starNum - 0.5 === ownComment.rating) {
-              return (
-                <button type="button" key={starNum - 0.5} onClick={() => changeValue(starNum - 0.5, 'rating')}>
-                  <Star fill="#ffab00" />
-                </button>
-              );
-            }
-
-            return (
-              <button type="button" key={starNum} onClick={() => changeValue(starNum, 'rating')}>
-                <Star />
-              </button>
-            );
-          })}
         </div>
       )}
 
@@ -104,7 +110,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, type
 
       <FormButton disabled={!user.uid} label={`${type === 'rating' ? 'Bewertung' : 'Tipp'} abschicken`} action={() => commitRating()} />
 
-      {ownComment.oldRating && <p class="red">Mit einer neuen Bewertung, werden alle Votes auf 0 zurückgesetzt</p>}
+      {!!ownComment.oldRating && <p class="red">Mit einer neuen Bewertung, werden alle Votes auf 0 zurückgesetzt</p>}
       <p class="grey">Hilf anderen und neuen Besuchern und gebe Ihnen mit deiner Bewertung eine Bewertungsgrundlage. Beschreibe dein Erlebnis in Worten und beschreibe was dich zu deiner Bewertung führt.</p>
     </Fragment>
   );

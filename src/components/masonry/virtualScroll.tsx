@@ -45,7 +45,7 @@ const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }
     <div key={`${index.toString()}_${scrolling.startAt}`} class={`${style.chunk} ${(index + scrolling.startAt) % 2 === 0 ? 'even' : 'odd'}`}>
       <MasonryItem chunks={chunks[index + scrolling.startAt] || []} type={type} />
     </div>
-  )), [scrolling.startAt]);
+  )), [scrolling.startAt, chunks]);
 
   return (
     <div

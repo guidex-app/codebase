@@ -29,7 +29,7 @@ const catFilter: Filter[][] = [[
       { name: 'Nachts', form: 'tz_nachts' },
     ] },
 ], [
-  { title: { name: 'Tags', form: 'ta', icon: <Coffee color="#2fd159" /> },
+  { title: { name: 'Interessen', form: 'ta', icon: <Coffee color="#2fd159" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Kultur', form: 'ta_culture' },

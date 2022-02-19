@@ -1,6 +1,6 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Calendar, Info } from 'react-feather';
+import { Calendar, Edit } from 'react-feather';
 
 import Chip from '../../../components/chip';
 import FormButton from '../../../components/form/basicButton';
@@ -8,51 +8,47 @@ import SelectInput from '../../../components/form/selectInput';
 import Item from '../../../components/item';
 import { fireDocument, getFireCollection } from '../../../data/fire';
 import getQuestFormValue from '../../../helper/priceStructure';
-import { ServiceField } from '../../../interfaces/company';
-import { PriceTerms } from '../../../interfaces/reservation';
+import { ServiceField, Structure } from '../../../interfaces/company';
+import { PriceItem } from '../../../interfaces/reservation';
 import style from '../../../style/table.module.css';
 
 interface EditPricesProps {
-    structureID: number;
+    structure: Structure;
     activityID: string;
     serviceID: string;
     questionLength: number;
-    changeType: (newType?: 'belongs' | 'prices') => void;
-    editStructure: (field: ServiceField[]) => void;
+    changeType: (newType?: 'belongs' | 'prices' | undefined) => void;
+    editStructure: (field: ServiceField[] | undefined, showType: 'belongs' | 'structure') => void;
 }
 
 interface PriceRows {
-    row: string[];
+    row: (string | false)[];
     columns: number[];
 }
 
-// interface PriceItem {
-//   col: string;
-//   row: string;
-//   onDay: string;
-//   value: number;
-// }
-
-const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeType, activityID, serviceID, questionLength, editStructure }: EditPricesProps) => {
+const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeType, activityID, serviceID, questionLength, editStructure }: EditPricesProps) => {
   const [status, setStatus] = useState<{
     isRound?: boolean;
     hasTime?: boolean;
     foundation?: string;
-    day?: string;
-  }>({});
+    day?:(string);
+      }>({});
 
   // listen
   const [structureFields, setStructureFields] = useState<ServiceField[]>();
   const [durationList, setDurationList] = useState<string[]>([]);
-  const [dayList, setDayList] = useState<string[]>();
 
   // tabelle
   const [columns, setColumns] = useState<[number, number][]>([]);
   const [rows, setRows] = useState<PriceRows[]>([]); // cell array in a row array
-  const [prices, setPrices] = useState<PriceTerms[] | false | undefined>(); // cell array in a row array
+  const [priceList, setPriceList] = useState<PriceItem[] | false | undefined>(); // cell array in a row array
 
   // farben
-  const colorList: string[] = ['#FFFFFF', '#d4be21', '#2fd159'];
+  const rowProps = [
+    { color: '#FFFFFF', suffix: 'Uhr', not: 'Keine Zeit' },
+    { color: '#d4be21', suffix: '', not: 'Kein Rabatt' },
+    { color: '#2fd159', suffix: 'Jahre', not: 'Kein Alter' },
+  ];
 
   const changeDay = (value: any) => setStatus({ ...status, day: value });
 
@@ -70,17 +66,12 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
     const { list: ageList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'age')?.answers, ['']);
     const { list: timeList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'time')?.answers, ['']);
 
-    const rowList: string[][] = [];
+    const rowList: (string | false)[][] = [];
 
     timeList.forEach((time) => {
       discountList.forEach((disc: string) => {
         ageList.forEach((age: string) => {
-          const newItem = [];
-          if (timeList[1]) newItem.push(time ? `${time} Uhr` : 'Keine Zeit');
-          if (ageList[1]) newItem.push(age ? `${age} Jahre` : 'Kein Alter');
-          if (disc || discountList[1]) newItem.push(disc || 'Kein Rabatt');
-          const hasValue = newItem.findIndex((x) => x.indexOf('Kein') === -1) !== -1;
-          rowList.push(hasValue ? newItem : [...(timeList[1] ? ['Keine Zeit'] : []), 'Standart Preis']);
+          rowList.push([time || false, disc || false, age || false]);
         });
       });
     });
@@ -91,12 +82,12 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
   };
 
   const generateRows = () => {
-    if (prices !== false) {
-      const rowNames: string[][] = generateRowNames();
+    if (priceList !== false) {
+      const rowNames: (string | false)[][] = generateRowNames();
 
-      const rowValues: PriceRows[] = rowNames.map((row: string[]) => {
+      const rowValues: PriceRows[] = rowNames.map((row: (string | false)[]) => {
         const priceValues = columns.map(([persons, duration]: [number, number]) => (
-          prices?.find((p: PriceTerms) => p.id === `${row.toString()}_${persons}_${duration}`)?.value || 0.00
+          priceList?.find((p: PriceItem) => p.id === `${row.filter(Boolean).join('_')}_${persons}_${duration}_${status.day}`)?.price || 0.00
         ));
         return { row, columns: priceValues };
       });
@@ -110,7 +101,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
       const newColumns: [number, number][] = [];
 
       const { list: personList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'persons')?.answers, ['1']);
-      const foundation: string = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'foundation')?.answers)?.list?.[0] || 'person';
+      const foundation: string = structure?.foundation || 'person';
 
       personList.forEach((person: string) => durationList.forEach((duration: string) => {
         // const text: string = foundation === 'object' ? `1 Raum (${getColumnName(p, d)})` : getColumnName(p, d);
@@ -134,17 +125,11 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
     setDurationList(isRound ? roundDiscountList : newDurationList);
   };
 
-  const loadPrices = (currentDay: string) => {
-    getFireCollection(`activities/${activityID}/services/${serviceID}/prices`, false, [['day', '==', currentDay]]).then((data: any[]) => setPrices(data || undefined));
+  const loadPrices = () => {
+    console.log('Tag:', status.day);
+    getFireCollection(`activities/${activityID}/services/${serviceID}/prices`, false, [['day', '==', status.day]])
+      .then((data: any[]) => setPriceList(data || []));
   };
-
-  // const generateNewPrices = (rowIndex: number, cellIndex: number, value: number): { [key: string]: number } => {
-  //   const currentPrices: { [key: string]: number } = {};
-  //   columns.forEach(([person, duration]: [number, number], i: number) => {
-  //     currentPrices[`${person}_${duration}`] = cellIndex === i ? value : (rows[rowIndex].columns[i] || 0);
-  //   });
-  //   return currentPrices;
-  // };
 
   const savePrice = (e: any) => {
     if (status.day) {
@@ -152,88 +137,90 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structureID, changeT
       const [cellIndex, rowIndex] = id.split('_');
 
       const [persons, duration] = columns[cellIndex];
-      const rowID = `${rows[rowIndex].row.toString()}_${persons}_${duration}`;
+      const [time, discount, age] = rows[rowIndex].row;
+      const getRowList = rows[rowIndex].row.filter(Boolean);
+      const rowID = `${getRowList.join('_')}_${persons}_${duration}_${status.day}`;
 
-      const newItem: PriceTerms = { id: rowID, duration, persons, value, day: status.day };
+      const newItem: PriceItem = { id: rowID, duration, persons, price: value, day: status.day, age, time, discount };
       return fireDocument(`activities/${activityID}/services/${serviceID}/prices/${rowID}`, newItem, 'set').then(() => console.log('gespeichert'));
     }
   };
 
-  /** Lade alle services von der activity ID */
-  const loadStructureFields = async () => {
-    const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structureID}/fields`, false);
+  const loadStructure = async () => {
+    const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structure.id}/fields`, false);
     if (serviceFieldData) {
-      const days = getQuestFormValue(status.day, serviceFieldData?.find((x) => x.name === 'days')?.answers).list
-      setDayList(days || []);
-      setStatus({ ...status, day: !days?.[1] && days?.[0] ? days[0] : 'nothing' });
-      console.log(!days?.[1] && days?.[0] ? days[0] : 'nothing');
+      const days = structure?.days;
+      setStatus({ ...status, day: days?.[1] ? undefined : days?.[0] || 'nothing' });
       setStructureFields(serviceFieldData);
     }
   };
 
-  useEffect(() => {
-    if (status.day) {
-      checkDuration();
-      loadPrices(status.day);
-    }
-  }, [status.day]); // wenn ein Tag ausgewählt wurde
+  const daySelect = async () => {
+    checkDuration();
+    loadPrices();
+  };
 
   useEffect(() => { generateColumns(); }, [durationList]);
-  useEffect(() => { generateRows(); }, [prices]);
-  useEffect(() => { loadStructureFields(); }, [structureID]); // init
+  useEffect(() => { if (priceList) generateRows(); }, [priceList]);
+  useEffect(() => { loadStructure(); }, []); // initial load
+  useEffect(() => { if (status.day) daySelect(); }, [status.day]);
 
   const editCurrentFields = () => {
-    if (structureFields) editStructure(structureFields);
+    if (structureFields) editStructure(structureFields, 'structure');
   };
 
   return (
     <Fragment>
-      <h1 style={{ marginBottom: '20px' }}>Preis anpassen</h1>
+      <h1 style={{ marginBottom: '20px' }}>Preis-Tabelle anpassen</h1>
 
-          {dayList?.[1] && questionLength === structureFields?.length && (
-            <SelectInput
-              label="Wähle eine Tagesgruppe"
-              name="day"
-              icon={<Calendar />}
-              options={dayList || []}
-              error={status.day ? 'valid' : 'invalid'}
-              change={changeDay}
-              value={status.day}
-            />
-          )}
+      {structure?.days?.[1] && questionLength === structureFields?.length && (
+      <SelectInput
+        label="Wähle eine Tagesgruppe"
+        name="day"
+        icon={<Calendar />}
+        options={structure.days || []}
+        error={status.day ? 'valid' : 'invalid'}
+        change={changeDay}
+        value={status.day}
+      />
+      )}
 
-<Chip small type="grey" label={questionLength === structureFields?.length ? 'Verwendete Vorlage bearbeiten' : 'Verwendete Vorlage abschließen'} action={editCurrentFields} />
-            <Chip small type="delete" label="Verwendete Vorlage entfernen" action={() => changeType('belongs')} />
+      {questionLength === structureFields?.length ? (
+        <Fragment>
+          <Chip small type="grey" label="Verwendete Tabelle bearbeiten" action={editCurrentFields} />
+          <Chip small type="delete" label="Verwendete Tabelle entfernen" action={() => editStructure(undefined, 'belongs')} />
 
-
-          {status.day && questionLength === structureFields?.length && (
+          {status.day && (
           <Fragment>
-
             <table class={`${style.table} ${style.prices} ${status.hasTime ? style.time : ''}`} style={{ margin: '0 0 20px 0' }}>
               <thead>
                 <tr>
                   {status.hasTime && <th>Uhrzeit</th>}
                   <th style={{ padding: '5px 0' }}>Rabatte</th>
-                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. für {duration} Min.</th>)}
+                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. für {structure.duration === 'round' ? '1 Runde' : `${duration} Min.`}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row: PriceRows, rowIndex: number) => (
                   <tr>
                     {status.hasTime && <td>{(rowIndex === 0 || rows[rowIndex - 1].row[0] !== row.row[0]) ? row.row[0] : 's.o.'}</td>}
-                    <td>{row.row.map((x, i) => (!status.hasTime || i > 0) && <span style={{ color: colorList[i], opacity: x.indexOf('Kein') > -1 ? 0.5 : 1 }}>{x}</span>)}</td>
+                    <td>{row.row.map((x: string | false, i: number) => (!status.hasTime || i > 0) && <span style={{ color: rowProps[i].color }}>{x ? `${x} ${rowProps[i].suffix}` : rowProps[i].not}</span>)}</td>
                     {row.columns?.map((price: number, cellIndex: number) => (
-                      <td class={price === 0.00 ? 'red' : 'green'}><input id={`${cellIndex}_${rowIndex}`} value={price} type="number" onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
+                      <td><input id={`${cellIndex}_${rowIndex}`} value={price} type="number" onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
                     ))}
                   </tr>
                 ))}
               </tbody>
             </table>
-            {/* <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" /> */}
-
-            <FormButton action={() => changeType()} />
+            <FormButton action={() => changeType(undefined)} />
           </Fragment>
           )}
+          {/* <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" /> */}
+
+        </Fragment>
+      ) : (
+        <Item icon={<Edit color="#ffab00" />} label="Tabelle jetzt abschließen" type="info" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
+      )}
 
     </Fragment>
   );

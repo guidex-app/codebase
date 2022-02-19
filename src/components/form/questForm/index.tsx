@@ -2,7 +2,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { AnsDB, AnsInfo, Questions, ServiceField, ServiceInfo } from '../../../interfaces/company';
+import { AnsDB, AnsInfo, Questions, ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
 import Chip from '../../chip';
 import TopButton from '../../topButton';
 import AddRemove from '../addRemove';
@@ -21,19 +21,18 @@ interface QuestFormProps {
     service?: ServiceInfo; // Serviceinfo oder noch nicht definiert
     folderPath?: string; // folderpath für image uploads
     openings?: (string | false)[];
+    structure?: Structure;
     save: (data: ServiceField) => void; // Speicherfunktion
 }
 
-const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, openings, serviceFields, folderPath, save }: QuestFormProps) => {
+const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, openings, serviceFields, folderPath, structure, save }: QuestFormProps) => {
   const [question, setQuestion] = useState<Questions | undefined>();
   const [field, setField] = useState<ServiceField | undefined>();
-  const [days, setDays] = useState<string[] | undefined>(serviceFields?.find((x) => x.name === 'days')?.answers?.[0]?.values);
   const [validation, setValidation] = useState<'valid' | 'notValid'>('notValid');
   const [showOverview, setShowOverview] = useState(false);
-
+  console.log(structure);
   const nextButton = () => {
     if (field) {
-      if (question?.info.title.form === 'days') setDays(field.answers?.[0]?.values);
       save(field);
     }
   }; // speichert die aktuelle frage und antworten
@@ -52,7 +51,6 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
   /** Setzt eine neue Frage, abhängig des "NextQuestionIndexes" */
   const getQuestion = (index?: number) => {
     const nextIndex: number = index !== undefined ? index : findNextQuestionIndex();
-
     if (nextIndex === -2) return setShowOverview(true);
     const nextForm: string = questions[nextIndex].info.title.form;
 
@@ -78,7 +76,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
       });
     });
 
-    if (!isInvalid && getAllDays.length !== days?.length) return true;
+    if (!isInvalid && getAllDays.length !== structure?.days?.length) return true;
 
     return isInvalid;
   };
@@ -101,7 +99,6 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         const checkIsMulti: boolean = question?.info.type !== 'simple' && ans.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
         const checkCheckbox: boolean = question?.info.type === 'checkbox' && checkboxValidation(ans);
 
-        console.log({ checkAmountOfFields, checkIsMulti, checkOnService, checkCheckbox, checkOnDays });
         return !(checkAmountOfFields || checkIsMulti || checkOnService || checkCheckbox || checkOnDays);
       });
     }
@@ -126,7 +123,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
     if (value) { // checked
       if (question.info.type === 'radio' || question.info.type === 'simple') {
-        answers = [{ amountOfFields: '1', name, ...(name === 'onDaysDuration' && days && { onDays: days }) }];
+        answers = [{ amountOfFields: '1', name, ...(name === 'onDaysDuration' && structure?.days && { onDays: structure.days }) }];
       } else {
         answers.push({ amountOfFields: '1', name });
       }
@@ -190,6 +187,13 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
     setField({ name: question.info.title.form, answers: [...newAnswers] });
   };
 
+  const skipAnswer = (form: string): boolean => {
+    const noDays = form.startsWith('onDay') && !structure?.days?.[0]; // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
+    const onPerson = ['round', 'onDayDuration'].includes(form) && structure?.foundation === 'person'; // Wenn pro Person
+    const duration = ['roundDiscount', 'onDayRoundDiscount'].includes(form) && structure?.duration === 'fixed';
+    return noDays || onPerson || duration;
+  };
+
   return (
     <Fragment>
       <header class={style.header} style={{ paddingBottom: '15px' }}>
@@ -208,7 +212,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         )}
         {question.info.type === 'onService' && !service?.serviceName?.[0] && <p class="red">Definiere mindestens eine Leistung.</p>}
         {question.answers.map((answer: AnsInfo) => {
-          if (answer.name.startsWith('onDay') && !days?.[0]) return; // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
+          if (skipAnswer(answer.name)) return;
 
           const getField: number = field?.answers ? field?.answers?.findIndex((g) => g.name === answer.name) : -1;
           const { type } = question.info;
@@ -253,13 +257,13 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                         />
                       ) : (
                         answer.onDay && (
-                          days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
+                          structure?.days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
                         )
                       )
                     ) : (
                       <div style={answer.onDay ? { backgroundColor: '#2b303d', borderRadius: '10px', padding: '5px 10px', marginBottom: '10px' } : undefined}>
                         {answer.onDay && (
-                          days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
+                          structure?.days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
                         )}
                         <BasicInput icon={answer.icon} isMulti={answer.isMultiField} value={values?.[amountIndex]} label={answer.label} name={`${answer.name}+${amountIndex}`} type={answer.inputType} placeholder={answer.placeholder} error={!values?.[amountIndex] ? 'invalid' : 'valid'} required change={setNewValue} />
                       </div>

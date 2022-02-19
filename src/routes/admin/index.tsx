@@ -22,18 +22,17 @@ const Admin: FunctionalComponent = () => {
   };
 
   const updateData = (data: any, filter?: boolean) => {
+    const findIndex = list.findIndex((x) => x.title.form === data.title?.form);
+
     if (filter) {
       setOpenFilter(true);
       setItem({ ...item, ...data });
-    } else {
-      const findIndex = list.findIndex((x) => x.title.form === item.title.form);
-      if (findIndex !== -1) {
-        const newList = list;
-        newList.slice(findIndex, 1);
-        setList(newList);
-      } else {
-        setList([...list, data]);
-      }
+    } else if (item === undefined && findIndex === -1) {
+      setList([data, ...list]);
+    } else if (findIndex > -1) {
+      const newList = list;
+      newList.slice(findIndex, 1);
+      setList(newList);
     }
   };
 
@@ -44,7 +43,8 @@ const Admin: FunctionalComponent = () => {
       <TextHeader icon={<Lock color="#fea00a" />} title="Admin" text="Verwalte die Kategorien oder die Topics" />
       <main class="small_size_holder">
         <Item icon={<ToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
-        <Item icon={<PlusCircle />} label="Hinzufügen" type="info" action={() => setItem(undefined)} />
+        <Item icon={<PlusCircle />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
+
         {list.map((x) => (
           <Item key={x.title.form} label={x.title.name} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type === 'topics' ? 'topics' : 'categories'}%2F${x.title.form}%2F${x.title.form}_250x200`} action={() => setItem(x)} />
         ))}

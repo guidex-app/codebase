@@ -1,10 +1,12 @@
 .rate {
     margin-bottom: 15px;
     padding: 10px 20px; 
-    border-radius: 20px;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.02);
+    background: linear-gradient(145deg, #201b29, #272031);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    box-shadow:  5px 5px 15px #221c2b,
+    -5px -5px 15px #262031;
 }
 
 .rate button {
@@ -20,7 +22,7 @@
 .rate button svg {
     width: 30px;
     height: 30px;
-    stroke-width: 1px;
+    stroke-width: 0;
 }
 
 .rate button:hover {

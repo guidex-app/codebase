@@ -28,14 +28,14 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings }: Opening
   }, [openings]);
 
   return (
-    <table class={style.openings}>
-      <tr>
-        {list?.map((day: [string, string]) => <td><strong>{day[0]}:</strong> {day[1]}</td>)}
-      </tr>
-      <tr class="red">
-        <td colSpan={list.length}>Feiertage und Sonder&shy;öffnungszeiten </td>
-      </tr>
-    </table>
+    <div class={style.openings}>
+
+      {list?.map((day: [string, string]) => <div><strong>{day[0]}:</strong> {day[1]}</div>)}
+
+      <div class="red">
+        Feiertage und Sonder&shy;öffnungszeiten
+      </div>
+    </div>
   );
 };
 
