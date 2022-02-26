@@ -1,9 +1,13 @@
-import { FunctionalComponent, h } from 'preact';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GitCommit, Upload } from 'react-feather';
 
+import Popup from '../../../container/popup';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useStorage from '../../../hooks/useStorage';
 import Item from '../../item';
+import FormButton from '../basicButton';
 import style from './style.module.css';
 
 interface ImgInputProps {
@@ -11,15 +15,10 @@ interface ImgInputProps {
     fileName: string,
     name: string,
     folderPath?: string,
-    editAble?: true,
-    error?: 'invalid' | 'error' | 'valid';
     size: [number, number],
-    showSizeInfo?: true,
-    startUpload: boolean,
     placeholder?: string,
     hasImage: boolean,
-    uploadFinished?: (name: string) => void;
-    change: (value: number, key: string) => void;
+    change?: (name: string) => void;
 }
 
 /**
@@ -28,18 +27,16 @@ interface ImgInputProps {
  * Medium: 600x450
  * Large: 1200x900
  */
-const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, uploadFinished, hasImage, size, error, fileName, editAble, folderPath, showSizeInfo, name, label = '*Thumbnail', placeholder = '+' }: ImgInputProps) => {
-  const { state, progress, setUpload } = useStorage();
+const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, fileName, folderPath, name, label = '*Thumbnail', placeholder = '+' }: ImgInputProps) => {
+  const { progress, setUpload } = useStorage();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [newImage, setNewImage] = useState<File | Blob | undefined>();
-  const [imgPosition, setImgPosition] = useState<string | undefined>(undefined);
+  const [imgPosition, setImgPosition] = useState<[('center' | 'left' | 'right'), ('top' | 'bottom' | 'middle')]>(['center', 'middle']);
 
-  useEffect(() => {
-    if (fileName && folderPath && state !== 'loading' && !!newImage) setUpload({ file: newImage, fileName: replaceSpecialCharacters(fileName), folderPath });
-  }, [startUpload, newImage]);
-
-  useEffect(() => {
-    if (progress === 1 && startUpload && uploadFinished) uploadFinished(name);
-  }, [state]);
+  const uploadImage = () => {
+    const imageName = replaceSpecialCharacters(fileName);
+    if (imageName && folderPath && progress === 0 && !!newImage) setUpload({ file: newImage, fileName: imageName, folderPath });
+  };
 
   const dataURItoBlob = (dataURI: string) => {
     // convert base64/URLEncoded data component to raw binary data held in a string
@@ -56,9 +53,40 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
     return new Blob([ia], { type: mimeString });
   };
 
-  const setUpCanvas = () => {
+  const getImagePosition = (imgWidth: number, imgHeight: number) => {
+    const [canvasWidth, canvasHeight] = size;
+    const ratio = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
+
+    const center: number = (canvasWidth - imgWidth * ratio) / 2;
+    const middle: number = (canvasHeight - imgHeight * ratio) / 2;
+
+    const shift = {
+      middle: 0,
+      top: -middle,
+      bottom: middle,
+      left: -center,
+      right: center,
+      center: 0,
+    };
+
+    const centerShiftX = center + shift[imgPosition[0]];
+    const centerShiftY = middle + shift[imgPosition[1]];
+
+    console.log('wird ausgerichtet', imgPosition);
+
+    return [centerShiftX, centerShiftY, ratio];
+  };
+
+  const convertImage = () => {
     const getFile: any = document.getElementById(`${name}_fileinput`);
+
+    const preview: any = document.getElementById(`${name}_preview`);
+    const preview1: any = document.getElementById(`${name}_preview1`);
+    const preview2: any = document.getElementById(`${name}_preview2`);
+
     const file = getFile?.files?.[0];
+    console.log('drinene');
+
     if (getFile && file) {
       const reader = new FileReader();
 
@@ -66,20 +94,28 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
         const image = new Image();
         image.src = e.target.result;
         image.onload = () => {
+          // prepare canvas
           const canvas: any = document.getElementById(`${name}_canvas`);
           [canvas.width, canvas.height] = size;
           const ctx = canvas.getContext('2d');
+          // get new position
+          const [centerShiftX, centerShiftY, ratio] = getImagePosition(image.width, image.height);
 
-          const widthRatio = canvas.width / image.width;
-          const heightRatio = canvas.height / image.height;
-          const ratio = Math.max(widthRatio, heightRatio);
-
-          const centerShiftX = ((canvas.width - image.width * ratio) / 2) + (parseInt(imgPosition || '0', 10));
-          const centerShiftY = (canvas.height - image.height * ratio) / 2;
+          // set new position
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(image, 0, 0, image.width, image.height, centerShiftX, centerShiftY, image.width * ratio, image.height * ratio);
-          const toBlob = dataURItoBlob(canvas.toDataURL('image/jpeg', { progressive: true }));
-          change(toBlob?.size || 0, name);
+
+          // generate image
+          const dataURL = canvas.toDataURL('image/jpeg', { progressive: true });
+          const toBlob = dataURItoBlob(dataURL);
+
+          // set position previews
+          preview.style.backgroundImage = `url("${dataURL}")`;
+          if (size[0] === 700 && size[1] === 900) {
+            preview1.style.backgroundImage = `url("${dataURL}")`;
+            preview2.style.backgroundImage = `url("${dataURL}")`;
+          }
+
           setNewImage(toBlob);
         };
       };
@@ -87,9 +123,23 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
     }
   };
 
+  const changePosition = (value: any, isVertical: boolean) => {
+    setImgPosition(isVertical ? [imgPosition[0], value] : [value, imgPosition[1]]);
+  };
+
+  useEffect(() => { convertImage(); }, [imgPosition]);
   useEffect(() => {
-    if (imgPosition !== undefined && newImage) setUpCanvas();
-  }, [imgPosition]);
+    if (progress === -1) {
+      setIsOpen(false);
+      if (change) change(name);
+    }
+  }, [progress]);
+
+  const removeFile = () => {
+    const getFile: any = document.getElementById(`${name}_fileinput`);
+    setNewImage(undefined);
+    getFile.value = '';
+  };
 
   const getImageUrl = () => {
     const correctFileName = fileName && replaceSpecialCharacters(fileName);
@@ -97,54 +147,56 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ startUpload, change, upl
   };
 
   return (
-    <div class={style.container}>
-      <div class={error ? style[error] : ''}>
-        <label for={`${name}_fileinput`}>{label}</label>
+    <Fragment>
+      <Item type="info" image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <Upload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
 
-        <div>
-          {hasImage && (
-          <div class={style.image}>
-            <picture>
-              <source srcSet={`${getImageUrl()}.webp?alt=media`} type="image/webp" />
-              <img loading="lazy" src={`${getImageUrl()}.jpeg?alt=media`} alt={label} />
-            </picture>
-          </div>
-          )}
+      {isOpen && (
+      <Popup close={() => setIsOpen(false)}>
+        <Fragment>
+          <h3 style={{ padding: '10px 10px 0 10px' }}>Bild hochladen</h3>
+          <small style={{ display: 'block', padding: '0 10px 10px 10px', color: 'var(--fifth)' }}>(Das Bild sollte mind. den maßen {size[0]}x{size[1]}px entsprechen)</small>
 
           <input
             type="file"
             accept="image/jpeg"
-            className={style.fileinput}
+            class={style.fileinput}
             id={`${name}_fileinput`}
             placeholder={placeholder}
-            onChange={() => setUpCanvas()}
+            onChange={() => convertImage()}
+            required
           />
-        </div>
 
-        {showSizeInfo && <small>(Das Bild sollte mind. den maßen {size[0]}x{size[1]}px entsprechen)</small>}
+          <div class={style.preview}>
+            <Item label="Anderes Bild auswählen" icon={<ChevronLeft />} type="grey" action={removeFile} />
+            <div class={style.preview_position}>
+              <button onClick={() => changePosition('left', false)} type="button" aria-label="ausrichten"><ChevronLeft color={imgPosition[0] === 'left' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('center', false)} type="button" aria-label="ausrichten"><AlignCenter color={imgPosition[0] === 'center' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('right', false)} type="button" aria-label="ausrichten"><ChevronRight color={imgPosition[0] === 'right' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('top', true)} type="button" aria-label="ausrichten"><ChevronUp color={imgPosition[1] === 'top' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('middle', true)} type="button" aria-label="ausrichten"><GitCommit color={imgPosition[1] === 'middle' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('bottom', true)} type="button" aria-label="ausrichten"><ChevronDown color={imgPosition[1] === 'bottom' ? 'var(--red)' : undefined} /></button>
+            </div>
+            <div id={`${name}_preview`} class={style.preview_image} />
+            {size[0] === 700 && size[1] === 900 && (
+              <Fragment>
+                <div id={`${name}_preview1`} class={style.preview_image} />
+                <div id={`${name}_preview2`} class={style.preview_image} />
+              </Fragment>
+            )}
+          </div>
 
-        {newImage && editAble && (
-          <Item label="Bild neu ausrichten" action={() => setImgPosition(imgPosition !== undefined ? undefined : '')} />
-        )}
+          <div hidden style={{ padding: '10px', margin: '10px 0', borderRadius: '20px' }}>
+            <canvas id={`${name}_canvas`} style={{ background: 'linear-gradient(180deg, #f37516 0%, #2b0079 100%)', margin: '0 auto', display: 'block' }} />
+          </div>
 
-      </div>
+          {progress > 0 && <div class={style.progress}><div style={{ width: `${progress}%` }} /></div>}
 
-      <div hidden={imgPosition === undefined} style={{ background: 'var(--ion-color-secondary)', padding: '10px', margin: '10px 0', borderRadius: '20px' }}>
-        <input
-          placeholder="z.B.: -20 (Horizontal)"
-          type="text"
-          value={imgPosition}
-          spellCheck={false}
-          onChange={(e: any) => {
-            setImgPosition(e.target.value);
-          }}
-        />
-        <canvas id={`${name}_canvas`} style={{ background: 'linear-gradient(180deg, #f37516 0%, #2b0079 100%)', margin: '0 auto', display: 'block' }} />
-      </div>
+          <FormButton label="Hochladen" disabled={!newImage || progress > 0} action={uploadImage} />
 
-      {error === 'error' && <small class={style.errorMessage}>Bitte mache eine korrekte eingabe</small>}
-
-    </div>
+        </Fragment>
+      </Popup>
+      )}
+    </Fragment>
   );
 };
 

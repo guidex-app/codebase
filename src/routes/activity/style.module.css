@@ -1,41 +1,62 @@
-.activity {
-    display: block;
-    width: 100%;
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-row-gap: 15px;
+    grid-column-gap: 15px;
+}
+
+.activityItem {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+
     border-radius: 20px;
-    background: #222531;
+    background: var(--third);
+
     transform: scale(1);
     transition: transform 0.3s ease-in-out;
     will-change: transform;
 }
 
+.activityItem:hover { transform: scale(1.01); }
+
+.content { flex-grow: 2; }
+
 .image {
     width: 115px;
     height: 115px;
-    margin-right: 15px;
     overflow: hidden;
-    display: inline-block;
     border-radius: 20px;
-    vertical-align: middle;
-    background-color: rgba(255,255,255,0.03);
+
+    background-color: var(--lighter);
     color: transparent;
 }
 
 .image img { width: 100%; height: auto; }
 
-.activity h2 {
+.content h2 {
     line-height: 20px;
-    color: white;
+    color: var(--white);
     padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.content small span {
+    font-size: 12px;
+    line-height: 16px;
+    opacity: 0.9;
+}
+
+.content small {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding-bottom: 5px;
 }
 
-.image + div {
-    display: inline-block;
-    vertical-align: middle;
-    width: calc(100% - 130px);
-}
-
-.activity table {
+.content table {
     padding: 0;
     width: 100%;
     border: none;
@@ -45,34 +66,18 @@
     overflow: hidden;
 }
 
-.activity table tbody {
+.content table tbody {
     width: 100%;
     display: table;
 }
 
-.activity table td {
+.content table td {
     height: 32px;
     line-height: 18px;
     padding: 0 5px;
 }
 
-.activity table tr:first-child td:nth-child(even),
-.activity table tr:nth-child(2) td:nth-child(odd) {
+.content table tr:first-child td:nth-child(even),
+.content table tr:nth-child(2) td:nth-child(odd) {
     background-color: rgba(255,255,255,0.01);
 }
-
-.activity:hover {
-    transform: scale(1.01);
-}
-
-.list {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(auto-fill, 1fr);
-    grid-row-gap: 10px;
-    grid-column-gap: 10px;
-    padding-bottom: 100px;
-}
-
-@media (min-width: 750px) { .list { grid-template-columns: repeat(2, 1fr); }}
-@media (min-width: 1047px) { .list { grid-template-columns: repeat(3, 1fr); }}

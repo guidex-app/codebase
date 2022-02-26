@@ -164,11 +164,6 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
   const navigateToServices = () => route(`/company/services/${activityID}`);
 
-  const changeType = (newType?: 'belongs' | 'prices' | undefined) => {
-    if (!newType) return closeModal();
-    return setShow(newType);
-  };
-
   return (
     <Fragment>
       <TextHeader
@@ -179,7 +174,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
       <BackButton url={`/company/dashboard/${activityID}`} />
       <section class="group form small_size_holder">
-        {serviceList === undefined || serviceList?.[0] ? (
+        {serviceList?.[0] ? (
           serviceList && serviceList?.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
         ) : (
           <Item icon={<ArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
@@ -205,7 +200,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
           )}
 
           {show === 'prices' && selected && selected.service?.id && selected.structure && (
-            <EditPrices structure={selected.structure} changeType={changeType} serviceID={selected.service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} />
+            <EditPrices structure={selected.structure} serviceID={selected.service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} />
           )}
         </Modal>
       )}

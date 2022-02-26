@@ -8,8 +8,8 @@
     border-spacing: 0;
     width: 100%;
     border: none;
-    color: white;
-    background: #fff;
+    color: var(--white);
+    background: var(--white);
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
@@ -41,7 +41,6 @@
     font-weight: 700;
     font-size: 16px;
     color: black;
-    outline: none;
 
     background-color: transparent;
     transition: 0.3s ease-in-out;
@@ -109,4 +108,4 @@
 
 /* .table tr::-moz-focus-inner {
     background-color: #ffe0c4;
-    /* box-shadow: 0 0 2px #fc424a inset, 0 0 2px orange inset, 0 0 2px orange inset, 0 0 2px orange inset; */
+    /* box-shadow: 0 0 2px var(--red) inset, 0 0 2px orange inset, 0 0 2px orange inset, 0 0 2px orange inset; */

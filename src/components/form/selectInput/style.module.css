@@ -4,7 +4,7 @@
 }
 
 .container > div {
-    background-color: #2b303d;
+    background-color: var(--fourth);
     border-radius: 10px;
 }
 
@@ -20,7 +20,7 @@
     height: auto;
     padding-left: 15px;
     padding-right: 5px;
-    color: #6c7293;
+    color: var(--fifth);
     vertical-align: middle;
 }
 
@@ -68,17 +68,17 @@
 
 .container button:hover::before {
     transform: translateY(-50%) rotate(135deg) scale(1.6);
-    border-color: white;
+    border-color: var(--white);
 }
 
 .container button:empty::after {
     content: attr(placeholder);
-    color: #6c7293;
+    color: var(--fifth);
 }
 
 .container label {
     display: block;
-    color: #FFFFFF;
+    color: var(--white);
     transition: 0.2s ease-in-out transform;
     font-size: 14px;
     padding: 5px 10px 0 10px;
@@ -96,8 +96,7 @@
     padding: 10px;
     height: 40px;
     border-radius: 10px;
-    background-color: #2b303d;
+    background-color: var(--fourth);
     font-size: 15px;
-    color: white;
-    outline: none;
+    color: var(--white);
 }

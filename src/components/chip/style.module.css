@@ -1,6 +1,5 @@
 .chip {
     display: inline-block;
-    outline: none;
     padding: 10px 15px;
     border: none;
     border-radius: 20px;
@@ -31,34 +30,34 @@
 }
 
 .inactive {
-    border: 1px solid #cf3c4f;
+    border: 1px solid var(--red);
     background-color: #342935;
-    color: #cf3c4f;
+    color: var(--red);
 }
 
 .active {
-    border: 1px solid #ffab02;
+    border: 1px solid var(--orange);
     background-color: #342935;
-    color: #ffab02;
+    color: var(--orange);
 }
 
 .warning {
-    background-color: #ffab02;
-    color: #000000;
+    background-color: var(--orange);
+    color: var(--dark);
 }
 
 .delete {
     background-color: transparent;
-    color: #eb445a;
+    color: var(--red);
 }
 
 .disabled {
     background-color: #222631;
-    color: #818388;
+    color: var(--fifth);
 }
 
 .grey {
-    background-color: #2b303d;
+    background-color: var(--fourth);
     color: #ffab02;
 }
 

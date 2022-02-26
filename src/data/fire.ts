@@ -1,4 +1,4 @@
-import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, increment, limit, query, runTransaction, setDoc, startAt, updateDoc, where } from 'firebase/firestore/lite';
+import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, increment, limit, orderBy, query, runTransaction, setDoc, startAt, updateDoc, where } from 'firebase/firestore/lite';
 
 import fireConfig from './fireConfig';
 
@@ -16,6 +16,7 @@ const getQuery = (item: { path:string, order: string | false, w?: [string, 'arra
   const whereFields = item.w?.map((i) => where(...i)) || [];
   return query(
     collection(db, item.path),
+    ...(item.order ? [orderBy(item.order)] : []),
     ...(item.limited ? [limit(item.limited)] : []),
     ...(item.start?.[0] ? [startAt(...item.start)] : []),
     ...whereFields,
@@ -126,6 +127,53 @@ export const voteItem = (mainPath: string, votePath: string, uid: string, commen
 //       }
 
 //       return undefined;
+//     });
+
+//     batch.commit().then(() => {
+//       console.log('fertig');
+//     });
+//   });
+// };
+
+// export const addSortNumber = () => {
+//   getFireCollection('catInfos', false).then((data: any) => {
+//     const batch: any = writeBatch(db);
+//     console.log(data);
+
+//     data.slice(0, 50).map((catInfo: any) => {
+//       const nycRef = doc(db, `catInfos/${catInfo.title.form}`);
+
+//       const newData = { sortCount: randomNumber(1, 7) };
+//       return batch.update(nycRef, newData);
+//     });
+
+//     batch.commit().then(() => {
+//       console.log('fertig');
+//     });
+//   });
+// };
+
+// export const saveGeohashes = () => {
+//   // const allowed = ['u1x1', 'u1x3', 'u1x2', 'u1rr', 'u1rp', 'u1qz', 'u1wb', 'u1wc', 'u1x0'];
+//   getFireCollection('catInfos', false).then((data: any) => {
+//     const batch: any = writeBatch(db);
+//     console.log(data);
+
+//     const hashPath = doc(db, 'geo/u1x0');
+//     batch.set(hashPath, { weather: ['Leichtes nieseln', new Date()], cityName: 'Hamburg', count: 51 });
+
+//     data.slice(0, 51).map((catInfo: any) => {
+//       ['u1x0'].map((hash: string) => {
+//         const nycRef = doc(db, `geo/${hash}/categories/${catInfo.title.form}`);
+
+//         const newData = {
+//           ...catInfo,
+//           count: Math.floor(Math.random() * (20 - 1 + 1)) + 1,
+//         };
+//         return batch.set(nycRef, newData);
+//       });
+
+//       return true;
 //     });
 
 //     batch.commit().then(() => {

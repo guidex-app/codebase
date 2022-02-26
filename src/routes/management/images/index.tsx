@@ -11,9 +11,7 @@ import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import useCompany from '../../../hooks/useCompany';
-import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
-import { FormInit } from '../../../interfaces/form';
 
 interface ActivityProp {
     activityID: string;
@@ -33,41 +31,17 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
     );
   }
 
-  const formInit: FormInit = {
-    image1: { value: false, type: 'image', required: false },
-    image2: { value: false, type: 'image', required: false },
-    image3: { value: false, type: 'image', required: false },
-    image4: { value: false, type: 'image', required: false },
-  };
+  const [state, setState] = useState<string[]>(data.state);
 
-  const { fields, formState, changeField, isValid } = useForm(formInit);
-
-  const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
-  const [finished, setFinished] = useState<string[]>([]);
-
-  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`/company/documents/${data.title.form}`);
-
-  const uploadFinished = (name: string) => {
-    const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false));
-    const validImages = filledImages.filter((x) => !!x);
-    if (validImages?.length > 0) {
-      const allUploadsComplete = finished.length + 1 === validImages.length;
-      console.log(finished.length, filledImages.length);
-      if (allUploadsComplete) {
-        const newState = mergeUnique(data?.state || [], validImages);
-        fireDocument(`activities/${data.title.form}`, { state: newState }, 'update').then(() => navigate());
-      } else {
-        setFinished([...finished, name]);
-      }
-    }
+  const updateImage = (name: string) => {
+    const newState = mergeUnique([name], state || []);
+    setState(newState);
   };
 
   const validateForm = async () => {
-    if (isValid()) {
-      const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false)).filter((x) => !!x);
-      if (filledImages.length !== 0) setImageState('loading');
-      else navigate();
-    }
+    await fireDocument(`activities/${data.title.form}`, { state }, 'update');
+
+    route(`/company/documents/${data.title.form}`);
   };
 
   return (
@@ -82,53 +56,45 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
         <form>
           <section class="group form">
-            <Item type="info" icon={<Info color="orange" />} label="Die Bilder sollten mind. den Maßen 1200x900px entsprechen" />
+            <Item type="info" icon={<Info color="var(--orange)" />} label="Info zum Upload" text="Das aktualisieren der Bilder dauert bis zu einem Tag" />
             <ImgInput
               fileName="image1"
               label="Bild 1 auswählen (JPG/JPEG)."
               name="image1"
-              folderPath={`activities/${data.title.form}`}
+              folderPath={`activities%2F${data.title.form}`}
               placeholder="+"
-              startUpload={imageState === 'loading'}
-              uploadFinished={uploadFinished}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image1')}
-              change={changeField}
+              change={updateImage}
             />
             <ImgInput
               fileName="image2"
               label="Bild 2 auswählen (JPG/JPEG)."
               name="image2"
-              folderPath={`activities/${data.title.form}`}
+              folderPath={`activities%2F${data.title.form}`}
               placeholder="+"
-              startUpload={imageState === 'loading'}
-              uploadFinished={uploadFinished}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image2')}
-              change={changeField}
+              change={updateImage}
             />
             <ImgInput
               fileName="image3"
               label="Bild 3 auswählen (JPG/JPEG)."
               name="image3"
-              folderPath={`activities/${data.title.form}`}
+              folderPath={`activities%2F${data.title.form}`}
               placeholder="+"
-              uploadFinished={uploadFinished}
-              startUpload={imageState === 'loading'}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image3')}
-              change={changeField}
+              change={updateImage}
             />
             <ImgInput
               fileName="image4"
               label="Bild 4 auswählen (JPG/JPEG)."
               name="image4"
-              folderPath={`activities/${data.title.form}`}
-              uploadFinished={uploadFinished}
-              startUpload={imageState === 'loading'}
+              folderPath={`activities%2F${data.title.form}`}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image4')}
-              change={changeField}
+              change={updateImage}
             />
           </section>
 

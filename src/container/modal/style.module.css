@@ -12,7 +12,7 @@
     padding-bottom: 140px;
 
     overflow-y: auto;
-    background-color: #20192a;
+    background-color: var(--second);
     transition: max-width 0.3s ease-in-out;
     overscroll-behavior-y: contain;
   }

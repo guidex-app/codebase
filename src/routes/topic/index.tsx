@@ -7,25 +7,23 @@ import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
 import useCompany from '../../hooks/useCompany';
 import { Topic } from '../../interfaces/topic';
-import { User } from '../../interfaces/user';
+import { Location } from '../../interfaces/user';
 import style from './style.module.css';
 
 interface TopicProps {
     topicID: string;
-    user: User;
+    location: Location;
 }
 
-const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, user }: TopicProps) => {
+const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, location }: TopicProps) => {
   const data: Topic = useCompany(topicID, undefined, 'topics');
   const [list, setList] = useState<any[] | undefined>(undefined);
 
   const loadTopicList = async () => {
     if (!data?.title) return;
-    const cats: any = await getFireCollection(`geo/${user.location?.geoHash}/categories`, false, undefined, 100);
+    const cats: any = await getFireCollection(`geo/${location.geoHash}/categories`, false, undefined, 100);
 
-    console.time('filterTime');
-    const filteredCats = await filterCats(cats, data.filter, user.weather);
-    console.timeEnd('filterTime');
+    const filteredCats = await filterCats(cats, data.filter, location.weather);
 
     return setList(filteredCats);
   };
@@ -37,17 +35,17 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, user }: TopicProp
       <BackButton url="/explore" />
       <header class="small_size_holder" style={data ? { backgroundImage: `url(https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/topics%2F${data.title.form}%2F${data.title.form}_600x450.jpeg?alt=media)` } : undefined}>
         <div>
-          <h1>{data?.title.name || ''}</h1>
-          <p>{data?.filter?.join(', ') || '...'}</p>
+          <h1>{data?.title.name}&nbsp;</h1>
+          <p>{data?.filter?.join(', ')}&nbsp;</p>
         </div>
       </header>
       <article class="small_size_holder">
         <p><strong>{data?.description}</strong></p>
         {data?.partitions?.map((p) => (
-          <p class="grey">{p}</p>
+          <p style={{ color: 'var(--fifth)' }}>{p}</p>
         ))}
       </article>
-      {list && <Masonry items={list} />}
+      {list && <Masonry list={list} />}
     </main>
   );
 };

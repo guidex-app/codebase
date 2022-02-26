@@ -1,8 +1,7 @@
 import { ComponentChildren, Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import Header from '../../components/header';
-import Overlay from '../../components/overlay';
 
+import Overlay from '../../components/overlay';
 import style from './style.module.css';
 
 interface PopupProps {
@@ -16,9 +15,8 @@ const Popup: FunctionalComponent<PopupProps> = ({ close, children }) => {
   return container && createPortal(
     (
       <Fragment>
-        <Overlay action={close} />
+        <Overlay action={close} isPopup />
         <div class={style.popup}>
-          <Header title="title" action={close} />
           <div class={style.content}>{children}</div>
         </div>
       </Fragment>

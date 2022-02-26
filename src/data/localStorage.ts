@@ -9,16 +9,14 @@ const getKey = (key: string) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getStorageKeys = async (keys: (keyof User)[]): Promise<User> => {
+export const getStorageKeys = async (keys: ['displayName', 'email', 'location', 'uid']): Promise<User> => {
   const getKeys: any[] = await Promise.all(keys.map(async (key) => getKey(key)));
-  const parserKeys: (keyof User)[] = ['location', 'weather'];
   const formatKeys: User = {};
 
   for (let index = 0; index < keys.length; index += 1) {
     if (getKeys[index] !== undefined) {
-      const isParserKey: boolean = parserKeys.includes(keys[index]);
       const value = getKeys[index];
-      formatKeys[keys[index]] = isParserKey ? JSON.parse(value) : value;
+      formatKeys[keys[index]] = keys[index] === 'location' ? JSON.parse(value) : value;
     }
   }
 

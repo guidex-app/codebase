@@ -46,7 +46,7 @@
     width: 100%;
 }
 
-.percent > span > span { background-color: #ffab00; }
+.percent > span > span { background-color: var(--orange); }
 
     /* .percent > span {
         display: block;

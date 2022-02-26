@@ -15,11 +15,11 @@ article p { font-size: 1.2em; line-height: calc(1ex / 0.32); }
 
 /* LINKS */
 
-a { color: white; text-decoration: none; }
+a { color: var(--white); text-decoration: none; }
 
 /* HERVORHEBUNGEN */
 
-blockquote { background-color: #6c7293; }
+blockquote { background-color: var(--fifth); }
 
 code {
 	display: block;

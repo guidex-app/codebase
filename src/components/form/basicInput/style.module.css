@@ -4,7 +4,7 @@
 }
 
 .container > div {
-    background-color: #2b303d;
+    background-color: var(--fourth);
     border-radius: 10px;
     width: auto;
     vertical-align: middle;
@@ -16,7 +16,7 @@
     height: auto;
     padding-left: 15px;
     padding-right: 5px;
-    color: #6c7293;
+    color: var(--fifth);
     vertical-align: middle;
 }
 
@@ -45,7 +45,7 @@
     box-sizing: border-box;
     font-weight: 500;
     color: #8184a1;
-    outline: none;
+    text-align: left;
 }
 
 .container label + input, .container label + textarea {
@@ -53,20 +53,20 @@
 }
 
 ::-webkit-input-placeholder { /* Edge */
-    color: #6c7293;
+    color: var(--fifth);
   }
   
   :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #6c7293;
+    color: var(--fifth);
   }
   
   ::placeholder {
-    color: #6c7293;
+    color: var(--fifth);
   }
 
 .container label {
     display: block;
-    color: #FFFFFF;
+    color: var(--white);
     transition: 0.2s ease-in-out transform;
     font-size: 15px;
     padding: 5px 10px 0 10px;
@@ -84,7 +84,7 @@
 }
 
 .container > div.disabled:not(.error) {
-    border: 1px solid #ffab00;
+    border: 1px solid var(--orange);
 } 
 
 .multi input:nth-child(odd) {

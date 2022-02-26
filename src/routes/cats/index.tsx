@@ -14,15 +14,16 @@ import catFilter from '../../data/catFilter';
 import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
 import { Cat } from '../../interfaces/categorie';
-import { User } from '../../interfaces/user';
+import { Location } from '../../interfaces/user';
 import style from './style.css';
 
 interface CatsProps {
-  user: User;
+  location?: Location;
+  interests?: string[];
 }
 
-const Cats: FunctionalComponent<CatsProps> = ({ user }: CatsProps) => {
-  const [filter, setFilter] = useState<string[]>(['we_sunny']);
+const Cats: FunctionalComponent<CatsProps> = ({ location, interests }: CatsProps) => {
+  const [filter, setFilter] = useState<string[]>([]);
   const [filteredCats, setFilteredCats] = useState<any[]>([]);
   const [catList, setCatList] = useState<any[]>([]);
 
@@ -38,35 +39,44 @@ const Cats: FunctionalComponent<CatsProps> = ({ user }: CatsProps) => {
   //   updateUser({ weather, location });
   // };
   const getFilteredCats = (cats: Cat[]) => {
-    const newCats = filterCats(cats, filter, user.weather);
-    console.log('filtern', filter);
-    return setFilteredCats(newCats);
+    if (cats[0]) {
+      console.time('filterCats');
+      console.log('filter', filter);
+      const newCats = filterCats(cats, filter, location?.weather);
+      console.timeEnd('filterCats');
+      return setFilteredCats(newCats);
+    }
   };
 
   const fetchCategories = async () => {
-    const interests: [string, 'array-contains-any', string[]][] | undefined = user.interests ? [['filter', 'array-contains-any', user.interests]] : undefined;
+    console.log('fetch cats', catList);
 
-    const cats: any = await getFireCollection(`geo/${user.location?.geoHash}/categories`, 'count', interests, 100);
+    // const alg: any = [
+    //   ...(interests?.[0] ? ['filter', 'array-contains-any', interests] : []),
+    // ];
+    console.log('interests', interests);
+
+    const cats: any = await getFireCollection(`geo/${location?.geoHash}/categories`, 'sortCount', undefined, 200);
     setCatList(cats);
     getFilteredCats(cats);
   };
 
-  const changeFilter = (newFilter: string[]) => {
+  const updateFilter = (newFilter: string[]) => {
     setFilter(newFilter);
   };
 
-  useEffect(() => { if (user) fetchCategories(); }, [user]);
+  useEffect(() => { if (location) fetchCategories(); }, [location]);
   useEffect(() => { if (catList) getFilteredCats(catList); }, [filter]);
 
   return (
     <div class={style.cats}>
-      <Teaser openModal={setOpenModal} data={{ weather: user.weather, location: user.location }} />
+      <Teaser openModal={setOpenModal} location={location} />
       <FilterBar />
-      <Masonry items={filteredCats} />
+      <Masonry list={filteredCats} />
       <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filtern')} />
       {!!openModal && (
       <Modal title={openModal} close={closeModal}>
-        {openModal === 'Filtern' && <FilterList data={catFilter} values={filter} change={changeFilter} />}
+        {openModal === 'Filtern' && <FilterList data={catFilter} values={filter} change={updateFilter} close={closeModal} />}
         {openModal === 'Standort' && <LocationList />}
         {openModal === 'Tag' && <WeatherList />}
       </Modal>

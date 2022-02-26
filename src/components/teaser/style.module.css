@@ -1,11 +1,9 @@
 .teaser {
     text-align: center;
-    background-color: #dbc5c8;
+
     background-repeat: no-repeat;
     background-size: auto 380px;
     background-position: center top;
-    position: relative;
-    color: #FFFFFF;
 }
 
 .teaser > div {
@@ -19,7 +17,7 @@
 .weatherText {
   position: relative;
   display: inline-block;
-  background: #111218;
+  background: var(--dark);
   line-height: 30px;
   letter-spacing: 2px;
   border-radius: 10px;
@@ -27,7 +25,7 @@
   font-size: 11px;
   padding: 0 15px;
   z-index: 1;
-  color: #ffab00;
+  color: var(--orange);
   text-transform: uppercase;
 }
 

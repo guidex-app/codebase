@@ -134,7 +134,7 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
               change={changeField}
             />
 
-            <p class="orange">MEHRERE ANHAKEN ERMÖGLICHEN</p>
+            <p style={{ color: 'var(--orange)' }}>MEHRERE ANHAKEN ERMÖGLICHEN</p>
 
           </section>
 

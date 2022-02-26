@@ -10,9 +10,9 @@ interface InfoBoxProps {
 
 const InfoBox: FunctionalComponent<InfoBoxProps> = ({ title, text }: InfoBoxProps) => (
   <div class={style.box}>
-    <MessageCircle color="#6c7293" />
+    <MessageCircle color="var(--fifth)" />
     {title && <p>{title}</p>}
-    {text && <p class="grey">{text}</p>}
+    {text && <p style={{ color: 'var(--fifth)' }}>{text}</p>}
   </div>
 );
 

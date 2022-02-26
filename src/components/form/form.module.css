@@ -4,7 +4,7 @@
 }
 
 .container > div {
-    background-color: #2b303d;
+    background-color: var(--fourth);
     border-radius: 10px;
 }
 

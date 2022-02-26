@@ -166,8 +166,8 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
               change={changeField}
             />
 
-            <p class="orange">Checkbox mit &quot;Angegebene Address ist gleich rechnungsadresse&quot; und zusätzlich brauchen wir die steuernummer</p>
-            <p class="grey">Bitte achten sie auf eine genaue Angabe ihrer Adresse. Denn diese wird für den Ausgabeort der Unternehmung verwendet.</p>
+            <p style={{ color: 'var(--orange)' }}>Checkbox mit &quot;Angegebene Address ist gleich rechnungsadresse&quot; und zusätzlich brauchen wir die steuernummer</p>
+            <p style={{ color: 'var(--fifth)' }}>Bitte achten sie auf eine genaue Angabe ihrer Adresse. Denn diese wird für den Ausgabeort der Unternehmung verwendet.</p>
 
           </section>
 
@@ -211,7 +211,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
             </Fragment>
             )}
 
-            <p class="grey">*Der Ansprechpartner wird nur für interne Fragen benötigt und wird nicht veröffentlicht.</p>
+            <p style={{ color: 'var(--fifth)' }}>*Der Ansprechpartner wird nur für interne Fragen benötigt und wird nicht veröffentlicht.</p>
 
           </section>
 
@@ -255,7 +255,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid 
             </Fragment>
             )}
 
-            <p class="grey">Wie können Nutzer Sie finden oder fragen bezüglich Angebote stellen. Gebe dafür eine Website und Telefonnummer an.</p>
+            <p style={{ color: 'var(--fifth)' }}>Wie können Nutzer Sie finden oder fragen bezüglich Angebote stellen. Gebe dafür eine Website und Telefonnummer an.</p>
 
           </section>
 

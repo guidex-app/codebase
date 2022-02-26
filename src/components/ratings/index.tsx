@@ -48,7 +48,7 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
   return (
     <div style={{ padding: '10px', backgroundColor: 'rgba(255,255,255,0.03', borderRadius: '20px', marginBottom: '20px' }}>
 
-      <Item icon={<ToggleLeft color="#ffab00" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
+      <Item icon={<ToggleLeft color="var(--orange)" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
       {segment === 'rating' && (
         <Fragment>
           <VisuellOverview rating={rating} />

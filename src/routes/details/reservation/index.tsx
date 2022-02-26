@@ -43,8 +43,8 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
       {serviceList && (
       <section class="group form">
         <h3>Leistungen</h3>
-        {serviceList.map((x) => (
-          <Item image="https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/categories%2Fautokino%2Fautokino_250x200" text={x.description || 'Verfügbarkeit Checken'} label={x.serviceName || ''} action={() => selectService(x)} />
+        {serviceList.map((x: any, i: number) => (
+          <Item image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${activityID}%2Fservices%2F${i}%2F${i}_250x200.jpeg?alt=media`} text={x.description || 'Verfügbarkeit Checken'} label={x.serviceName || ''} action={() => selectService(x)} />
         ))}
       </section>
       )}

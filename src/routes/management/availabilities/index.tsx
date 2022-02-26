@@ -92,7 +92,7 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
           <Fragment>
             <form>
               <section class="group form">
-                <h3>Kapazitäten {formState.countMinPerson}</h3>
+                <h3>Kapazitäten</h3>
                 <Counter
                   label="Mindest Personenanzahl"
                   name="countMinPerson"

@@ -2,16 +2,17 @@
     position: relative;
     display: block;
     font-size: 17px;
-    color: #FFFFFF;
+    color: var(--white);
     text-decoration: none;
     cursor: pointer;
     border-radius: 10px;
-    background-color: rgba(255,255,255,0.03);
+    background-color: var(--lighter);
     margin-bottom: 10px;
     padding: 2.5px 10px;
+    opacity: 1;
 
-    will-change: background;
-    transition: background 0.3s ease-in-out;
+    will-change: opacity;
+    transition: opacity 0.3s ease-in-out;
 
     -ms-user-select: None;
     -moz-user-select: None;
@@ -24,11 +25,11 @@
     background-color: transparent;
 }
 
-.checkbox:hover { background-color: rgba(255,255,255,0.05); }
+.checkbox:hover { opacity: 0.8; }
 
 .checkbox label {
     display: inline-block;
-    color: #fff;
+    color: var(--white);
     cursor: pointer;
     position: relative;
     padding: 13.5px 10px 13.5px 45px;
@@ -65,7 +66,7 @@
     width: 0px;
     height: 2px;
     border-radius: 2px;
-    background: #FFF;
+    background: var(--white);
     position: absolute;
     transform-origin: 0% 0%;
 }
@@ -90,26 +91,26 @@
 .checkbox input { display: none; }
 
 .checkbox input:checked + span { 
-    background-color: #fc424a;
-    border-color: #fc424a;
+    background-color: var(--red);
+    border-color: var(--red);
     transform: scale(1.2) translateY(-50%);
 }
 
 .checkbox input:checked + span::before,
 .checkbox:hover input:checked + span::before {
     width: 5px;
-    background: #FFF;
+    background: var(--white);
     transition: width 150ms ease 100ms;
 }
 
 .checkbox input:checked + span::after,
 .checkbox:hover input:checked + span::after {
     width: 10px;
-    background: #FFF;
+    background: var(--white);
     transition: width 150ms ease 100ms;
 }
 
-.checkbox input:checked:hover + span { background-color: #fff; transform: scale(1.2) translateY(-50%); }
+.checkbox input:checked:hover + span { background-color: var(--white); transform: scale(1.2) translateY(-50%); }
 
 .list:last-child label {
     border-bottom: 1px solid transparent !important;

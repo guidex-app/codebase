@@ -4,7 +4,7 @@
 }
 
 .slots > div {
-    display: block;
+    display: flex;
     background-color: rgba(255,255,255,0.05);
 
     transform: scale(1);

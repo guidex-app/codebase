@@ -5,7 +5,7 @@
     overflow: hidden;;
     line-height: 22px;
 
-    background-color: #2b303d;
+    background-color: var(--fourth);
 }
 
 .counter > svg {
@@ -14,7 +14,7 @@
     height: auto;
     padding-left: 15px;
     padding-right: 5px;
-    color: #6c7293;
+    color: var(--fifth);
     vertical-align: middle;
 }
 
@@ -40,9 +40,8 @@
 
 .counter input {
     background-color: transparent;
-    outline: none;
     font-size: 20px;
-    color: white;
+    color: var(--white);
     border: none;
     min-width: 70px;
     text-align: center;
@@ -62,8 +61,8 @@
     width: 35px;
     border-radius: 20px;
     text-align: center;
-    color: white;
-    background-color: #fc424a;
+    color: var(--white);
+    background-color: var(--red);
     border: none;
     outline: none;
     box-shadow: 0 0 30px rgb(0, 0, 0, 0.27);
@@ -81,7 +80,6 @@
 }
 
 .counter button {
-    outline: none;
     border: none;
     cursor: pointer;
     font-weight: 700;

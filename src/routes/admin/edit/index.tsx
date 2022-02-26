@@ -1,12 +1,14 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { Filter } from 'react-feather';
 
 import AddRemove from '../../../components/form/addRemove';
 import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
 import ImgInput from '../../../components/form/imgInput';
 import SelectInput from '../../../components/form/selectInput';
+import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
+import { mergeUnique } from '../../../helper/array';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useForm from '../../../hooks/useForm';
 import { FormInit } from '../../../interfaces/form';
@@ -20,16 +22,13 @@ interface EditProps {
 const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) => {
   const topicTypes: string[] = ['seopage', 'seotext', 'topicpage', 'topictext', 'notlisted', 'quickfilter'];
 
-  const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
-
   const form: FormInit = {
     title: { value: data !== 'new' && data?.title.name, type: 'string', required: true },
     type: { value: data !== 'new' && data?.type ? data.type : 'seopage', type: 'string', required: true },
     description: { value: data !== 'new' && data?.description ? data.description : '', type: 'string', required: false },
     partitions: { value: data !== 'new' && data?.partitions ? data.partitions : [''], type: 'string[]', required: false },
     filter: { value: data !== 'new' && data?.filter ? data.filter : [], type: 'string[]', required: false },
-    state: { value: data !== 'new' && data?.state ? data.state : 'inEdit', type: 'string', required: false },
-    image: { type: 'image', required: false },
+    state: { value: data !== 'new' && data?.state ? data.state : [], type: 'string[]', required: false },
   };
   const { formState, fields, isValid, changeField } = useForm(form);
 
@@ -37,10 +36,10 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     ...(data === undefined ? { title: { name: fields.title, form: replaceSpecialCharacters(fields.title) } } : { title: data.title }),
     filter: fields.filter,
     description: fields.description,
+    state: fields.state,
     ...(type === 'topics' && {
       partitions: fields.partitions?.filter((x: string) => x !== '') || undefined,
       type: fields.type,
-      state: fields.state,
     }),
   });
 
@@ -81,12 +80,14 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     changeField(getPartition, 'partitions');
   };
 
+  const changeImage = (name: string) => {
+    const newState = mergeUnique([name], fields.state);
+    changeField(newState, 'state');
+  };
+
   const validation = async () => {
     if (isValid()) {
-      if (formState.image === 'valid') setImageState('loading');
-
       const newFields = getCorrectFields();
-
       fireDocument(`${type}/${newFields.title.form}`, newFields, data === undefined ? 'set' : 'update').then(() => navigate());
     }
   };
@@ -130,8 +131,20 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       />
       )}
 
+      {fields.type !== 'notlisted' && fields.title && (
+      <ImgInput
+        fileName={fields.title}
+        folderPath={type === 'topics' ? 'topics' : 'categories'}
+        name="image"
+        label="Thumbnail hochladen/anpassen"
+        change={changeImage}
+        size={[700, 900]}
+        hasImage={data !== 'new'}
+      />
+      )}
+
       {(!fields.type || (fields.type && ['quickfilter', 'topicpage', 'seopage'].indexOf(fields.type) !== -1)) && (
-        <FormButton action={openFilter} label="Filter bearbeiten" type="outline" />
+        <Item icon={<Filter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={data.filter.join(' | ')} />
       )}
 
       <BasicInput
@@ -148,7 +161,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         change={changeField}
       />
 
-      <p class="grey">Die Zusammenfassung erlaubt keine &lt;HTML Tags&gt;. Und wird als Kurzbeschreibung angesehen. Achte darauf das, diese nicht zu lang ist.</p>
+      <p style={{ color: 'var(--fifth)' }}>Die Zusammenfassung erlaubt keine &lt;HTML Tags&gt;. Und wird als Kurzbeschreibung angesehen. Achte darauf das, diese nicht zu lang ist.</p>
 
       {type !== 'catInfos' && fields.partitions && (
       <Fragment>
@@ -178,22 +191,6 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
 
         <AddRemove action={addPartition} name="add" isFirst={!(fields.partitions?.[1])} />
       </Fragment>
-      )}
-
-      {fields.type !== 'notlisted' && fields.title && (
-      <ImgInput
-        fileName={fields.title}
-        folderPath={type}
-        name="image"
-        error={formState.image}
-        uploadFinished={() => navigate(true)}
-        startUpload={imageState === 'loading'}
-        change={changeField}
-        size={[700, 900]}
-        hasImage={data !== 'new'}
-        showSizeInfo
-        editAble
-      />
       )}
 
       <FormButton action={validation} />

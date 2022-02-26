@@ -41,28 +41,42 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID }: Acti
     }
   };
 
-  useEffect(() => {
-    getCategorie();
-  }, [categoryID]);
+  useEffect(() => { getCategorie(); }, [categoryID]);
 
   return (
     <Fragment>
+      <BackButton url="/" title="Zurück" />
+
       <TextHeader
-        icon={<Info color="#fea00a" />}
+        image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/categories%2F${categoryID}%2F${categoryID}_250x200`}
         title={category?.title.name || ''}
         text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
         Der Name Ihrer Unternehmung ist ihr öffentliches Label"
       />
+      {/* <Item type="large" title={category?.title.name || ''}
+        text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
+        Der Name Ihrer Unternehmung ist ihr öffentliches Label" /> */}
+
       <main style={{ padding: '20px 10px' }} class="size_holder">
-        <BackButton url="/" title="Zurück" />
 
         {list === undefined && <Item icon={<Info />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
         <div class={style.list}>
-          {list && list?.map((x: Activity) => <ActivityItem activity={x} />)}
+          {list && (
+            <Fragment>
+              {list && list?.map((x: Activity) => <ActivityItem activity={x} />)}
+              <ActivityItem activity={list[1]} />
+              <ActivityItem activity={list[1]} />
+              <ActivityItem activity={list[1]} />
+              <ActivityItem activity={list[1]} />
+              <ActivityItem activity={list[1]} />
+            </Fragment>
+          )}
+
         </div>
 
-        <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => console.log('test')} />
       </main>
+
+      <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => console.log('test')} />
     </Fragment>
   );
 };

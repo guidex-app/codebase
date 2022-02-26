@@ -1,64 +1,60 @@
 .item {
-    display: block;
     position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 55px;
+    padding: 0 12px;
+
     cursor: pointer;
-    padding: 5px 10px;
-    will-change: background;
     transition: background 0.3s ease-in-out, 0.5s ease-out border-image;
+    will-change: background;
+    border-radius: 10px;
 }
 
-.item:hover { background-color: rgba(255,255,255,0.03); }
+.item:hover { background-color: var(--lighter); }
 
-.item svg, .image {
-    display: inline-block;
-    vertical-align: middle;
+.item p {
+	line-height: 22px;
+    padding: 5px 0 5px 0;
+    margin: 0;
+    flex-grow: 1;
 }
 
-.item svg { width: 20px; height: 45px; }
-.item svg:not([color]) { color: #6c7293; }
-.grey svg, .current svg { color: #fc424a !important; }
+.item small { display: block; color: var(--fifth); font-size: 0.86em; }
+.warning small { color: var(--white); }
 
-.image img { width: 100%; height: auto; }
+.info, .grey, .warning { background-color: var(--lighter); margin-bottom: 15px; }
+.warning { background: linear-gradient(90deg,#fa8142, #ff4088); font-weight: bolder; transition: 0.3s opacity; }
+
+/* SVG COLOR */
+.item svg { flex-shrink: 0; width: 20px; }
+.item svg:not([color]) { color: var(--fifth); }
+.grey svg, .current svg, .grey, .current { color: var(--red) !important; }
+.warning svg { color: var(--white) !important; }
+
 .image {
+    flex-shrink: 0;
     width: 50px;
     height: 50px;
     overflow: hidden;
     border-radius: 10px;
     background-color: #323643;
     color: transparent;
+    margin: 5px 0;
 }
 
-.item p {
-    display: inline-block;
-    max-width: 100%;
-	line-height: 22px;
-    vertical-align: middle;
-    padding: 5px 0;
-    margin: 0;
-}
-
-.item svg + p, .item .image + p { padding-left: 12.5px; max-width: calc(100% - 30px); }
-.item small { display: block; color: #6c7293; font-size: 0.86em; }
-
-.item .image + p {
-    max-width: calc(100% - 50px);
-}
+.image img { width: 100%; height: auto; }
 
 .clean { 
-    background-color: transparent;
     border-width: 1px;
     border-style: solid;
     border-image: linear-gradient(to right, transparent, #373349) 0 1 100%;
 }
 
-.clean:last-child, .clean:hover { border-image: linear-gradient(to right, transparent, transparent) 0 1 100%; border-radius: 10px; }
-
-.info, .grey {
-    background-color: rgba(255,255,255,0.04);
-    margin-bottom: 10px;
-    border-radius: 10px;
-}
-
-.grey, .current { color: #fc424a; }
-
+.clean:last-child, .clean:hover { border-image: linear-gradient(to right, transparent, transparent) 0 1 100%; }
+.warning:hover { opacity: 0.8; }
 

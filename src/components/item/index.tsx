@@ -10,7 +10,7 @@ interface ItemProps {
     link?: string;
     icon?: any;
     image?: string;
-    type?: 'grey' | 'large' | 'info' | 'clean';
+    type?: 'grey' | 'large' | 'info' | 'clean' | 'warning';
 }
 
 const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type = 'clean', action, link, text }: ItemProps) => (
@@ -23,7 +23,7 @@ const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type = 'clea
     ) : (
       icon && icon
     )}
-    <p>{label} {text && <small>{text}</small>}</p>
+    <p>{label}&nbsp; {text && <small>{text}</small>}</p>
   </Link>
 );
 

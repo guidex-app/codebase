@@ -1,17 +1,47 @@
+@keyframes slideInFromLeft {
+	0% {
+	  transform: translateX(15px);
+	  opacity: 0.5;
+	}
+	100% {
+	  transform: translateX(0);
+	  opacity: 1;
+	}
+}
+
 .topButton {
     position: absolute;
     top: 0;
     left: 10px;
-    color: #fc424a;
+    color: var(--red);
     background: transparent;
-    outline: none;
     cursor: pointer;
     border: none;
     font-size: 15px;
     line-height: 55px;
     text-align: left;
+    animation: 0.3s ease-in-out 0s 1 slideInFromLeft;
 }
 
 .topButton:hover {
     opacity: 0.8;
+}
+
+.topButton::before {
+	border-style: solid;
+	border-width: 2px 2px 0 0;
+	content: '';
+	display: inline-block;
+	height: 10px;
+	width: 10px;
+
+	left: 0.15em;
+	position: relative;
+	top: 0.15em;
+	transform: rotate(-45deg);
+	vertical-align: middle;
+    margin-right: 7px;
+    
+    left: 0.25em;
+    transform: translateY(-3px) rotate(-135deg);
 }

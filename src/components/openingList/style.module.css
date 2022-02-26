@@ -5,7 +5,7 @@
     color: rgba(255,255,255,0.8);
     font-size: 14px;
     border-radius: 10px;
-    border: 1px solid #232732;
+    border: 1px solid var(--third);
     margin-bottom: 15px;
     overflow: hidden;
     display: flex;
@@ -18,8 +18,12 @@
     display: block;
     line-height: 1.5em;
     padding: 7px 10px;
-    min-width: 175px;
+    min-width: 160px;
     flex-grow: 1;
+}
+
+.openings strong {
+    color: var(--white);
 }
 
 .openings div:nth-child(even) {

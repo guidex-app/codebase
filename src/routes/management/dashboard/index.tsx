@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { Link, route } from 'preact-router';
-import { Home, Info } from 'react-feather';
+import { AlignJustify, Home } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
@@ -35,24 +35,16 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
   return (
     <Fragment>
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${activityID}%2F${activityID}_250x200`}
         title={`${data.title.name} (${data.category.name})`}
         text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie ihre angegebenen Informationen verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
       />
       <main>
         <BackButton url="/company" title="Liste" />
-
-        <div class={style.tools}>
-          <div>
-            <Chip label="✓ Die nächsten schritte (45%)" small type="warning" action={() => setOpenModal(true)} />
-            <Chip label="Online stellen" small type="disabled" action={() => console.log('da')} />
-          </div>
-          <div>
-            <Chip label="Support" small type="grey" action={() => console.log('da')} />
-            <Chip label="Alles Löschen" small type="delete" action={() => console.log('da')} />
-          </div>
+        <div class="small_size_holder" style={{ paddingTop: '20px' }}>
+          <Item icon={<AlignJustify />} type="warning" label="(45%) Fast geschafft - Jetzt die nächsten Schritte ansehen" action={() => setOpenModal(true)} />
         </div>
-        <Item icon={<Info />} type="info" label="Deine Unternehmung ist jetzt bereit. Stelle sie Online!" action={() => setOpenModal(true)} />
+
         <div class={`${style.basic} size_holder`}>
           {companyRoutes.basic.map((x) => (
             <Item icon={x.icon} label={x.title} type="info" action={() => route(`${x.path}/${data.title.form}`)} />
@@ -63,18 +55,19 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
             <Link key={x.title} href={`${x.path}/${data.title.form}`} class={style.dashItem}>
               {x.icon && x.icon}
               <strong>{x.title}</strong><br />
-              <small>{x.subTitle}</small>
+              <small>{x.text}</small>
             </Link>
           ))}
-          {companyRoutes.disabled.map((x) => (
-            <Link key={x.title} href="/company/dashboard" class={style.dashItem} style={{ opacity: 0.5 }}>
-              {/* <IonCard className="dash-group ion-no-margin" disabled={!activity.state?.includes('service') && serviceDepends.indexOf(x.title) !== -1} color="primary" href={`${x.path}/${id}`}> */}
-              {/* <IonIcon icon={x.icon} color={x.color} size="large" /> */}
-              {x.icon && x.icon}
-              <strong>{x.title}</strong><br />
-              <small>{x.subTitle}</small>
-            </Link>
-          ))}
+        </div>
+        <div class={style.tools}>
+          <div>
+            {/* <Chip label="✓ Die nächsten schritte (45%)" small type="warning" action={() => setOpenModal(true)} />
+            <Chip label="Online stellen" small type="disabled" action={() => console.log('da')} /> */}
+            <Chip label="Support - Wenn du Hilfe brauchst" small type="grey" action={() => console.log('da')} />
+          </div>
+          <div>
+            <Chip label="Alles Löschen" small type="delete" action={() => console.log('da')} />
+          </div>
         </div>
         {openModal && <Modal title="" close={() => setOpenModal(false)}><Check activity={data} /></Modal>}
       </main>

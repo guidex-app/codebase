@@ -29,16 +29,17 @@ const AppRoutes: FunctionalComponent = () => {
       geoHash: 'u1x0',
       date: new Date().getTime(),
     };
+
     const weather: Weather = await getWeather('today', location.lat, location.lng);
 
-    setStorageKeys({ weather: JSON.stringify(weather), location: JSON.stringify(location) });
-    updateUser({ weather, location });
+    setStorageKeys({ location: JSON.stringify({ ...location, weather }) });
+    updateUser({ location });
   };
 
   const getUserData = async () => {
-    const userData: User = await getStorageKeys(['displayName', 'email', 'weather', 'location', 'uid']);
-    if (userData.weather && userData.location && !isDayGreater(userData.location.date, 1)) return updateUser(userData);
-    getNewLocation();
+    const userData: User = await getStorageKeys(['displayName', 'email', 'location', 'uid']);
+    if (userData.location?.weather && !isDayGreater(userData.location.date, 1)) return updateUser(userData);
+    return getNewLocation();
   };
 
   /** lädt die user daten beim start */
@@ -47,14 +48,14 @@ const AppRoutes: FunctionalComponent = () => {
   return (
 
     <Router>
-      <Route path="/" component={Cats} user={user} />
+      <Route path="/" component={Cats} location={user.location} interests={user.interests} />
       <Route path="/explore/" component={Explore} />
-      <Route path="/explore/:topicID" component={TopicPage} user={user} />
+      <Route path="/explore/:topicID" component={TopicPage} location={user.location} />
 
       <Route path="/admin/" component={Admin} />
 
       {/* <AsyncRoute path="/company/:rest*" component={Management} user={user} /> */}
-      <Route path="/company/:rest*" component={Management} user={user} />
+      <Route path="/company/:rest*" component={Management} uid={user.uid} />
       <Route path="/activity/:categoryID" component={ActivityList} />
       <Route path="/profile/" component={Profile} updateUser={updateUser} />
       <Route path="/register/" component={Register} updateUser={updateUser} />

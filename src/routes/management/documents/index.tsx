@@ -10,9 +10,7 @@ import TextHeader from '../../../components/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import useCompany from '../../../hooks/useCompany';
-import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
-import { FormInit } from '../../../interfaces/form';
 
 interface ActivityProp {
     activityID: string;
@@ -32,41 +30,16 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
     );
   }
 
-  const formInit: FormInit = {
-    image1: { value: false, type: 'image', required: false },
-    image2: { value: false, type: 'image', required: false },
-    image3: { value: false, type: 'image', required: false },
-    image4: { value: false, type: 'image', required: false },
-  };
-
-  const { fields, formState, changeField, isValid } = useForm(formInit);
-
-  const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
-  const [finished, setFinished] = useState<string[]>([]);
-
-  const navigate = (isFinished?: true) => (formState.image !== 'valid' || isFinished) && route(`/company/services/${data.title.form}`);
-
-  const uploadFinished = (name: string) => {
-    const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false));
-    const validImages = filledImages.filter((x) => !!x);
-    if (validImages?.length > 0) {
-      const allUploadsComplete = finished.length + 1 === validImages.length;
-      console.log(finished.length, filledImages.length);
-      if (allUploadsComplete) {
-        const newState = mergeUnique(data?.state || [], validImages);
-        fireDocument(`activities/${data.title.form}`, { state: newState }, 'update').then(() => navigate());
-      } else {
-        setFinished([...finished, name]);
-      }
-    }
-  };
+  const [state, setState] = useState<string[]>(data.state);
 
   const validateForm = async () => {
-    if (isValid()) {
-      const filledImages: (string | false)[] = Object.entries(fields).map(([key, value]) => (value && value > 0 ? key : false)).filter((x) => !!x);
-      if (filledImages.length !== 0) setImageState('loading');
-      else navigate();
-    }
+    await fireDocument(`activities/${data.title.form}`, { state }, activityID === 'new' ? 'set' : 'update');
+    route(`/company/services/${data.title.form}`);
+  };
+
+  const changeDocument = (name: string) => {
+    const newState = mergeUnique([name], state);
+    setState(newState);
   };
 
   return (
@@ -85,41 +58,32 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
             <ImgInput
               fileName="image1"
               label="AGB"
-              name="image1"
+              name="agb"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image1}
-              startUpload={imageState === 'loading'}
-              uploadFinished={uploadFinished}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image1')}
-              change={changeField}
+              change={changeDocument}
             />
             <ImgInput
               fileName="image2"
               label="Wiederrufsbelehrung"
-              name="image2"
+              name="wb"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image2}
-              startUpload={imageState === 'loading'}
-              uploadFinished={uploadFinished}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image2')}
-              change={changeField}
+              change={changeDocument}
             />
             <ImgInput
               fileName="image3"
               label="Einverständniserklärung für Minderjährige"
-              name="image3"
+              name="eve"
               folderPath={`activities/${data.title.form}`}
               placeholder="+"
-              error={formState.image3}
-              uploadFinished={uploadFinished}
-              startUpload={imageState === 'loading'}
               size={[1200, 900]}
               hasImage={!!data?.state?.includes('image3')}
-              change={changeField}
+              change={changeDocument}
             />
           </section>
 

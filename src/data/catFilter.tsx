@@ -4,7 +4,7 @@ import { Calendar, Clock, Coffee, DollarSign, Feather, Home, Sun, Thermometer, U
 import { Filter } from '../interfaces/filter';
 
 const catFilter: Filter[][] = [[
-  { title: { name: 'Wetter', form: 'we', icon: <Sun color="#fea00a" /> },
+  { title: { name: 'Wetter', form: 'we', icon: <Sun color="var(--orange)" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Sonnig', form: 'we_sunny' },
@@ -12,7 +12,7 @@ const catFilter: Filter[][] = [[
       { name: 'Bewölkt', form: 'we_cloudy' },
       { name: 'Schnee', form: 'we_snowy' },
     ] },
-  { title: { name: 'Temperatur', form: 'te', icon: <Thermometer color="#fea00a" /> },
+  { title: { name: 'Temperatur', form: 'te', icon: <Thermometer color="var(--orange)" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Wärmer als 20°', form: 'te_sommerlaune' },
@@ -20,7 +20,7 @@ const catFilter: Filter[][] = [[
       { name: '10° - 14°', form: 'te_wetterfrei' },
       { name: 'Kälter als 10°', form: 'te_frostigefreude' },
     ] },
-  { title: { name: 'Tageszeit', form: 'tz', icon: <Calendar color="#fea00a" /> },
+  { title: { name: 'Tageszeit', form: 'tz', icon: <Calendar color="var(--orange)" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Morgens', form: 'tz_morgens' },
@@ -29,7 +29,7 @@ const catFilter: Filter[][] = [[
       { name: 'Nachts', form: 'tz_nachts' },
     ] },
 ], [
-  { title: { name: 'Interessen', form: 'ta', icon: <Coffee color="#2fd159" /> },
+  { title: { name: 'Interessen', form: 'ta', icon: <Coffee color="#b555dd" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Kultur', form: 'ta_culture' },
@@ -41,21 +41,21 @@ const catFilter: Filter[][] = [[
       { name: 'Essen', form: 'ta_food' },
       { name: 'Tiere', form: 'ta_animals' },
     ] },
-  { title: { name: 'Elemente', form: 'el', icon: <Feather color="#2fd159" /> },
+  { title: { name: 'Elemente', form: 'el', icon: <Feather color="#b555dd" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Natur', form: 'el_nature' },
       { name: 'Wasser', form: 'el_water' },
       { name: 'Luft', form: 'el_air' },
     ] },
-  { title: { name: 'Draußen/Drinnen', form: 'lo', icon: <Home color="#2fd159" /> },
+  { title: { name: 'Draußen/Drinnen', form: 'lo', icon: <Home color="#b555dd" /> },
     inputType: 'checkbox',
     data: [
       { form: 'lo_indoor', name: 'Drinnen' },
       { form: 'lo_outdoor', name: 'Draußen' },
     ] },
 ], [
-  { title: { name: 'Alter', form: 'ag', icon: <UserPlus color="#0983fe" /> },
+  { title: { name: 'Alter', form: 'ag', icon: <UserPlus color="#f571aa" /> },
     inputType: 'checkbox',
     data: [
       { name: 'Baby', form: 'ag_baby' },
@@ -64,7 +64,7 @@ const catFilter: Filter[][] = [[
       { name: 'Teenager', form: 'ag_teen' },
       { name: 'Erwachsen', form: 'ag_adult' },
     ] },
-  { title: { name: 'Preis', form: 'pr', icon: <DollarSign color="#0983fe" /> },
+  { title: { name: 'Preis', form: 'pr', icon: <DollarSign color="#f571aa" /> },
     inputType: 'radio',
     data: [
       { form: 'pr_price_0', name: 'Kostenfrei' },
@@ -74,8 +74,8 @@ const catFilter: Filter[][] = [[
       { form: 'pr_price_4', name: '75 - 100 €' },
       { form: 'pr_price_5', name: 'Über 100 €' },
     ] },
-  { title: { name: 'Personen', form: 'pe', icon: <UserCheck color="#0983fe" /> },
-    inputType: 'radio',
+  { title: { name: 'Personen', form: 'pe', icon: <UserCheck color="#f571aa" /> },
+    inputType: 'checkbox',
     data: [
       { form: 'pe_eine_pers', name: '1 Pers.' },
       { form: 'pe_zwei_pers', name: '2 Pers.' },
@@ -84,7 +84,7 @@ const catFilter: Filter[][] = [[
       { form: 'pe_fuenf_pers', name: '5 Pers.' },
       { form: 'pe_ueberfuenf_pers', name: 'Über 5 Pers.' },
     ] },
-  { title: { name: 'Dauer', form: 'du', icon: <Clock color="#0983fe" /> },
+  { title: { name: 'Dauer', form: 'du', icon: <Clock color="#f571aa" /> },
     inputType: 'radio',
     data: [
       { form: 'du_halbestunde', name: '30 Min.' },

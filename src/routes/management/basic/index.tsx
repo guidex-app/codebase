@@ -43,12 +43,12 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     category: { value: data?.category?.name, type: 'string', required: true },
     filter: { value: data?.filter || ['Indoor'], type: 'string[]', required: true },
     description: { value: data?.description, type: 'string', required: false },
-    image: { value: false, type: 'image', required: false },
+    state: { value: data.state, type: 'string[]', required: false },
   };
 
   const { fields, formState, changeField, isValid } = useForm(formInit);
 
-  const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
+  // const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
   const [categoryList, setCategoryList] = useState<{ title: { name: string, form: string }, filter: string[] }[]>([]);
   const [isIndoorAndOutdoor, setIsIndoorAndOutdoor] = useState<boolean>(false);
 
@@ -60,24 +60,25 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     }
   }, []);
 
-  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && fields.title && route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
+  const updateImage = (name: string) => {
+    const newState = mergeUnique([name], fields.state || []);
+    changeField(newState, 'state');
+  };
 
   const validateForm = async () => {
     if (isValid()) {
-      if (formState.image === 'valid') setImageState('loading');
-
       const basic = await {
         ...(activityID === 'new' && { member: [uid] }),
         title: data?.title || { name: fields.title, form: replaceSpecialCharacters(fields.title) },
         category: { name: fields.category, form: replaceSpecialCharacters(fields.category) },
         filter: fields.filter,
-        ...(fields.image > 0 && { state: mergeUnique(['thumbnail'], activity?.state || []) }),
+        state: fields.state,
         ...(fields.description && { description: fields.description }),
       };
 
       await fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update');
 
-      navigate();
+      route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
     }
   };
 
@@ -87,6 +88,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
 
     const ind: boolean = cat.filter.includes('lo_indoor');
     const out: boolean = cat.filter.includes('lo_outdoor');
+    console.log(cat.filter);
     setIsIndoorAndOutdoor(ind && out);
 
     if (ind && !out) changeField(['Indoor'], 'filter');
@@ -114,7 +116,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
               value={fields.title}
               placeholder="Wie lautet der Titel ihrer Unternehmung"
               error={formState.title}
-              disabled={activityID !== 'new'}
+              disabled={activityID !== 'new' || fields.state[0]}
             //   errorMessage="Bitte geben Sie einen Namen an"
               required
             //   disabled={!!activity && 'Sie habe Ihre Unternehmung bereits definiert'}
@@ -133,7 +135,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
               change={changeCat}
             />
 
-            {fields.category?.form && isIndoorAndOutdoor && (
+            {fields.category && isIndoorAndOutdoor && (
             <PickInput
               label="Wo seid Ihr verfügbar?"
               name="filter"
@@ -151,16 +153,13 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
           <section class="group form">
 
             <ImgInput
-              label="Anzeigebild"
+              label={data?.state?.includes('thumbnail') ? 'Anzeigebild aktualisieren' : 'Anzeigebild hochladen'}
               fileName={fields.title}
               folderPath="activities"
-              name="image"
-              error={formState.image}
-              startUpload={imageState === 'loading'}
-              uploadFinished={() => navigate(true)}
-              size={[700, 900]}
+              name="thumbnail"
+              size={[900, 900]}
               hasImage={!!data?.state?.includes('thumbnail')}
-              change={changeField}
+              change={updateImage}
             />
 
             <BasicInput

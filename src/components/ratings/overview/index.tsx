@@ -30,14 +30,14 @@ const VisuellOverview: FunctionalComponent<OverviewProps> = ({ rating }: Overvie
     <div class={style.overview}>
       <div>
         <h1><strong>{ratingStats.amount > 0 ? getPerfectNumber(ratingStats.totalCount / ratingStats.amount) : 0} / 5</strong></h1>
-        <p class="grey"><small>({ratingStats.amount}) Bewertungen</small></p>
+        <p style={{ color: 'var(--fifth)' }}><small>({ratingStats.amount}) Bewertungen</small></p>
       </div>
 
       <table>
         <tbody>
           {ratingStats.currentRatings.map((star: number, index: number) => (
             <tr>
-              <td class={`${style.stars} orange`}>
+              <td class={`${style.stars}`} style={{ color: 'var(--orange)' }}>
                 <span>★</span>
                 {index >= 1 && <span>★</span>}
                 {index >= 2 && <span>★</span>}

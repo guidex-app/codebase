@@ -231,7 +231,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
               {getField > -1 && type === 'onOpenings' && !openings && <p class="red">Konfigurieren Sie zuerst Ihre Öffnungszeiten</p>}
               {((getField > -1 && !['simple', 'onOpenings'].includes(type)) || exceptions) && (
               <Fragment>
-                <p class="grey">{answer.info}</p>
+                <p style={{ color: 'var(--fifth)' }}>{answer.info}</p>
                 {amountOfFields.map((amountString: string, amountIndex: number) => (
                   <Fragment key={amountString}>
                     {answer.inputType === 'image' ? (
@@ -240,11 +240,9 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                         fileName={amountString.replace(' ', '_').toLowerCase()}
                         name={`${answer.name}+${amountIndex}`}
                         folderPath={folderPath}
-                        error={values?.[amountIndex] ? 'valid' : 'invalid'}
-                        startUpload
-                        size={[1200, 900]}
+                        size={[900, 900]}
                         hasImage={values?.[amountIndex]}
-                        change={setNewValue}
+                        // change={(name) => setNewValue(name, `${answer.name}+${amountIndex}`)}
                       />
                     ) : (answer.inputType === 'dayPicker' ? (
                       question.info.type !== 'simple' ? (
@@ -261,7 +259,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
                         )
                       )
                     ) : (
-                      <div style={answer.onDay ? { backgroundColor: '#2b303d', borderRadius: '10px', padding: '5px 10px', marginBottom: '10px' } : undefined}>
+                      <div style={answer.onDay ? { backgroundColor: 'var(--fourth)', borderRadius: '10px', padding: '5px 10px', marginBottom: '10px' } : undefined}>
                         {answer.onDay && (
                           structure?.days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
                         )}

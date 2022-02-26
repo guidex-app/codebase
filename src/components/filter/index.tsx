@@ -9,9 +9,10 @@ interface FilterListProps {
   data: Filter[][];
   values: string[];
   change: (newFilter: string[]) => void;
+  close: () => void;
 }
 
-const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, change }: FilterListProps) => {
+const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, close, change }: FilterListProps) => {
   const [activeSection, setActiveSection] = useState<string[]>([]);
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, change
   return (
     <Fragment>
       {data.map((group: Filter[], groupIndex: number) => (
-        <div key={groupIndex.toString()} style={{ backgroundColor: '#2b303d', borderRadius: '20px', marginBottom: '15px' }}>
+        <div key={groupIndex.toString()} style={{ backgroundColor: 'var(--fourth)', borderRadius: '20px', marginBottom: '15px' }}>
           {group.map((item: Filter) => (
             <FilterItem
               filter={values}
@@ -71,6 +72,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, change
           ))}
         </div>
       ))}
+      <FormButton label="Filter übernehmen" action={close} />
       <FormButton label="Filter zurücksetzen" type="outline" action={() => reset()} />
     </Fragment>
   );

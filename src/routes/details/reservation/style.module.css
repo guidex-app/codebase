@@ -1,9 +1,10 @@
 .price {
-    color: black;
+    color: var(--white);
     border-radius: 20px;
     margin-bottom: 15px;
     display: flex;
-    padding: 20px;
+    align-items: center;
+    padding: 10px 10px 10px 20px;
 }
 
 .price div {
@@ -16,7 +17,7 @@
     width: 100px;
     padding: 20px;
     text-align: center;
-    background-color: white;
+    background-color: var(--white);
     border-radius: 20px;
     color: #ffa500;
 }

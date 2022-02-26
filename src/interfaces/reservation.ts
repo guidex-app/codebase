@@ -10,8 +10,7 @@ export interface PriceItem {
 
     day: string;
     rounds?: number | false;
-    discount: string | false;
-    age: string | false;
+    discount: string | false; // age & normale rabatte
     time: string | false;
   }
 
@@ -27,8 +26,7 @@ export interface Capacity {
 
 export interface ContainsList {
     day: string[];
-    age: string[];
-    discount: string[];
+    discount: string[]; // age und normale rabatte
     time: string[];
     persons: number[];
   }
@@ -86,8 +84,7 @@ export interface Reservation {
   }
 
 export interface ShoppingCart {
-    age: string,
-    discount?: string,
+    discount?: string, // age und normale rabatte
     price: number,
     amount: number,
     groupDiscount?: number,
@@ -96,6 +93,5 @@ export interface ShoppingCart {
 
 export interface UserValues {
     ages?: { [key: string]: number },
-    discountName?: { [key: string]: number },
-    onDuration?: string;
+    discount?: { [key: string]: number },
   }

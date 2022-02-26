@@ -1,12 +1,29 @@
-.red { color: #fc424a }
-.orange { color: #ffab00 }
-.blue { color: #0090e7 }
-.green { color: #00d25b }
-.lila { color: #8f5fe8 }
-.grey { color: #6c7293 }
-.olive { color: #0a717c }
+:root {
+    /* TEXT COLOR */
+    --white: #f2f2f2;
+    --red: #f04c54;
+    --orange: #ffab00;
+    --blue: #0090e7;
+    --green: #00d25b;
+    --lila: #8f5fe8;
+    --olive: #0a717c;
 
-.main-bg { background-color: #191C25; }
+    /* DARK COLORS */
+    --dark: #111218; /* black */
+
+    --first: #191C25; /* background */
+    --second: #20192a; /* modal */
+
+    --third: #232732; /* group */
+    --fourth: #2b303d; /* group heading */
+
+    --fifth: #6c7293; /* text color */
+
+    --lighter: rgba(255, 255, 255, 0.05);
+    --darker: rgba(24, 17, 34, 0.4);
+}
+
+.main-bg { background-color: var(--first); }
 
 .blue-bg {
     background: rgb(42,178,248);

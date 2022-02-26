@@ -17,7 +17,6 @@ interface EditPricesProps {
     activityID: string;
     serviceID: string;
     questionLength: number;
-    changeType: (newType?: 'belongs' | 'prices' | undefined) => void;
     editStructure: (field: ServiceField[] | undefined, showType: 'belongs' | 'structure') => void;
 }
 
@@ -26,7 +25,7 @@ interface PriceRows {
     columns: number[];
 }
 
-const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeType, activityID, serviceID, questionLength, editStructure }: EditPricesProps) => {
+const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityID, serviceID, questionLength, editStructure }: EditPricesProps) => {
   const [status, setStatus] = useState<{
     isRound?: boolean;
     hasTime?: boolean;
@@ -45,7 +44,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeTyp
 
   // farben
   const rowProps = [
-    { color: '#FFFFFF', suffix: 'Uhr', not: 'Keine Zeit' },
+    { color: 'var(--white)', suffix: 'Uhr', not: 'Keine Zeit' },
     { color: '#d4be21', suffix: '', not: 'Kein Rabatt' },
     { color: '#2fd159', suffix: 'Jahre', not: 'Kein Alter' },
   ];
@@ -63,16 +62,14 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeTyp
 
   const generateRowNames = () => {
     const { list: discountList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'discounts')?.answers, ['']);
-    const { list: ageList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'age')?.answers, ['']);
+    const { list: ageList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'age')?.answers, []);
     const { list: timeList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'time')?.answers, ['']);
 
     const rowList: (string | false)[][] = [];
 
     timeList.forEach((time) => {
-      discountList.forEach((disc: string) => {
-        ageList.forEach((age: string) => {
-          rowList.push([time || false, disc || false, age || false]);
-        });
+      [...discountList, ...ageList].forEach((disc: string) => {
+        rowList.push([time || false, disc || false || false]);
       });
     });
 
@@ -137,11 +134,11 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeTyp
       const [cellIndex, rowIndex] = id.split('_');
 
       const [persons, duration] = columns[cellIndex];
-      const [time, discount, age] = rows[rowIndex].row;
+      const [time, discount] = rows[rowIndex].row;
       const getRowList = rows[rowIndex].row.filter(Boolean);
       const rowID = `${getRowList.join('_')}_${persons}_${duration}_${status.day}`;
 
-      const newItem: PriceItem = { id: rowID, duration, persons, price: value, day: status.day, age, time, discount };
+      const newItem: PriceItem = { id: rowID, duration, persons, price: value, day: status.day, time, discount };
       return fireDocument(`activities/${activityID}/services/${serviceID}/prices/${rowID}`, newItem, 'set').then(() => console.log('gespeichert'));
     }
   };
@@ -164,6 +161,8 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeTyp
   useEffect(() => { if (priceList) generateRows(); }, [priceList]);
   useEffect(() => { loadStructure(); }, []); // initial load
   useEffect(() => { if (status.day) daySelect(); }, [status.day]);
+
+  const handleFocus = (e: any) => e.target.select();
 
   const editCurrentFields = () => {
     if (structureFields) editStructure(structureFields, 'structure');
@@ -203,23 +202,23 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, changeTyp
               <tbody>
                 {rows.map((row: PriceRows, rowIndex: number) => (
                   <tr>
-                    {status.hasTime && <td>{(rowIndex === 0 || rows[rowIndex - 1].row[0] !== row.row[0]) ? row.row[0] : 's.o.'}</td>}
+                    {status.hasTime && <td>{(rowIndex === 0 || rows[rowIndex - 1].row[0] !== row.row[0]) ? row.row[0] || 'Standartpreis' : 's.o.'}</td>}
                     <td>{row.row.map((x: string | false, i: number) => (!status.hasTime || i > 0) && <span style={{ color: rowProps[i].color }}>{x ? `${x} ${rowProps[i].suffix}` : rowProps[i].not}</span>)}</td>
                     {row.columns?.map((price: number, cellIndex: number) => (
-                      <td><input id={`${cellIndex}_${rowIndex}`} value={price} type="number" onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
+                      <td><input id={`${cellIndex}_${rowIndex}`} value={price} type="number" onFocus={handleFocus} onChange={savePrice} min="0.00" max="10000.00" step="1" placeholder="-" /></td>
                     ))}
                   </tr>
                 ))}
               </tbody>
             </table>
-            <FormButton action={() => changeType(undefined)} />
+            <FormButton label="Preise speichern & schließen" action={() => changeDay(undefined)} />
           </Fragment>
           )}
           {/* <Item icon={<Info />} type="info" label="Wenn kein Preis angegeben ist, wird der Standartpreis verwendet." text="Für die Berechnung ist ein Preis oder Standart-Preis erforderlich" /> */}
 
         </Fragment>
       ) : (
-        <Item icon={<Edit color="#ffab00" />} label="Tabelle jetzt abschließen" type="info" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
+        <Item icon={<Edit color="var(--orange)" />} label="Tabelle jetzt abschließen" type="info" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
       )}
 
     </Fragment>

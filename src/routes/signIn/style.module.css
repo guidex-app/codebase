@@ -16,5 +16,5 @@
 }
 
 .register a {
-	color: #fc424a;
+	color: var(--red);
 }

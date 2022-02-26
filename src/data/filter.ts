@@ -2,46 +2,62 @@ import { Cat } from '../interfaces/categorie';
 import { Weather } from '../interfaces/user';
 
 const filterCats = (list: any[], filter?: string[], weather?: Weather): any[] => {
-  if (!list || !filter || !weather || list.length === 0) return list;
-
-  const prefixList: { [key: string]: string[] } = {};
-  let isRainy: boolean = false;
+  if (!list?.[0] || !weather) return list;
 
   const { temp: t, shortName: w } = weather;
 
-  // create prefixList
-  for (let index = 0; index < filter.length; index += 1) {
-    const filterItem = filter[index];
-    if (filterItem === 'we_rainy') isRainy = true;
+  const prefixList: { [key: string]: string[] } = {};
+  let isRainy: boolean = false; // wenn regen ist
 
-    const prefix = filterItem.substring(0, 2);
-    if (prefixList[prefix]) {
-      prefixList[prefix].push(filterItem);
-    } else {
-      prefixList[prefix] = [filterItem];
+  // create prefixList
+  if (filter?.[0]) {
+    for (let index = 0; index < filter.length; index += 1) {
+      const tag: string = filter[index];
+      if (!isRainy && tag === 'we_rainy') isRainy = true;
+
+      const prefix = tag.substring(0, 2);
+      if (prefixList[prefix]) {
+        prefixList[prefix].push(tag);
+      } else {
+        prefixList[prefix] = [tag];
+      }
     }
   }
 
-  // guidex algorythmus
+  // get guidex weather algorythmus
   if (!prefixList.te && !prefixList.we) {
-    if (w !== 'Rain') {
+    if (w === 'Rain') {
+      isRainy = true;
+      prefixList.we = ['we_rainy'];
+    } else {
       if (t >= 20 && w !== 'Mist') prefixList.te = ['te_sommerlaune'];
       if (t >= 15 && t <= 19) prefixList.te = ['te_nordisch'];
       if (t >= 10 && t <= 14) prefixList.te = ['te_wetterfrei'];
       if (t <= 9) prefixList.te = ['te_frostigefreude'];
-    } else {
-      isRainy = true;
-      prefixList.we = ['we_rainy'];
     }
   }
 
-  console.log('Wird gefiltert', prefixList);
+  const currentOrder: number = new Date().getDay();
+  const newList: Cat[] = [];
 
-  return list.filter((cat: Cat) => (
-    Object.values(prefixList).every((prefix: string[]) => (
-      (isRainy && prefix[0].startsWith('te')) || prefix.findIndex((pr: string) => cat.filter.indexOf(pr) > -1) > -1
-    ))
-  ));
+  console.log('prefixList', prefixList);
+
+  for (let i = 0; i < list.length; i += 1) {
+    const checkTags = Object.entries(prefixList).every(([currentPrefix, prefixValues]: [string, string[]]) => {
+      if (currentPrefix === 'te' && isRainy) return true;
+      return prefixValues.findIndex((tag: string) => list[i].filter.includes(tag)) > -1;
+    });
+
+    if (checkTags) {
+      if (currentOrder === list[i].sortCount) {
+        newList.unshift(list[i]);
+      } else {
+        newList.push(list[i]);
+      }
+    }
+  }
+
+  return newList;
 };
 
 export default filterCats;

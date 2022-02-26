@@ -35,4 +35,5 @@ function MasonryItem({ chunks, type }: any) {
 
   );
 }
+
 export default MasonryItem;

@@ -1,7 +1,7 @@
 .header {
-	height: 60px;
+	min-height: 60px;
 	width: 100%;
-	padding: 2.5px;
+	padding: 0 2.5px;
 	background: transparent;
 	overflow: hidden;
 
@@ -31,7 +31,7 @@
 .title h1 {
 	font-size: 17px;
 	font-weight: 600;
-	color: #FFFFFF;
+	color: var(--white);
 }
 
 .menu { 

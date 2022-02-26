@@ -27,3 +27,10 @@ export const getSimpleDateString = (date: Date) => {
 
   return `${year}-${month}-${day}`;
 };
+
+export const isInTimeRange = (timeToCompare: string, timeRange: string | false): boolean => {
+  if (!timeRange) return false;
+  const timeSplitted = timeRange.split('-');
+  if (timeSplitted[1] === '00:00') timeSplitted[1] = '24:00';
+  return timeSplitted && (timeToCompare >= timeSplitted[0] && timeToCompare <= timeSplitted[1]);
+};

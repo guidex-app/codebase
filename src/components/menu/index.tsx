@@ -45,7 +45,7 @@ const Menu: FunctionalComponent = () => {
   return (
     <Fragment>
       <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
-        <Grid color="#FFFFFF" size="24" />
+        <Grid color="var(--white)" size="24" />
       </button>
 
       {show && container.current && createPortal(
@@ -54,13 +54,13 @@ const Menu: FunctionalComponent = () => {
             <Overlay action={toggleModal} />
             <aside class={style.menu}>
               <h1 class={style.title}>Guidex</h1>
-              {user && <small>Willkommen {user?.displayName?.split(' ')?.[0] || ''}</small>}
-              <nav>
+              <small>Willkommen {user?.displayName ? user?.displayName.split(' ')?.[0] : 'auf Guidex'}</small>
+              <nav style={{ padding: '0 4px' }}>
                 {routes.map((item: { title: string; link: string; icon: any }) => (
                   <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                 ))}
 
-                {user ? (
+                {user?.email ? (
                   <Fragment>
                     <h4>Account</h4>
                     {userRoutes.map((item: { title: string; link: string; icon: any }) => (

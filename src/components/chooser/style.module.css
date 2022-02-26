@@ -1,5 +1,5 @@
 .chooser {
-    background-color: #111218;
+    background-color: var(--dark);
     border-radius: 27px;
   
     max-width: 350px;
@@ -7,10 +7,10 @@
     height: 55px;
     margin: 0 auto 15px auto;
   
-      display: grid; 
-      grid-template-rows: 55px;
+    display: grid; 
+    grid-template-rows: 55px;
     grid-template-columns: calc(100% / 3);
-      grid-template-areas: "first second third";
+    grid-template-areas: "first second third";
   }
     
   .chooser svg { display: inline-block; }
@@ -27,7 +27,7 @@
 }
 
 .chooser button:hover {
-  background-color: #191C25;
+  background-color: var(--first);
 } 
 
 .chooser small {
@@ -37,7 +37,7 @@
   font-weight: 900;
   letter-spacing: 3px;
   font-size: 8px;
-  color: #fc424a;
+  color: var(--red);
 }
   
 .first { grid-area: first; }

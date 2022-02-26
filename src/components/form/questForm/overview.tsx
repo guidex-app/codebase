@@ -15,9 +15,9 @@ interface OverviewProps {
 
 const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, showBackButton, select, close }: OverviewProps) => (
   <Fragment>
-    <h2 style={{ padding: '10px' }}>Was möchtest du bearbeiten?</h2>
+    <h2 style={{ paddingBottom: '10px' }}>Was möchtest du bearbeiten?</h2>
 
-    <section class="form group" style={{ margin: '10px' }}>
+    <section class="form group">
       {showBackButton && <TopButton action={close} title="Zurück" />}
       {fields?.includes(questions[0].info.title.form) ? questions.map((x: Questions, index: number) => (
         fields?.includes(x.info.title.form) && <Item icon={x.info.icon} label={x.info.title.name} text={x.info.question} action={() => select(index)} />

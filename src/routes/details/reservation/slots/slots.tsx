@@ -79,8 +79,8 @@ const Slots: FunctionalComponent<SlotsProps> = ({ capacitys, available, serviceT
     return currentFreePlaces;
   };
 
-  if (!personAmount) return <div class="grey">Wähle mindestens 1 Person</div>;
-  if (!available) return <div class="grey">Es sind momentan leider keine Reservierungen möglich</div>;
+  if (!personAmount) return <div style={{ color: 'var(--fifth)' }}>Wähle mindestens 1 Person</div>;
+  if (!available) return <div style={{ color: 'var(--fifth)' }}>Es sind momentan leider keine Reservierungen möglich</div>;
 
   return (
     <div class={style.slots}>
@@ -90,22 +90,23 @@ const Slots: FunctionalComponent<SlotsProps> = ({ capacitys, available, serviceT
 
         return (
           <div role="button" tabIndex={0} onClick={() => userInputCapacity > 0 && chooseTime(time)} key={time}>
-            <p><strong>{time}</strong>&nbsp;
-              {availCapacity > 5 && userInputCapacity >= 0 && <span class="green">Es sind noch ausreichend {serviceType !== 'entry' ? 'Räume' : 'Plätze'} verfügbar</span>}
-              {((availCapacity >= 1 && userInputCapacity < 0) || availCapacity === -100) && <span class="orange">Für Deine Auswahl nicht mehr verfügbar</span>}
-              {availCapacity <= 5 && userInputCapacity >= 0 && (
-              <span class="red">
+            <strong>{time}</strong>
+
+            {availCapacity > 5 && userInputCapacity >= 0 && <span style={{ color: 'var(--green)' }}>Es sind noch ausreichend {serviceType !== 'entry' ? 'Räume' : 'Plätze'} verfügbar</span>}
+            {((availCapacity >= 1 && userInputCapacity < 0) || availCapacity === -100) && <span style={{ color: 'var(--orange)' }}>Für Deine Auswahl nicht mehr verfügbar</span>}
+            {availCapacity <= 5 && userInputCapacity >= 0 && (
+              <span style={{ color: 'var(--red)' }}>
                 Es sind nur noch {`${availCapacity} ${serviceType !== 'entry' ? 'Räume' : 'Plätze'}`} verfügbar
               </span>
-              )}
+            )}
 
-              {availCapacity <= 0 && availCapacity !== -100 && (
+            {availCapacity <= 0 && availCapacity !== -100 && (
               <Fragment>
-                <span class="red">Knapp verpasst</span><br />
-                <span class="grey"><small>Diese Uhrzeit ist leider nicht mehr Verfügbar</small></span>
+                <span style={{ color: 'var(--red)' }}>Knapp verpasst</span><br />
+                <span style={{ color: 'var(--fifth)' }}><small>Diese Uhrzeit ist leider nicht mehr Verfügbar</small></span>
               </Fragment>
-              )}
-            </p>
+            )}
+
           </div>
         );
       })}

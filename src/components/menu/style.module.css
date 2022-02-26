@@ -13,7 +13,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #20192a;
+    background-color: var(--second);
     width: 250px;
     height: 100vh;
     min-height: -webkit-fill-available;
@@ -28,20 +28,22 @@
     background-color: #2f2938;
     padding: 5px 10px;
     transform: translateY(-1px);
+    margin: 0 -4px;
 }
 
 .menu small {
     display: block;
     margin-top: -17px;
     padding: 5px 10px 15px 10px;
+
     font-style: italic;
-    color: #6c7293;
     letter-spacing: 1px;
+    color: var(--fifth);
 }
 
 .title {
     font-size: 27px;
-    color: #DCDBDE;
+    color: var(--white);
     padding: 15px 10px;
 }
 
@@ -53,11 +55,12 @@
     border: none;
     height: 55px;
     width: 55px;
-    background-color: rgba(25, 28, 37, 0.4);
+    background-color: var(--darker);
+    opacity: 1;
     border-radius: 50%;
     cursor: pointer;
-    transition: 0.3s background ease-in-out;
-    will-change: background;
+    transition: 0.3s opacity ease-in-out;
+    will-change: opacity;
 }
 
-.button:hover { background: rgba(25, 28, 37, 0.6); }
+.button:hover { opacity: 0.8; }

@@ -23,7 +23,7 @@ const DayValue: FunctionalComponent<DayValueProps> = ({ name, values, position, 
   };
 
   return (
-    <div style={{ backgroundColor: '#2b303d67', borderRadius: '10px', margin: '2.5px 0', padding: '0 10px' }}>
+    <div style={{ backgroundColor: 'var(--fourth)67', borderRadius: '10px', margin: '2.5px 0', padding: '0 10px' }}>
       {dayGroups.map((day: string) => (
         <Chip small label={`${day}.`} type={values?.[position]?.indexOf(day) > -1 ? 'active' : 'inactive'} key={day} action={() => updateValue(day)} />
       ))}

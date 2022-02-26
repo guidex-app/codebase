@@ -16,14 +16,14 @@ const UserCommentItem: FunctionalComponent<UserCommentItemProps> = ({ rate, vote
     </div>
     <div>
       <small>
-        <span class="grey">{rate.displayName} &nbsp;</span>
+        <span style={{ color: 'var(--fifth)' }}>{rate.displayName} &nbsp;</span>
         {rate.rating && [1, 2, 3, 4, 5].map((x) => (
-          <span key={`${rate.displayName}_${x}`} class="orange">{x <= (rate.rating || 0) ? '★' : '☆'}</span>
+          <span key={`${rate.displayName}_${x}`} style={{ color: 'var(--orange)' }}>{x <= (rate.rating || 0) ? '★' : '☆'}</span>
         ))}
       </small>
       <br />
       <h4><strong>{rate.capture}</strong></h4>
-      <p class="grey">{rate.comment}</p>
+      <p style={{ color: 'var(--fifth)' }}>{rate.comment}</p>
 
       <div class={style.upvote}>
         <button type="button" disabled={rate.vote === 1} onClick={() => vote(rate.uid, 'add', rate.vote)}>

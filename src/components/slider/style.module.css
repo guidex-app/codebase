@@ -23,4 +23,5 @@
     margin: 0 2.5px; padding: 0;
     scroll-snap-align: start;
     height: 100%;
+    max-width: calc(100% - 20px);
 }

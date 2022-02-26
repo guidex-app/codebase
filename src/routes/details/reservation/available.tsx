@@ -8,6 +8,7 @@ import BasicInput from '../../../components/form/basicInput';
 import Counter from '../../../components/form/counter';
 import SelectInput from '../../../components/form/selectInput';
 import Item from '../../../components/item';
+import OpeningList from '../../../components/openingList/openings';
 import TopButton from '../../../components/topButton';
 import { getFireMultiCollection } from '../../../data/fire';
 import { generateDateString, getSimpleDateString, shortDay } from '../../../helper/date';
@@ -169,11 +170,11 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   useEffect(() => { chooseDay(getSimpleDateString(new Date())); }, []); // init
 
   if (!reservationData.loaded && reservationData.isOpened) return <Item icon={<Info />} type="info" label="Die Unternehmung ist noch nicht reservierbar" />;
-  if (show === 'confirm' && fields.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} time={fields.reservationTime} />;
+  if (show === 'confirm' && fields.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} shortDay={fields.selectedShortDay} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} time={fields.reservationTime} />;
 
   return (
     <Fragment>
-      <TopButton action={() => changeState('info')} />
+      <TopButton title="Infos" action={() => changeState('info')} />
 
       <BasicInput
         name="selectedDay"
@@ -225,7 +226,10 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
         </Fragment>
       ) : (
         !reservationData.isOpened && (
-          <Chip small type="inactive" label={`Am ${fields.selectedShortDay}. ist leider nicht geöffnet`} action={() => console.log('')} />
+          <Fragment>
+            <Chip small type="inactive" label={`Am ${fields.selectedShortDay}. ist leider nicht geöffnet`} action={() => console.log('')} />
+            <OpeningList openings={openings} />
+          </Fragment>
         )
       )}
 

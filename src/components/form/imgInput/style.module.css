@@ -1,30 +1,9 @@
-.container {
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.container > div {
-    background-color: #2b303d;
-    border-radius: 10px;
-    padding-bottom: 11px;
-}
-
-.container small {
-  display: block;
-  text-align: center;
-  color: #6c7293;
-  padding: 10px 10px 0 10px;
-}
-
 .image {
-  display: inline-block;
-  width: 80px;
+  display: block;
   height: 80px;
   background-color: rgba(255,255,255,0.03);
   color: transparent;
   overflow: hidden;
-  vertical-align: middle;
-  margin-left: 10px;
   border-radius: 20px;
   text-indent: -100px;
 }
@@ -34,81 +13,138 @@
   height: auto;
 }
 
-.errorMessage { color: rgba(252, 66, 75, 0.5); }
-.container .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
-.container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
-
-.container label {
-    display: block;
-    color: #FFFFFF;
-    transition: 0.2s ease-in-out transform;
-    font-size: 15px;
-    padding: 5px 10px 10px 10px;
-}
-
 .fileinput {
   position: relative;
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
   color: transparent;
   height: 100px;
+  width: 100%;
   padding: 30px 10px;
   z-index: 10;
   cursor: pointer;
-  background-color: #000;
+  background-color: transparent;
 
   line-height: 2em;
-  margin: 0 10px;
-  width: calc(100% - 20px);
   font-size: 15px;
   border: 1px solid transparent;
-  background-color: transparent;
   border-radius: 5px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   font-weight: 500;
-  outline: none;
+  margin-bottom: 10px;
 }
 
-  .fileinput::before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 5;
-    content: '*Klicke, um ein Bild auszuwählen (JPG/JPEG)';
-    content: attr(placeholder);
-    display: block;
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.07);
-    text-align: center;
+.fileinput:valid {
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+}
 
-    border-radius: 15px;
-    outline: none;
-    white-space: nowrap;
-    font-weight: 700;
-    color: white;
-    font-size: 25px;
-    padding: 32px 10px 10px 10px;
-  }
+.fileinput:invalid::before {
+  display: block;
+  padding: 32px 10px 10px 10px;
+
+  position: absolute;
+  top: 0; bottom: 0; left: 0;right: 0;
+  z-index: 5;
+
+  content: '*Klicke, um ein Bild auszuwählen (JPG/JPEG)';
+  content: attr(placeholder);
+  border-radius: 15px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: var(--third);
+
+  text-align: center;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 25px;
+}
 
 .fileinput:hover::before { border-color: rgba(255, 255, 255, 0.15); }
-.fileinput:active::before { background: #6c7293; }
+.fileinput:active::before { background: var(--fifth); }
 
-  .image + .fileinput {
-    display: inline-block;
-    width: calc(100% - 110px);
-    vertical-align: middle;
-  }
+.fileinput::-webkit-file-upload-button {
+  position: relative;
+  z-index: 80;
+  border: 1px solid var(--white);
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  visibility: hidden;
+}
 
-  .fileinput::-webkit-file-upload-button {
-    position: relative;
-    z-index: 80;
-    border: 1px solid #FFFFFF;
-    border-radius: 5px;
-    text-align: center;
-    width: 100%;
-    visibility: hidden;
-  }
+.fileinput:valid + .preview {
+  display: block;
+}
+
+.preview {
+  display: none;
+  align-items: center;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.preview_position {
+  text-align: center;
+  border-bottom: 1px solid var(--lighter);
+}
+
+.preview_position button {
+  border: 0;
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+  border-radius: 15px;
+  margin: 2.5px;
+  text-align: center;
+  background-color: var(--fourth);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.preview_image {
+  display: inline-block;
+  width: 100px;
+  height: 70px;
+  border: 1px solid var(--lighter);
+  margin: 5px;
+  border-radius: 20px;
+
+  background-color: var(--dark);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.preview_image:nth-child(2) {
+  height: 100px;
+  background-size: cover;
+}
+
+.preview_image:nth-child(3) {
+  height: 130px;
+  background-size: 100% auto;
+}
+
+.preview_image:last-child {
+  width: 130px;
+  height: 130px;
+}
+
+.progress {
+  width: 100%;
+  background-color: var(--fourth);
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.progress div {
+  height: 4px;
+  border-radius: 2px;
+  background-color: var(--green);
+}

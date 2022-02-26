@@ -13,7 +13,7 @@ const Header: FunctionalComponent<HeaderProps> = ({ title, action }: HeaderProps
     <div class={style.title}><h1>{title}</h1></div>
     <div class={style.menu}>
       <button onClick={action} type="button" aria-label="Menü">
-        <X fill="#fc424a" />
+        <X fill="var(--red)" />
       </button>
     </div>
   </header>

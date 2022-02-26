@@ -88,7 +88,7 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
         <FormButton action={logIn} label="Einloggen" />
 
         <Item type="info" icon={<LogIn color="#2fd159" />} label="Als Nutzer registrieren" action={() => route('/register')} />
-        <Item type="info" icon={<Key color="#ffab00" />} label="Ihre Freizeitunternehmung anmelden" action={() => route('/register/company')} />
+        <Item type="info" icon={<Key color="var(--orange)" />} label="Ihre Freizeitunternehmung anmelden" action={() => route('/register/company')} />
 
       </form>
 

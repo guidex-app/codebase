@@ -2,6 +2,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 import { Clock, Columns, DollarSign, Home, Image, Info } from 'react-feather';
 
+import FormButton from '../../../../components/form/basicButton';
 import Item from '../../../../components/item';
 import { Activity } from '../../../../interfaces/activity';
 
@@ -26,9 +27,10 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
 
   return (
     <Fragment>
-      <h2 style={{ marginTop: '0', padding: '0 10px 3px 10px' }}>Die nächsten Schritte</h2>
-      <p class="grey" style={{ marginTop: '0', padding: '0 10px 10px 10px' }}>Erledigen sie die aufgelisteten Punkte um die Aktivität online stellen zu können. Bei Fragen melden sie sich an den Support.</p>
-      <section class="group" style={{ borderRadius: '15px', padding: '0', margin: '0 10px' }}>
+      <h2 style={{ marginTop: '0' }}>Die nächsten Schritte</h2>
+      <p style={{ marginTop: '0', padding: '10px 0', color: 'var(--fifth)' }}>Erledigen sie die aufgelisteten Punkte um die Aktivität online stellen zu können. Bei Fragen melden sie sich an den Support.</p>
+      <FormButton label="Unternehmung jetzt online stellen" disabled />
+      <section class="form group">
         {checkListItems.map((item) => item.check && (
           <Item label={item.title} text={item.description} icon={item.icon || <Home />} key={item.title} action={() => route(item.link)} type="large" />
         ))}

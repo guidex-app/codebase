@@ -7,7 +7,7 @@
     border-radius: 10px;
     overflow: hidden;
     padding: 10px;
-    background-color: #2b303d;
+    background-color: var(--fourth);
 }
 
 .errorMessage { color: rgba(252, 66, 75, 0.5); }
@@ -16,7 +16,7 @@
 
 .container label {
     display: block;
-    color: #FFFFFF;
+    color: var(--white);
     transition: 0.2s ease-in-out transform;
     font-size: 15px;
     padding-bottom: 10px;

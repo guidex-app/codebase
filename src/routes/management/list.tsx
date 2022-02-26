@@ -2,6 +2,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { PlayCircle } from 'react-feather';
 
+import BackButton from '../../components/backButton';
 import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
 import { getFireCollection } from '../../data/fire';
@@ -26,6 +27,7 @@ const List: FunctionalComponent<ListProps> = ({ setActivity }: ListProps) => {
 
   return (
     <Fragment>
+      <BackButton title="Startseite" url="/" />
       <TextHeader
         title="Unternehmungen"
         text="Wähle eine Unternehmung die du verwalten möchtest. Oder lege eine neue an."
@@ -36,7 +38,7 @@ const List: FunctionalComponent<ListProps> = ({ setActivity }: ListProps) => {
         {list ? list.map((x) => (
           <Item label={x.title.name} text={x.address?.street || undefined} action={() => setActivity(x)} link={`/company/dashboard/${x.title.form}`} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${x.title.form}%2F${x.title.form}_250x200`} />
         )) : (
-          list !== false && <p style={{ textAlign: 'center', color: '#6c7293' }}>Es wurden noch keine Unternehmungen angelegt.</p>
+          list !== false && <p style={{ textAlign: 'center', color: 'var(--fifth)' }}>Es wurden noch keine Unternehmungen angelegt.</p>
         )}
       </main>
     </Fragment>

@@ -2,6 +2,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Lock, PlusCircle, ToggleLeft } from 'react-feather';
 
+import BackButton from '../../components/backButton';
 import FilterList from '../../components/filter';
 import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
@@ -36,20 +37,27 @@ const Admin: FunctionalComponent = () => {
     }
   };
 
+  const updateFilter = (newFilter: string[]) => {
+    if (item) {
+      setItem({ ...item, filter: newFilter });
+    }
+  };
+
   useEffect(() => { fetchList(); }, [type]);
 
   return (
     <Fragment>
-      <TextHeader icon={<Lock color="#fea00a" />} title="Admin" text="Verwalte die Kategorien oder die Topics" />
+      <BackButton title="Startseite" url="/" />
+      <TextHeader icon={<Lock color="#fea00a" />} title={`${type === 'catInfos' ? 'Kategorien' : 'Topics'}`} text="Verwalte die Kategorien oder die Topics" />
       <main class="small_size_holder">
         <Item icon={<ToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
-        <Item icon={<PlusCircle />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
+        <Item icon={<PlusCircle color="var(--orange)" />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
 
         {list.map((x) => (
           <Item key={x.title.form} label={x.title.name} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type === 'topics' ? 'topics' : 'categories'}%2F${x.title.form}%2F${x.title.form}_250x200`} action={() => setItem(x)} />
         ))}
 
-        {item !== false && openFilter && <Modal title={item?.title?.name || ''} close={() => setOpenFilter(false)}><FilterList data={catFilter} values={item.filter} /></Modal>}
+        {item !== false && openFilter && <Modal title={item?.title?.name || ''} close={() => setOpenFilter(false)}><FilterList data={catFilter} values={item.filter} change={updateFilter} close={() => setOpenFilter(false)} /></Modal>}
         {item !== false && !openFilter && <Modal title={item?.title?.name || ''} close={() => setItem(false)}><Edit data={item} type={type} close={updateData} /></Modal>}
       </main>
     </Fragment>

@@ -56,7 +56,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
   // if (ownComment.rating && starNum <= ownComment.rating && ownComment.rating !== 0) {
   //   return (
   //     <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
-  //       <Star fill="#ffab00" />
+  //       <Star fill="var(--orange)" />
   //     </button>
   //   );
   // }
@@ -64,7 +64,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
   // if (starNum - 0.5 === ownComment.rating) {
   //   return (
   //     <button type="button" key={starNum - 0.5} onClick={() => changeValue(starNum - 0.5, 'rating')}>
-  //       <Star fill="#ffab00" />
+  //       <Star fill="var(--orange)" />
   //     </button>
   //   );
   // }
@@ -81,7 +81,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
         <div class={style.rate}>
           {[1, 2, 3, 4, 5].map((starNum: number) => (
             <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
-              <Star fill={(starNum <= (ownComment.rating || 0) || starNum - 0.5 === ownComment.rating) ? '#ffab00' : 'white'} />
+              <Star fill={(starNum <= (ownComment.rating || 0) || starNum - 0.5 === ownComment.rating) ? 'var(--orange)' : 'white'} />
             </button>
           ))}
 
@@ -111,7 +111,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
       <FormButton disabled={!user.uid} label={`${type === 'rating' ? 'Bewertung' : 'Tipp'} abschicken`} action={() => commitRating()} />
 
       {!!ownComment.oldRating && <p class="red">Mit einer neuen Bewertung, werden alle Votes auf 0 zurückgesetzt</p>}
-      <p class="grey">Hilf anderen und neuen Besuchern und gebe Ihnen mit deiner Bewertung eine Bewertungsgrundlage. Beschreibe dein Erlebnis in Worten und beschreibe was dich zu deiner Bewertung führt.</p>
+      <p style={{ color: 'var(--fifth)' }}>Hilf anderen und neuen Besuchern und gebe Ihnen mit deiner Bewertung eine Bewertungsgrundlage. Beschreibe dein Erlebnis in Worten und beschreibe was dich zu deiner Bewertung führt.</p>
     </Fragment>
   );
 };

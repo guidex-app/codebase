@@ -5,27 +5,24 @@ import Loading from './loading';
 import VirtualScroll from './virtualScroll';
 
 interface MasonryProps {
-    items: any[];
+    list: any[];
     type?: 'Voting' | 'Topic' | 'Geteilt' | 'Privat';
-    // voteItem?: string;
-    // eslint-disable-next-line no-unused-vars
-    // vote?: (itemForm: string, isVotet?: boolean) => void;
-    // hideIcon?: boolean;
 }
 
-const Masonry: FunctionalComponent<MasonryProps> = ({ items, type }: MasonryProps) => {
-  const [chunks, setChunks] = useState<any[][]>([]);
+const Masonry: FunctionalComponent<MasonryProps> = ({ list, type }: MasonryProps) => {
+  const [chunks, setChunks] = useState<any[][]>();
 
-  const generateChunks = (arr: any[], size: number): any[][] => (
-    [...Array(Math.ceil(arr.length / size))].map((_, i) => arr.slice(size * i, size + size * i))
-  );
+  const generateChunks = () => {
+    const listLength = list.length;
+    if (listLength > 0) {
+      const gen = [...Array(Math.ceil(listLength / 10))].map((_, i) => list.slice(10 * i, 10 + 10 * i));
+      setChunks(gen);
+    }
+  };
 
-  useEffect(() => {
-    console.log('generateChunks');
-    if (items?.[0]) setChunks(generateChunks(items, 10));
-  }, [items]);
+  useEffect(() => { generateChunks(); }, [list]);
 
-  return chunks?.[0] ? <VirtualScroll chunks={chunks} type={type} /> : <Loading />;
+  return chunks ? <VirtualScroll chunks={chunks} type={type} /> : <Loading />;
 };
 
 export default Masonry;

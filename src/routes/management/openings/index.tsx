@@ -97,7 +97,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
               <Chip label={day} type={fields.openings?.[index] ? 'active' : 'inactive'} action={() => changeOpening(fields.openings?.[index] ? false : '-', index.toString())} />
             ))}
 
-            <p class="grey">Markiere alle geöffneten Tage in Orange.</p>
+            <p style={{ color: 'var(--fifth)' }}>Markiere alle geöffneten Tage in Orange.</p>
           </section>
 
           <section class="group form">
@@ -143,12 +143,12 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
               </Fragment>
 
             ) : (
-              <p class="orange">Konfiguriere zuerst alle geöffneten Tage.</p>
+              <p style={{ color: 'var(--orange)' }}>Konfiguriere zuerst alle geöffneten Tage.</p>
             )}
 
           </section>
 
-          <p class="orange">FEIERTAGE API HINZUFÜGEN</p>
+          <p style={{ color: 'var(--orange)' }}>FEIERTAGE API HINZUFÜGEN</p>
 
           <FormButton action={validateForm} label="Speichern" />
 

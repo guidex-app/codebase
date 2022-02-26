@@ -67,7 +67,7 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
         type="date"
       />
 
-      <p class="grey">Definiere die Anzahl für die entsprechenden Tage / Uhrzeiten. Wenn die Anzahl von den standartwerten abweicht, fülle das feld aus.</p>
+      <p style={{ color: 'var(--fifth)' }}>Definiere die Anzahl für die entsprechenden Tage / Uhrzeiten. Wenn die Anzahl von den standartwerten abweicht, fülle das feld aus.</p>
       {rows?.[0] ? (
         <table class={style.table}>
           <thead>
