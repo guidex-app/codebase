@@ -6,17 +6,18 @@ import { AlignCenter, AlignJustify, AlignLeft, AlignRight, ChevronDown, ChevronL
 import Popup from '../../../container/popup';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useStorage from '../../../hooks/useStorage';
+import Chip from '../../chip';
 import Item from '../../item';
 import FormButton from '../basicButton';
 import style from './style.module.css';
 
 interface ImgInputProps {
     label?: string,
+    text?: string,
     fileName: string,
     name: string,
     folderPath?: string,
     size: [number, number],
-    placeholder?: string,
     hasImage: boolean,
     change?: (name: string) => void;
 }
@@ -27,7 +28,7 @@ interface ImgInputProps {
  * Medium: 600x450
  * Large: 1200x900
  */
-const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, fileName, folderPath, name, label = '*Thumbnail', placeholder = '+' }: ImgInputProps) => {
+const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, fileName, folderPath, name, text, label = '*Thumbnail' }: ImgInputProps) => {
   const { progress, setUpload } = useStorage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [newImage, setNewImage] = useState<File | Blob | undefined>();
@@ -148,7 +149,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
 
   return (
     <Fragment>
-      <Item type="info" image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <Upload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
+      <Item type="info" text={text} image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <Upload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
 
       {isOpen && (
       <Popup close={() => setIsOpen(false)}>
@@ -161,13 +162,12 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
             accept="image/jpeg"
             class={style.fileinput}
             id={`${name}_fileinput`}
-            placeholder={placeholder}
             onChange={() => convertImage()}
             required
           />
 
           <div class={style.preview}>
-            <Item label="Anderes Bild auswählen" icon={<ChevronLeft />} type="grey" action={removeFile} />
+            <Chip small label="Neues Bild wählen" type="active" action={removeFile} />
             <div class={style.preview_position}>
               <button onClick={() => changePosition('left', false)} type="button" aria-label="ausrichten"><ChevronLeft color={imgPosition[0] === 'left' ? 'var(--red)' : undefined} /></button>
               <button onClick={() => changePosition('center', false)} type="button" aria-label="ausrichten"><AlignCenter color={imgPosition[0] === 'center' ? 'var(--red)' : undefined} /></button>

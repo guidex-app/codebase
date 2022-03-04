@@ -37,6 +37,9 @@
 export interface CatInfo {
     title: { name:string, form:string },
     description: string,
+
+    belongsTo?: string,
+
     filter: string[],
   }
 
@@ -44,6 +47,7 @@ export interface Cat {
     title: { name:string, form:string },
     description: string,
     filter: string[],
+
 
     geohash: string,
     allowed: string[],

@@ -1,13 +1,11 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
 import { Link, route } from 'preact-router';
-import { AlignJustify, Home } from 'react-feather';
+import { Home } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
-import Modal from '../../../container/modal';
 import useCompany from '../../../hooks/useCompany';
 import { Activity } from '../../../interfaces/activity';
 import Check from './check';
@@ -31,7 +29,6 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
     );
   }
 
-  const [openModal, setOpenModal] = useState(false);
   return (
     <Fragment>
       <TextHeader
@@ -42,7 +39,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
       <main>
         <BackButton url="/company" title="Liste" />
         <div class="small_size_holder" style={{ paddingTop: '20px' }}>
-          <Item icon={<AlignJustify />} type="warning" label="(45%) Fast geschafft - Jetzt die nächsten Schritte ansehen" action={() => setOpenModal(true)} />
+          <Check activity={data} />
         </div>
 
         <div class={`${style.basic} size_holder`}>
@@ -61,15 +58,12 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
         </div>
         <div class={style.tools}>
           <div>
-            {/* <Chip label="✓ Die nächsten schritte (45%)" small type="warning" action={() => setOpenModal(true)} />
-            <Chip label="Online stellen" small type="disabled" action={() => console.log('da')} /> */}
             <Chip label="Support - Wenn du Hilfe brauchst" small type="grey" action={() => console.log('da')} />
           </div>
           <div>
             <Chip label="Alles Löschen" small type="delete" action={() => console.log('da')} />
           </div>
         </div>
-        {openModal && <Modal title="" close={() => setOpenModal(false)}><Check activity={data} /></Modal>}
       </main>
     </Fragment>
   );

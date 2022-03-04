@@ -28,6 +28,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     description: { value: data !== 'new' && data?.description ? data.description : '', type: 'string', required: false },
     partitions: { value: data !== 'new' && data?.partitions ? data.partitions : [''], type: 'string[]', required: false },
     filter: { value: data !== 'new' && data?.filter ? data.filter : [], type: 'string[]', required: false },
+    belongsTo: { value: (data !== 'new' && data?.belongsTo) || '', type: 'string', required: false },
     state: { value: data !== 'new' && data?.state ? data.state : [], type: 'string[]', required: false },
   };
   const { formState, fields, isValid, changeField } = useForm(form);
@@ -37,28 +38,13 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     filter: fields.filter,
     description: fields.description,
     state: fields.state,
-    ...(type === 'topics' && {
+    ...(type === 'topics' ? {
       partitions: fields.partitions?.filter((x: string) => x !== '') || undefined,
       type: fields.type,
+    } : {
+      belongsTo: fields.belongsTo,
     }),
   });
-
-  const navigate = (finished?: true) => {
-    if (formState.image !== 'valid' || finished) {
-      close(getCorrectFields());
-    }
-  };
-
-  //   const uploadFinished = () => navigate(true);
-
-  //   const deleteTopic = () => {
-  //     if (data !== 'new' && data?.title?.form) {
-  //       const collectionName = type === 'categories' ? 'catInfos' : 'topics';
-  //       deleteFireDocument(collectionName, data.title.form);
-  //       deleteStoragePath(`${type}/${data.title.form}`);
-  //     }
-  //     // closeModal(true, formVals);
-  //   };
 
   const changePartition = (value: any, key: string) => {
     const correctKey: number = parseInt(key, 10);
@@ -88,7 +74,9 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
   const validation = async () => {
     if (isValid()) {
       const newFields = getCorrectFields();
-      fireDocument(`${type}/${newFields.title.form}`, newFields, data === undefined ? 'set' : 'update').then(() => navigate());
+      fireDocument(`${type}/${newFields.title.form}`, newFields, data === undefined ? 'set' : 'update').then(() => {
+        close(getCorrectFields());
+      });
     }
   };
 
@@ -115,6 +103,17 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         required
         change={changeField}
       />
+
+      {type === 'catInfos' && (
+      <BasicInput
+        type="text"
+        label="Gibt es eine Überkategorie?"
+        name="belongsTo"
+        value={fields.belongsTo}
+        placeholder="Gebe den exakten Namen / ID an"
+        change={changeField}
+      />
+      )}
 
       {type === 'topics' && (
       <SelectInput
@@ -144,7 +143,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       )}
 
       {(!fields.type || (fields.type && ['quickfilter', 'topicpage', 'seopage'].indexOf(fields.type) !== -1)) && (
-        <Item icon={<Filter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={data.filter.join(' | ')} />
+        <Item icon={<Filter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={fields.filter?.join(' | ') || ''} />
       )}
 
       <BasicInput

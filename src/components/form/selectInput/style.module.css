@@ -90,7 +90,7 @@
 
 .search {
     display: block;
-    width: calc(100% - 20px);
+    width: 100%;
     border: none;
     margin-bottom: 10px;
     padding: 10px;

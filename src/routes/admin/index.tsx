@@ -27,20 +27,22 @@ const Admin: FunctionalComponent = () => {
 
     if (filter) {
       setOpenFilter(true);
-      setItem({ ...item, ...data });
-    } else if (item === undefined && findIndex === -1) {
+      return setItem({ ...item, ...data });
+    }
+
+    if (item === undefined && findIndex === -1) {
       setList([data, ...list]);
     } else if (findIndex > -1) {
       const newList = list;
       newList.slice(findIndex, 1);
       setList(newList);
     }
+
+    return setItem(false);
   };
 
   const updateFilter = (newFilter: string[]) => {
-    if (item) {
-      setItem({ ...item, filter: newFilter });
-    }
+    if (item) setItem({ ...item, filter: newFilter });
   };
 
   useEffect(() => { fetchList(); }, [type]);

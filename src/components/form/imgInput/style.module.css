@@ -45,24 +45,23 @@
 
 .fileinput:invalid::before {
   display: block;
-  padding: 32px 10px 10px 10px;
+  padding: 34px 10px 10px 10px;
 
   position: absolute;
   top: 0; bottom: 0; left: 0;right: 0;
   z-index: 5;
 
-  content: '*Klicke, um ein Bild auszuwählen (JPG/JPEG)';
-  content: attr(placeholder);
+  content: '*Klicke, zum auswählen';
   border-radius: 15px;
 
   overflow: hidden;
   white-space: nowrap;
-  background-color: var(--third);
+  background: linear-gradient(90deg, #038aff 0%, #4cadfe 100%);
 
   text-align: center;
   color: var(--white);
   font-weight: 700;
-  font-size: 25px;
+  font-size: 16px;
 }
 
 .fileinput:hover::before { border-color: rgba(255, 255, 255, 0.15); }

@@ -1,22 +1,23 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Book, CheckCircle, Info, Type } from 'react-feather';
+import { CheckCircle, Info, Type } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
 import ImgInput from '../../../components/form/imgInput';
 import PickInput from '../../../components/form/pickInput';
-import SelectInput from '../../../components/form/selectInput';
 import TextHeader from '../../../components/iconTextHeader';
-import { fireDocument, getFireCollection } from '../../../data/fire';
+import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
+import { CatInfo } from '../../../interfaces/categorie';
 import { FormInit } from '../../../interfaces/form';
+import ChooseCat from './chooseCat';
 
 interface ActivityProps {
     activityID: string;
@@ -48,17 +49,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
 
   const { fields, formState, changeField, isValid } = useForm(formInit);
 
-  // const [imageState, setImageState] = useState<'empty' | 'loading' | 'finished'>('empty');
-  const [categoryList, setCategoryList] = useState<{ title: { name: string, form: string }, filter: string[] }[]>([]);
   const [isIndoorAndOutdoor, setIsIndoorAndOutdoor] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!categoryList.length) {
-      getFireCollection('catInfos', false).then((catInfoList: any) => (
-        catInfoList && setCategoryList(catInfoList.map((x: any) => ({ title: x.title, filter: x.filter })))
-      ));
-    }
-  }, []);
 
   const updateImage = (name: string) => {
     const newState = mergeUnique([name], fields.state || []);
@@ -77,18 +68,17 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
       };
 
       await fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update');
-
+      console.log('abgesendet');
       route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
     }
   };
 
-  const changeCat = async (value: string) => {
-    const cat = categoryList.find((x) => x.title.name === value);
-    if (!cat) return;
+  const changeCat = async (cat?: CatInfo) => {
+    if (!cat) return changeField(undefined, 'category');
 
     const ind: boolean = cat.filter.includes('lo_indoor');
     const out: boolean = cat.filter.includes('lo_outdoor');
-    console.log(cat.filter);
+
     setIsIndoorAndOutdoor(ind && out);
 
     if (ind && !out) changeField(['Indoor'], 'filter');
@@ -117,23 +107,11 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
               placeholder="Wie lautet der Titel ihrer Unternehmung"
               error={formState.title}
               disabled={activityID !== 'new' || fields.state[0]}
-            //   errorMessage="Bitte geben Sie einen Namen an"
               required
-            //   disabled={!!activity && 'Sie habe Ihre Unternehmung bereits definiert'}
               change={changeField}
             />
 
-            <SelectInput
-              label="Kategorie"
-              name="category"
-              placeholder="Ordnen Sie sich einer Kategorie zu"
-              icon={<Book color="#fea00a" />}
-              value={fields.category}
-              options={categoryList?.map((x) => x.title.name)}
-              error={formState.category}
-              required
-              change={changeCat}
-            />
+            <ChooseCat currentCat={data?.category?.name} changeCat={changeCat} />
 
             {fields.category && isIndoorAndOutdoor && (
             <PickInput
@@ -154,6 +132,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
 
             <ImgInput
               label={data?.state?.includes('thumbnail') ? 'Anzeigebild aktualisieren' : 'Anzeigebild hochladen'}
+              text="Das anzeige Bild ist als erstes für die Nutzer sichtbar"
               fileName={fields.title}
               folderPath="activities"
               name="thumbnail"

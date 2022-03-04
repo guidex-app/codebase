@@ -13,6 +13,7 @@
 
 .solid {
     background-color: var(--red);
+    background: linear-gradient(90deg,#fa8142, #ff4088);
 }
 
 .outline {
