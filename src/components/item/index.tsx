@@ -9,11 +9,12 @@ interface ItemProps {
     action?: () => void;
     link?: string;
     icon?: any;
+    editIcon?: any;
     image?: string;
-    type?: 'grey' | 'large' | 'info' | 'clean' | 'warning';
+    type?: 'grey' | 'large' | 'info' | 'clean' | 'warning' | 'success';
 }
 
-const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type = 'clean', action, link, text }: ItemProps) => (
+const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editIcon, type = 'clean', action, link, text }: ItemProps) => (
   <Link class={`${style.item} ${style[type] || ''}`} href={link} activeClassName={link ? style.current : undefined} onClick={action}>
     {image ? (
       <picture class={style.image}>
@@ -24,6 +25,7 @@ const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, type = 'clea
       icon && icon
     )}
     <p>{label}&nbsp; {text && <small>{text}</small>}</p>
+    {editIcon && editIcon}
   </Link>
 );
 

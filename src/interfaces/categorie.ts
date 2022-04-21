@@ -48,7 +48,6 @@ export interface Cat {
     description: string,
     filter: string[],
 
-
     geohash: string,
     allowed: string[],
     count: number;

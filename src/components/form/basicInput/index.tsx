@@ -3,18 +3,22 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import style from './style.module.css';
 
 interface BasicInputProps {
-    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'date' | 'textarea' | 'time';
+    change: (value: any, key: string) => void,
     label?: string;
     name: string;
     value?: string;
+
+    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'date' | 'textarea' | 'time';
+
     icon?: any;
     autocomplete?: string;
     placeholder?: string;
+
     disabled?: boolean;
-    error?: 'invalid' | 'error' | 'valid';
     required?: true;
     isMulti?: boolean;
-    change: (value: any, key: string) => void,
+
+    error?: 'invalid' | 'error' | 'valid';
 }
 
 const BasicInput: FunctionalComponent<BasicInputProps> = ({ label, isMulti, icon, name, disabled, type = 'text', error, placeholder, autocomplete, required, value, change }: BasicInputProps) => {

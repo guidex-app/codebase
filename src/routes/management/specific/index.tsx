@@ -17,12 +17,11 @@ import { FormInit } from '../../../interfaces/form';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<Star color="#2fd159" />}

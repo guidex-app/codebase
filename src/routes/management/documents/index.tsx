@@ -15,12 +15,11 @@ import { Activity } from '../../../interfaces/activity';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<CreditCard color="#ff375e" />}
@@ -30,7 +29,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID, ui
     );
   }
 
-  const [state, setState] = useState<string[]>(data.state);
+  const [state, setState] = useState<string[] | undefined>(data?.state);
 
   const validateForm = async () => {
     await fireDocument(`activities/${data.title.form}`, { state }, activityID === 'new' ? 'set' : 'update');

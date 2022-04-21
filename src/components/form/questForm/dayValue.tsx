@@ -3,29 +3,33 @@ import { FunctionalComponent, h } from 'preact';
 import Chip from '../../chip';
 
 interface DayValueProps {
-  name: string;
-  values: string[];
-  position: number;
-  updateSelectDay: (day: string, name: string) => void;
-  dayGroups: string[];
+  valueIndex: number;
+  days?: string[];
+  values?: string;
+  onlySingle?: true;
+  addOnDayValue: (days: string, valueIndex: number) => void;
 }
 
-const DayValue: FunctionalComponent<DayValueProps> = ({ name, values, position, dayGroups, updateSelectDay }: DayValueProps) => {
+const DayValue: FunctionalComponent<DayValueProps> = ({ valueIndex, values, days, addOnDayValue, onlySingle }: DayValueProps) => {
   const updateValue = (dayValue: string) => {
-    const newValue: string[] = values?.[position]?.split(',') || [];
-    const getIndex = newValue.indexOf(dayValue);
-    if (getIndex > -1) {
-      newValue.splice(getIndex, 1);
-    } else if (values.findIndex((x) => x.indexOf(dayValue) !== -1) === -1) {
-      newValue.push(dayValue);
+    if (onlySingle) return addOnDayValue(dayValue, valueIndex);
+
+    const newDayValue: string[] = values?.split('+') || [];
+    const findValue: number = newDayValue.indexOf(dayValue);
+
+    if (findValue > -1) {
+      newDayValue.splice(findValue, 1);
+    } else {
+      newDayValue.push(dayValue);
     }
-    updateSelectDay(newValue.toString(), name);
+
+    addOnDayValue(newDayValue.join('+'), valueIndex);
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--fourth)67', borderRadius: '10px', margin: '2.5px 0', padding: '0 10px' }}>
-      {dayGroups.map((day: string) => (
-        <Chip small label={`${day}.`} type={values?.[position]?.indexOf(day) > -1 ? 'active' : 'inactive'} key={day} action={() => updateValue(day)} />
+    <div>
+      {days && days?.map((dayName: string) => (
+        <Chip small label={`${dayName}.`} type={values && values.indexOf(dayName) > -1 ? 'active' : 'inactive'} key={dayName} action={() => updateValue(dayName)} />
       ))}
     </div>
   );

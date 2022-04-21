@@ -1,6 +1,6 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Calendar, Clock } from 'react-feather';
+import { Calendar, Clock, Info } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
@@ -8,6 +8,7 @@ import FormButton from '../../../components/form/basicButton';
 import BasicInput from '../../../components/form/basicInput';
 import CheckInput from '../../../components/form/checkInput';
 import TextHeader from '../../../components/iconTextHeader';
+import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { dayNames } from '../../../helper/date';
 import useCompany from '../../../hooks/useCompany';
@@ -18,12 +19,11 @@ import { FormInit } from '../../../interfaces/form';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<Clock color="#63d2ff" />}
@@ -97,7 +97,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
               <Chip label={day} type={fields.openings?.[index] ? 'active' : 'inactive'} action={() => changeOpening(fields.openings?.[index] ? false : '-', index.toString())} />
             ))}
 
-            <p style={{ color: 'var(--fifth)' }}>Markiere alle geöffneten Tage in Orange.</p>
+            <Item icon={<Info />} type="info" label="Markiere alle geöffneten Tage in Orange." />
           </section>
 
           <section class="group form">
@@ -143,12 +143,10 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
               </Fragment>
 
             ) : (
-              <p style={{ color: 'var(--orange)' }}>Konfiguriere zuerst alle geöffneten Tage.</p>
+              <Item icon={<Info />} type="info" label="Konfiguriere zuerst alle geöffneten Tage." />
             )}
 
           </section>
-
-          <p style={{ color: 'var(--orange)' }}>FEIERTAGE API HINZUFÜGEN</p>
 
           <FormButton action={validateForm} label="Speichern" />
 

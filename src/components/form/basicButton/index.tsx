@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import style from './style.module.css';
 
@@ -10,10 +11,22 @@ interface FormButtonProps {
   action?: () => void;
 }
 
-const FormButton: FunctionalComponent<FormButtonProps> = ({ isLoading = false, action, label = 'Speichern', type = 'solid', disabled }: FormButtonProps) => (
-  <button class={`${type && type === 'outline' ? style.outline : style.solid} small_size_holder`} disabled={disabled} type="button" aria-label={label} onClick={action}>
-    {isLoading ? 'lädt' : label}
-  </button>
-);
+const FormButton: FunctionalComponent<FormButtonProps> = ({ isLoading = false, action, label = 'Speichern', type = 'solid', disabled }: FormButtonProps) => {
+  const [clicked, setClicked] = useState(false);
+
+  const clickFunction = () => {
+    setClicked(true);
+    setTimeout(() => {
+      if (action) action();
+      setClicked(false);
+    }, 400);
+  };
+
+  return (
+    <button class={`${type && type === 'outline' ? style.outline : style.solid} mini_size_holder ${clicked ? style.clicked : ''}`} disabled={disabled} type="button" aria-label={label} onClick={clickFunction}>
+      {isLoading ? 'lädt' : label}
+    </button>
+  );
+};
 
 export default FormButton;

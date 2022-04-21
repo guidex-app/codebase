@@ -7,6 +7,7 @@ import NotFoundPage from '../../routes/notfound';
 import Availabilities from './availabilities';
 import Basic from './basic';
 import Contact from './contact';
+import Contract from './contract';
 import Dashboard from './dashboard';
 import Documents from './documents';
 import Images from './images';
@@ -29,15 +30,16 @@ const Management: FunctionalComponent<ManagementProps> = ({ uid }: ManagementPro
       <Route path="/company/" component={List} setActivity={setActivity} />
       <Route path="/company/dashboard/:activityID" component={Dashboard} activity={activity} />
       <Route path="/company/basic/:activityID" component={Basic} activity={activity} uid={uid} />
-      <Route path="/company/contact/:activityID" component={Contact} activity={activity} uid={uid} />
-      <Route path="/company/openings/:activityID" component={Openings} activity={activity} uid={uid} />
-      <Route path="/company/specific/:activityID" component={Specific} activity={activity} uid={uid} />
-      <Route path="/company/images/:activityID" component={Images} activity={activity} uid={uid} />
-      <Route path="/company/availabilities/:activityID" component={Availabilities} activity={activity} uid={uid} />
-      <Route path="/company/documents/:activityID" component={Documents} activity={activity} uid={uid} />
-      <Route path="/company/services/:activityID" component={Services} activity={activity} uid={uid} />
-      <Route path="/company/prices/:activityID" component={Prices} activity={activity} uid={uid} />
-      <Route path="/company/reservations/:activityID" component={Reservations} activity={activity} uid={uid} />
+      <Route path="/company/contact/:activityID" component={Contact} activity={activity} />
+      <Route path="/company/contract/:activityID" component={Contract} activity={activity} />
+      <Route path="/company/openings/:activityID" component={Openings} activity={activity} />
+      <Route path="/company/specific/:activityID" component={Specific} activity={activity} />
+      <Route path="/company/images/:activityID" component={Images} activity={activity} />
+      <Route path="/company/availabilities/:activityID" component={Availabilities} activity={activity} />
+      <Route path="/company/documents/:activityID" component={Documents} activity={activity} />
+      <Route path="/company/services/:activityID" component={Services} activity={activity} />
+      <Route path="/company/prices/:activityID" component={Prices} activity={activity} />
+      <Route path="/company/reservations/:activityID" component={Reservations} activity={activity} />
       <NotFoundPage default />
     </Router>
   );

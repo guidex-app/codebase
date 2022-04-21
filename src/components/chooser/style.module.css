@@ -1,5 +1,6 @@
 .chooser {
-    background-color: var(--dark);
+    /* background-color: var(--dark); */
+    background: linear-gradient(270deg,#f5af19,#f12711);
     border-radius: 27px;
   
     max-width: 350px;
@@ -27,7 +28,7 @@
 }
 
 .chooser button:hover {
-  background-color: var(--first);
+  background-color: rgba(0,0,0,0.1);
 } 
 
 .chooser small {
@@ -37,7 +38,7 @@
   font-weight: 900;
   letter-spacing: 3px;
   font-size: 8px;
-  color: var(--red);
+  color: #581e0d;
 }
   
 .first { grid-area: first; }

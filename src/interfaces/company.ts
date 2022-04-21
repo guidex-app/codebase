@@ -37,6 +37,7 @@ export interface AnsDB {
   isRound?: boolean[],
   onDays?: (string | undefined)[], // auf den Value Index spezifizierte Tage
   values?: any[];
+  option?: (string | undefined)[];
 }
 
 /**
@@ -45,7 +46,7 @@ export interface AnsDB {
 export interface ServiceField {
   name: string;
   notIsChecked?: boolean;
-  answers?: AnsDB[];
+  selected?: AnsDB;
 }
 
 /**
@@ -65,9 +66,11 @@ export interface AnsInfo {
   info: string,
   onDay: boolean,
   isMultiField: boolean,
+  options?: string[], // options felder
   placeholder?: string
 }
 
+// QUESTION INFOS
 export interface Questions {
   info: Infos;
   answers: AnsInfo[];

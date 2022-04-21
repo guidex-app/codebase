@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Compass, Globe, Grid, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
+import { Compass, Globe, List, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
 
 import { getUser } from '../../data/auth';
 import Item from '../item';
@@ -45,7 +45,7 @@ const Menu: FunctionalComponent = () => {
   return (
     <Fragment>
       <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
-        <Grid color="var(--white)" size="24" />
+        <List color="var(--white)" size="24" />
       </button>
 
       {show && container.current && createPortal(

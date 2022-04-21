@@ -15,12 +15,11 @@ import Reservations from './reservations';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<Columns color="#bf5bf3" />}
@@ -56,7 +55,7 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID, 
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
-        {serviceList !== undefined && (
+        {serviceList !== false && (
           <section class="group form small_size_holder">
             {serviceList?.map((x: ServiceInfo) => (
               <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />

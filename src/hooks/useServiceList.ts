@@ -3,8 +3,8 @@ import { useEffect, useState } from 'preact/hooks';
 import { getFireCollection } from '../data/fire';
 import { ServiceInfo } from '../interfaces/company';
 
-const useServiceList = (activityID: string): { serviceList: ServiceInfo[] | undefined, updateServiceList: (item?: ServiceInfo) => void } => {
-  const [serviceList, setServiceList] = useState<ServiceInfo[] | undefined>(undefined);
+const useServiceList = (activityID: string): { serviceList: ServiceInfo[] | undefined | false, updateServiceList: (item?: ServiceInfo) => void } => {
+  const [serviceList, setServiceList] = useState<ServiceInfo[] | undefined | false>(false);
 
   const updateServiceList = (newItem?: ServiceInfo) => {
     if (newItem) {
@@ -22,12 +22,16 @@ const useServiceList = (activityID: string): { serviceList: ServiceInfo[] | unde
 
   /** Lade alle services von der activity ID */
   const loadList = async () => {
-    console.log('Liste wird geladen');
-    const serviceListData = await getFireCollection(`activities/${activityID}/services/`, false);
-    if (serviceListData[0]) return setServiceList(serviceListData);
+    try {
+      const serviceListData = await getFireCollection(`activities/${activityID}/services/`, false);
+      if (serviceListData[0]) return setServiceList(serviceListData);
+      return setServiceList(undefined);
+    } catch (error) {
+      setServiceList(undefined);
+    }
   };
 
-  useEffect(() => { if (serviceList === undefined) loadList(); }, []);
+  useEffect(() => { if (serviceList === false) loadList(); }, []);
 
   return { serviceList, updateServiceList };
 };

@@ -36,7 +36,7 @@ const List: FunctionalComponent<ListProps> = ({ setActivity }: ListProps) => {
         <Item label="Neue Unternehmung hinzufügen" type="grey" icon={<PlayCircle />} link="/company/basic/new" action={() => setActivity(undefined)} />
 
         {list ? list.map((x) => (
-          <Item label={x.title.name} text={x.address?.street || undefined} action={() => setActivity(x)} link={`/company/dashboard/${x.title.form}`} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${x.title.form}%2F${x.title.form}_250x200`} />
+          <Item label={x.title.name} text={`${x.state?.includes('online') ? 'Online' : 'Offline'} · ${x.address?.street || undefined}`} action={() => setActivity(x)} link={`/company/dashboard/${x.title.form}`} image={x.state?.includes('thumbnail') ? `https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${x.title.form}%2F${x.title.form}_250x200` : undefined} />
         )) : (
           list !== false && <p style={{ textAlign: 'center', color: 'var(--fifth)' }}>Es wurden noch keine Unternehmungen angelegt.</p>
         )}

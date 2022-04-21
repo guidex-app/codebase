@@ -48,7 +48,7 @@ const SelectInput: FunctionalComponent<SelectInputProps> = ({ label, name, icon,
       </div>
       {error === 'error' && <small class={style.errorMessage}>Bitte mache eine korrekte eingabe</small>}
 
-      {open && (
+      {open && !disabled && (
       <Modal title="Auswählen" close={() => setOpen(false)}>
         {options.length > 5 && <input class={style.search} type="text" disabled={disabled} value={searchText} placeholder="Liste durchsuchen" autoComplete="off" onInput={(e: any) => setSearchText(e.target.value)} />}
           {(searchText ? list : options).map((x) => <CheckInput key={x} value={undefined} name={x} label={x} list change={select} />)}

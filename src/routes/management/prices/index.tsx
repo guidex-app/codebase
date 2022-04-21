@@ -9,12 +9,13 @@ import FormButton from '../../../components/form/basicButton';
 import QuestForm from '../../../components/form/questForm';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
+import Spinner from '../../../components/spinner';
 import Modal from '../../../container/modal';
 import { fireArray, fireDocument, getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
-import { AnsDB, ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
+import { ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
 import ChangeStructure from './changeStructure';
 import EditPrices from './prices';
 import StructureQuestions from './structureQuestions';
@@ -22,17 +23,16 @@ import StructureQuestions from './structureQuestions';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<DollarSign color="#fea00a" />}
         title="Preis-Tabellen"
-        text="Bitte definiere die Preis-Logik und passe die entsprechenden Preise an."
+        text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
       />
     );
   }
@@ -91,12 +91,12 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
 
     fields?.forEach((element: ServiceField) => {
       if ((!element.notIsChecked || element.name === 'days') && element.name) {
-        const values = element.answers?.map((ans: AnsDB) => ans.values?.join(' & ')) || [];
-        if (values.toString()) description.push(`(${values.toString()} ${suffixList[element.name] || ''})`);
+        const values = element.selected?.values?.join(' & ');
+        if (values) description.push(`(${values} ${suffixList[element.name] || ''})`);
 
         if (specFieldIds.includes(element.name)) {
-          if (element.name !== 'days') newSpecs[element.name] = element.answers?.[0].name;
-          if (element.name === 'days') newSpecs.days = element.notIsChecked ? [] : element.answers?.[0].values;
+          if (element.name !== 'days') newSpecs[element.name] = element.selected?.name;
+          if (element.name === 'days') newSpecs.days = element.notIsChecked ? [] : element.selected?.values;
         }
       }
     });
@@ -169,17 +169,20 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
       <TextHeader
         icon={<DollarSign color="#fea00a" />}
         title="Preis-Tabellen"
-        text="Bitte definiere die Preis-Logik und passe die entsprechenden Preise an."
+        text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
       />
 
       <BackButton url={`/company/dashboard/${activityID}`} />
-      <section class="group form small_size_holder">
-        {serviceList?.[0] ? (
-          serviceList && serviceList?.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
-        ) : (
-          <Item icon={<ArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
-        )}
-      </section>
+
+      {serviceList !== false ? (
+        <section class="group form small_size_holder">
+          {serviceList ? (
+            serviceList.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
+          ) : (
+            <Item icon={<ArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
+          )}
+        </section>
+      ) : <Spinner />}
 
       <FormButton action={() => route(`/company/availabilities/${data.title.form}`)} label="Mit den Verfügbarkeiten fortfahren" />
 

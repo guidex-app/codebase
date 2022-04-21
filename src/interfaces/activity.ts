@@ -1,5 +1,5 @@
 type Images = 'thumbnail' | 'image1' | 'image2' | 'image3' | 'image4';
-type IsComplete = 'services' | 'available' | 'prices';
+type IsComplete = 'services' | 'available' | 'prices' | 'online';
 
 export interface ActBasic {
   title: { name: string, form: string },
@@ -12,6 +12,7 @@ export interface ActBasic {
   online: boolean;
   language?: string[];
   filter: ('Indoor' | 'Outdoor')[]
+  termsAccepted?: boolean;
 }
 
 export interface CompLocation {
@@ -31,6 +32,7 @@ export interface ActContact {
   emptyGuidexContact?: boolean,
   emptyCustomerContact?: boolean,
   emptyHouseNumber?: boolean,
+  hasInvoiceAddress: boolean,
 
   guidexContact?: {
     name?: string,
@@ -42,6 +44,7 @@ export interface ActContact {
   },
 
   address?: Address;
+  invoiceAddress?: Address;
 }
 
 export interface ActOpenings {

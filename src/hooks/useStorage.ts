@@ -19,13 +19,13 @@ const useStorage = (): { progress: number, setUpload: (img: { file: File | Blob,
       const { folderPath, fileName, file } = upload;
       // const metadata = { cacheControl: 'public,max-age=300', contentType: 'image/jpeg' };
 
-      const storageRef = ref(storage, `${folderPath}/${fileName}/${fileName}.jpg`);
+      const storageRef = ref(storage, `${folderPath.replace('%2F', '/')}/${fileName}/${fileName}.jpg`);
 
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on('state_changed', (snapshot) => {
         const progr = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progr);
+        setProgress(progr < 5 ? 5 : progr);
         console.log(`Upload is ${progr}% done`);
       }, () => {
         setProgress(0);
@@ -38,9 +38,8 @@ const useStorage = (): { progress: number, setUpload: (img: { file: File | Blob,
     }
   };
 
-  useEffect(() => {
-    if (upload?.file) uploadData();
-  }, [upload]);
+  // wenn ein file gesetzt wird
+  useEffect(() => { if (upload?.file) uploadData(); }, [upload]);
 
   return {
     progress,

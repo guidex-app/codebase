@@ -9,11 +9,13 @@
     margin-bottom: 15px;
     height: 40px;
     font-size: 16px;
+    transform: scale(1);
+    transition: all 0.4s ease-out;
 }
 
 .solid {
     background-color: var(--red);
-    background: linear-gradient(90deg,#fa8142, #ff4088);
+    background-image: linear-gradient(90deg,#fa8142, #ff4088);
 }
 
 .outline {
@@ -24,4 +26,9 @@
 
 .solid:disabled, .outline:disabled {
     opacity: 0.5;
+}
+
+.clicked {
+    background-image: linear-gradient(90deg,#05ae4e, #00d25b);
+    transform: scale(1.05);
 }

@@ -16,12 +16,11 @@ import { Activity } from '../../../interfaces/activity';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<Image color="#ff375e" />}
@@ -31,7 +30,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }
     );
   }
 
-  const [state, setState] = useState<string[]>(data.state);
+  const [state, setState] = useState<string[] | undefined>(data?.state);
 
   const updateImage = (name: string) => {
     const newState = mergeUnique([name], state || []);

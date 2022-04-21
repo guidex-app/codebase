@@ -20,9 +20,10 @@ import style from './style.css';
 interface CatsProps {
   location?: Location;
   interests?: string[];
+  getNewLocation: (dayNr: number) => void;
 }
 
-const Cats: FunctionalComponent<CatsProps> = ({ location, interests }: CatsProps) => {
+const Cats: FunctionalComponent<CatsProps> = ({ location, getNewLocation, interests }: CatsProps) => {
   const [filter, setFilter] = useState<string[]>([]);
   const [filteredCats, setFilteredCats] = useState<any[]>([]);
   const [catList, setCatList] = useState<any[]>([]);
@@ -57,12 +58,16 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, interests }: CatsProps
     console.log('interests', interests);
 
     const cats: any = await getFireCollection(`geo/${location?.geoHash}/categories`, 'sortCount', undefined, 200);
+    console.log(cats);
     setCatList(cats);
     getFilteredCats(cats);
   };
 
-  const updateFilter = (newFilter: string[]) => {
-    setFilter(newFilter);
+  const updateFilter = (newFilter: string[]) => { setFilter(newFilter); };
+
+  const changeDay = (dayNr: number) => {
+    getNewLocation(dayNr);
+    closeModal();
   };
 
   useEffect(() => { if (location) fetchCategories(); }, [location]);
@@ -78,7 +83,7 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, interests }: CatsProps
       <Modal title={openModal} close={closeModal}>
         {openModal === 'Filtern' && <FilterList data={catFilter} values={filter} change={updateFilter} close={closeModal} />}
         {openModal === 'Standort' && <LocationList />}
-        {openModal === 'Tag' && <WeatherList />}
+        {openModal === 'Tag' && <WeatherList changeDay={changeDay} />}
       </Modal>
       )}
     </div>

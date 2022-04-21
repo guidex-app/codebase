@@ -18,7 +18,7 @@ interface ActivityProp {
 }
 
 const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
+  const data: Activity | undefined = useCompany(activityID, activity);
   if (!data) {
     return (
       <TextHeader
@@ -32,7 +32,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
   return (
     <Fragment>
       <TextHeader
-        image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${activityID}%2F${activityID}_250x200`}
+        image={data.state?.includes('thumbnail') ? `https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activities%2F${activityID}%2F${activityID}_250x200` : undefined}
         title={`${data.title.name} (${data.category.name})`}
         text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie ihre angegebenen Informationen verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
       />

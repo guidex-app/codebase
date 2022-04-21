@@ -24,6 +24,7 @@ const companyRoutes: { [key: string]: Pages[] } = {
     { title: 'Preis-Tabellen', path: '/company/prices', text: 'Preise hinzufügen und anpassen', icon: <DollarSign color="#ff663d" /> },
     { title: 'Verfügbarkeiten', path: '/company/availabilities', text: 'Verfügbarkeiten der Leistungen', icon: <Columns color="#c2429f" /> },
     { title: 'Reservierungen', path: '/company/reservations', text: 'Reservierungen einsehen', icon: <Columns color="#eca975" /> },
+    { title: 'Rechtliches & Vertragliches', path: '/company/contract', text: 'Verwalte Deine ', icon: <Archive color="#25a7ff" /> },
   ],
   disabled: [
     { title: 'Vorschau', path: '/company/dashboard', text: 'Coming soon', icon: <Monitor color="#6765b1" /> },

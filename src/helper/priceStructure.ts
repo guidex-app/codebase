@@ -1,10 +1,10 @@
 import { AnsDB } from '../interfaces/company';
 
-const getQuestFormValue = (day?: string, answers?: AnsDB[], defaultVal?: string[]): { list: string[], isRound?: boolean } => {
+const getQuestFormValue = (day?: string, selected?: AnsDB, defaultVal?: string[]): { list: string[], isRound?: boolean } => {
   let list: string[] = defaultVal || [];
   let isRound: boolean = false;
 
-  if (!answers) return { list, isRound };
+  if (!selected) return { list, isRound };
 
   const findOnDayIndex = (onDays?: (string | undefined)[]): number[] => {
     if (!onDays || !day || day === 'nothing') return [];
@@ -17,30 +17,28 @@ const getQuestFormValue = (day?: string, answers?: AnsDB[], defaultVal?: string[
     return indexList;
   };
 
-  answers.forEach((ans: AnsDB) => {
-    if (ans.values && !isRound) {
-      if (ans.name.startsWith('onDay')) { // DayValue
-        const dayIndexList: number[] = findOnDayIndex(ans.onDays);
-        dayIndexList.forEach((indexValue: number) => {
-          const currentValue: any = ans.values?.[indexValue];
+  if (selected.values && !isRound) {
+    if (selected.name.startsWith('onDay')) { // DayValue
+      const dayIndexList: number[] = findOnDayIndex(selected.onDays);
+      dayIndexList.forEach((indexValue: number) => {
+        const currentValue: any = selected.values?.[indexValue];
 
-          if (currentValue) {
-            if (ans.isRound?.[indexValue]) isRound = true; // es sind runden
-            if (ans.name === 'onDayObject') {
-              list.push(currentValue.split(','));
-            } else {
-              list.push(currentValue);
-            }
+        if (currentValue) {
+          if (selected.isRound?.[indexValue]) isRound = true; // es sind runden
+          if (selected.name === 'onDayObject') {
+            list.push(currentValue.split(','));
+          } else {
+            list.push(currentValue);
           }
-        });
-      } else if (ans.isRound?.[0]) {
-        isRound = true;
-        list.push(ans.values?.[0]);
-      } else {
-        list = [...list, ...ans.values];
-      }
+        }
+      });
+    } else if (selected.isRound?.[0]) {
+      isRound = true;
+      list.push(selected.values?.[0]);
+    } else {
+      list = [...list, ...selected.values];
     }
-  });
+  }
 
   return { list, isRound };
 };

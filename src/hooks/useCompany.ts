@@ -3,17 +3,17 @@ import { useEffect, useState } from 'preact/hooks';
 import { getFireDocument } from '../data/fire';
 import { Activity } from '../interfaces/activity';
 
-const useCompany = (id: string, activity?: Activity, type?: 'topics'): any | undefined => {
+const useCompany = (activityID: string, activity?: Activity, type?: 'topics'): Activity | undefined => {
   const [data, setData] = useState<Activity | undefined>(activity);
 
   useEffect(() => {
-    if (!activity && id && id !== 'new') {
+    if (!activity && activityID && activityID !== 'new') {
       console.log('wird geladen');
-      getFireDocument(`${type || 'activities'}/${id}`).then((act: Activity) => {
+      getFireDocument(`${type || 'activities'}/${activityID}`).then((act: Activity) => {
         setData(act);
       });
     }
-  }, [id]);
+  }, [activityID]);
 
   return data;
 };

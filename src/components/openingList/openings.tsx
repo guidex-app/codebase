@@ -4,16 +4,16 @@ import { useEffect, useState } from 'preact/hooks';
 import { isInTimeRange, shortDay } from '../../helper/date';
 import style from './style.module.css';
 
-interface OpeningListProp { openings?: (string | false)[]; }
+interface OpeningListProp { openings?: (string | false)[]; day?: number }
 
-const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings }: OpeningListProp) => {
+const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings, day }: OpeningListProp) => {
   const [list, setList] = useState<[string, string][]>([['', ''], ['', ''], ['', ' ']]);
   const [today, setToday] = useState<[boolean, string] | undefined>();
 
   const getTodayOpeningsText = (currenOpenings: (string | false)) => {
-    if (!currenOpenings) return setToday([false, 'Heute ist Geschlossen']);
+    if (!currenOpenings) return setToday([false, 'ist Geschlossen']);
 
-    const currentDate = new Date();
+    const currentDate = day ? new Date(day) : new Date();
     const currentTime: string = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 
     const [startTime, endTime] = currenOpenings.split('-');
@@ -23,7 +23,7 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings }: Opening
   };
 
   const generateOpenings = () => {
-    const currentDayNr = new Date().getDay();
+    const currentDayNr = day ? new Date(day).getDay() : new Date().getDay();
     const newList: [string, string][] = [];
 
     openings?.forEach((x: (string | false), dayIndex: number) => {
@@ -40,8 +40,8 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings }: Opening
 
   return (
     <div class={style.openings}>
-      {today && <div style={{ color: 'var(--fifth)' }}><strong style={{ color: 'var(--green)' }}>{today[0] ? 'Geöffnet' : 'Geschlossen'}</strong> ⋅ {today[1]}</div>}
-      {list?.map((day: [string, string]) => <div class={day[1] === 'Geschlossen' ? 'red' : 'green'}><strong>{day[0] ? `${day[0]}:` : ''}&nbsp;</strong>{day[1]}</div>)}
+      {today && <div style={{ color: 'var(--fifth)' }}><strong style={{ color: today[0] ? 'var(--green)' : 'var(--red)' }}>{`${day ? shortDay[new Date(day).getDay()] : 'Heute'}, `}{today[0] ? 'Geöffnet' : 'Geschlossen'}</strong> ⋅ {today[1]}</div>}
+      {list?.map((days: [string, string]) => <div><strong>{days[0] ? `${days[0]}:` : ''}&nbsp;</strong>{days[1]}</div>)}
 
       <div style={{ color: 'var(--red)' }}>
         Feiertage und Sonder&shy;öffnungszeiten

@@ -9,6 +9,7 @@ import FormButton from '../../../components/form/basicButton';
 import QuestForm from '../../../components/form/questForm';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
+import Spinner from '../../../components/spinner';
 import Modal from '../../../container/modal';
 import { fireArray, fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
@@ -20,12 +21,11 @@ import ServiceQuestions from './serviceQuestions';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
+const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
     entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
@@ -46,8 +46,8 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
     Object.entries(select || []).forEach(([name, values]: [string, any]) => {
       if (fields.includes(name)) {
         const isServiceName: boolean = name === 'serviceName';
-        const answers: AnsDB[] = [{ name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values }];
-        newFields.push({ name, answers });
+        const selected: AnsDB = { name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values };
+        newFields.push({ name, selected });
       }
     });
 
@@ -75,7 +75,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
 
   const closeService = (newService?: ServiceInfo) => {
     updateServiceList(newService);
-    if (!serviceList?.[0]) fireArray(`activities/${activityID}`, 'state', 'services', 'add');
+    if (!serviceList) fireArray(`activities/${activityID}`, 'state', 'services', 'add');
     setServiceFields(false);
     setService(false);
   };
@@ -83,11 +83,11 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
   const saveQuestions = (newField: ServiceField) => {
     const isInitial = newField.name === 'serviceName';
 
-    const getName: string | undefined = newField?.answers?.[0]?.name;
+    const getName: string | undefined = newField?.selected?.name;
     const getServiceID: string = service && service.id ? service.id : `${getName}_${Date.now()}`;
 
     if (getName) {
-      const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.answers?.[0]?.values?.[0] };
+      const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.selected?.values?.[0] };
 
       fireDocument(`activities/${activityID}/services/${getServiceID}`, updatedField, isInitial ? 'set' : 'update').then(() => {
         const newService = { ...(!isInitial ? service : []), ...updatedField };
@@ -109,13 +109,15 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid
       <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
 
       <BackButton url={`/company/dashboard/${activityID}`} />
-      <section class="group form small_size_holder">
-        <Item type="grey" icon={<PlusCircle />} label="Hinzufügen" action={() => selectService(undefined)} />
+      {serviceList !== false ? (
+        <section class="group form small_size_holder">
+          <Item type="grey" icon={<PlusCircle />} label="Leistung Hinzufügen" action={() => selectService(undefined)} />
 
-        {serviceList?.map((x: ServiceInfo) => (
-          <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />
-        ))}
-      </section>
+          {serviceList?.map((x: ServiceInfo) => (
+            <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />
+          ))}
+        </section>
+      ) : <Spinner />}
 
       <FormButton action={() => route(`/company/prices/${data.title.form}`)} label="Speichern und weiter" />
 

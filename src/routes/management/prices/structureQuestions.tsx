@@ -4,22 +4,22 @@ import { Calendar, Clock, Settings, Star, UserPlus, Users } from 'react-feather'
 import { Questions } from '../../../interfaces/company';
 
 const StructureQuestions: Questions[] = [
-  {
-    info: {
-      title: { name: 'Tagesgruppen', form: 'days' },
-      question: 'Unterscheiden sich die Preise an bestimmten Tagen?',
-      explanation: 'Variieren bei Ihnen die Preise Tagesabhängig bei folgenden Faktoren? Preis (im Allgemeinen), Alter der Person (Kind etc.), Uhrzeiten (von bis), Dauer (1h, 2h etc.), Preis nach Rundenzahl, Gruppenpreise, Rabatte für Mitglieder oder Bevölkerungsschichten.',
-      example: 'z.B. Am Wochenende sind die Preise höher, als in der Woche. Dafür müssen Sie 2 Tagesgruppen erstellen. Gruppe 1 (Mo, Di, Mi, Do, Fr) und Gruppe 2 (Sa, So)',
-      advice: 'Achtung: Die Tagesgruppen sind entscheident in allen darauf folgenden Fragen.',
-      icon: <Calendar color="#63e6e1" />,
-      type: 'onOpenings',
-      availableActivated: true,
-      availableText: 'Nein, die Preise sind jeden Tag gleich',
-    },
-    answers: [
-      { icon: <Calendar />, label: 'Ja, die Preise sind an bestimmten Tagen unterschiedlich', name: 'day', inputType: 'dayPicker', info: 'Bitte bilden sie Tagesgruppen. Innerhalb der Tagesgruppen, gelten die gleichen Bedingungen für alle enthaltenen Preise.', onDay: false, isMultiField: false },
-    ],
-  },
+  // {
+  //   info: {
+  //     title: { name: 'Tagesgruppen', form: 'days' },
+  //     question: 'Unterscheiden sich die Preise an bestimmten Tagen?',
+  //     explanation: 'Variieren bei Ihnen die Preise Tagesabhängig bei folgenden Faktoren? Preis (im Allgemeinen), Alter der Person (Kind etc.), Uhrzeiten (von bis), Dauer (1h, 2h etc.), Preis nach Rundenzahl, Gruppenpreise, Rabatte für Mitglieder oder Bevölkerungsschichten.',
+  //     example: 'z.B. Am Wochenende sind die Preise höher, als in der Woche. Dafür müssen Sie 2 Tagesgruppen erstellen. Gruppe 1 (Mo, Di, Mi, Do, Fr) und Gruppe 2 (Sa, So)',
+  //     advice: 'Achtung: Die Tagesgruppen sind entscheident in allen darauf folgenden Fragen.',
+  //     icon: <Calendar color="#63e6e1" />,
+  //     type: 'onOpenings',
+  //     availableActivated: true,
+  //     availableText: 'Nein, die Preise sind jeden Tag gleich',
+  //   },
+  //   answers: [
+  //     { icon: <Calendar />, label: 'Ja, die Preise sind an bestimmten Tagen unterschiedlich', name: 'day', inputType: 'dayPicker', info: 'Bitte bilden sie Tagesgruppen. Innerhalb der Tagesgruppen, gelten die gleichen Bedingungen für alle enthaltenen Preise.', onDay: false, isMultiField: false },
+  //   ],
+  // },
   {
     info: {
       title: { name: 'Alter', form: 'age' },
@@ -69,7 +69,7 @@ const StructureQuestions: Questions[] = [
     answers: [
       { icon: <Calendar />, label: 'Der Preis wird pro Person berechnet', name: 'person', inputType: 'number', info: '', onDay: false, isMultiField: false, placeholder: '' },
       { icon: <Calendar />, label: 'Der Preis wird anhand eines Gegenstandes/Raum/Bahn berechnet', name: 'object', inputType: 'number', info: '', onDay: false, isMultiField: false, placeholder: '' },
-      { icon: <Calendar />, label: 'Der Preis wird Tagesabhängig anhand eines Gegenstandes/Raum/Bahn berechnet', name: 'onDayObject', inputType: 'dayPicker', info: '', onDay: true, isMultiField: false, placeholder: '' },
+      { icon: <Calendar />, label: 'Der Preis wird Tagesabhängig anhand eines Gegenstandes/Raum/Bahn berechnet', name: 'onDayObject', inputType: 'dayPicker', info: 'Markiere die Tage an denen pro Gegstand/Raum oder Bahn berechnet wird.', onDay: true, isMultiField: false, placeholder: '' },
     ],
   },
   {
@@ -85,10 +85,10 @@ const StructureQuestions: Questions[] = [
       availableText: '',
     },
     answers: [
-      { icon: <Calendar />, label: 'Nein, wir haben feste Zeiten (Dauer)', name: 'fixed', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Minuten, 90 etc. ', onDay: false, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
-      { icon: <Calendar />, label: 'Ja, wir berechnen pro Runde', name: 'round', inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: false, isMultiField: false, placeholder: 'Die Runde dauert z.B.: 60 Min.' },
+      // { icon: <Calendar />, label: 'Nein, wir haben feste Zeiten (Dauer)', name: 'fixed', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Minuten, 90 etc. ', onDay: false, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
+      { icon: <Calendar />, label: 'Ja, wir berechnen pro Runde', name: 'round', options: ['Rundenpreis', 'feste Dauer'], inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: false, isMultiField: false, placeholder: 'Die Runde dauert z.B.: 60 Min.' },
       // { icon: <Calendar />, label: 'An folgenden Tagen gibt es feste Zeiten', name: 'onDayDurationTime', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Minuten, 90 etc.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
-      { icon: <Calendar />, label: 'Tagesabhängig feste Zeiten oder Runden', name: 'onDayDuration', inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
+      { icon: <Calendar />, label: 'Tagesabhängig feste Zeiten oder Runden', options: ['Rundenpreis', 'feste Dauer'], name: 'onDayDuration', inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     //   { icon: calendar, label: 'Es gibt verschiedene Dauern oder Rundendauern.', name: 'dauer', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Min.', onDay: false, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     //   { icon: calendar, label: 'Die Dauern oder Runden sind Tagesabhängig', name: 'dauerGroup', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Min.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     ],
@@ -123,10 +123,10 @@ const StructureQuestions: Questions[] = [
       availableText: 'Nein, die Personenanzahl hat keinen Einfluss auf den Preis',
     },
     answers: [
-      { icon: <Calendar />, label: 'Ja, ab folgender Personenanzahl gelten unterschiedliche Preise (pro Person)', name: 'person', inputType: 'number', info: 'Bitte geben Sie an für welche Personenanzahlen sich der Preis pro Person verändert z.B. 2 Personen, 4 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
-      { icon: <Calendar />, label: 'Ja, für folgende Personenanzahlen gelten Gruppenpreise', name: 'group', inputType: 'number', info: 'Bitte geben Sie an für welche Gruppengröße andere Preise gelten z.B. 10 Personen, 20 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
-      { icon: <Calendar />, label: 'Ja, aber nur an folgenden Tagen gelten andere Preise ab einer Personenanzahl (pro Person)', name: 'onDayPerson', inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen sich der Preis pro Person verändert', onDay: true, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
-      { icon: <Calendar />, label: 'Ja, aber nur an folgenden Tagen gelten Gruppenpreise.', name: 'onDayGroup', inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen Gruppenpreise gelten', onDay: true, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
+      { icon: <Calendar />, label: 'Ja, ab folgender Personenanzahl gelten unterschiedliche Preise', options: ['Gruppenpreis', 'pro Person'], name: 'person', inputType: 'number', info: 'Bitte geben Sie an für welche Personenanzahlen sich der Preis pro Person verändert z.B. 2 Personen, 4 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
+      // { icon: <Calendar />, label: 'Ja, für folgende Personenanzahlen gelten Gruppenpreise', name: 'group', inputType: 'number', info: 'Bitte geben Sie an für welche Gruppengröße andere Preise gelten z.B. 10 Personen, 20 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
+      // { icon: <Calendar />, label: 'Ja, aber nur an folgenden Tagen gelten andere Preise ab einer Personenanzahl (pro Person)', name: 'onDayPerson', inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen sich der Preis pro Person verändert', onDay: true, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
+      { icon: <Calendar />, label: 'Ja, aber nur an folgenden Tagen', name: 'onDayGroup', options: ['Gruppenpreis', 'pro Person'], inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen Gruppenpreise gelten', onDay: true, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
     ],
   },
   {

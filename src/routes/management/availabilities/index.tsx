@@ -23,12 +23,11 @@ import Capacity from './capacity';
 interface ActivityProp {
     activityID: string;
     activity: Activity;
-    uid: string;
 }
 
-const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityID, uid }: ActivityProp) => {
-  const data = useCompany(activityID, activity);
-  if (!data || !uid) {
+const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
+  const data: Activity | undefined = useCompany(activityID, activity);
+  if (!data) {
     return (
       <TextHeader
         icon={<Columns color="#bf5bf3" />}
@@ -56,7 +55,7 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
 
   const toggleShowCapacity = () => setShowCapacity(!showCapacity);
 
-  useEffect(() => { if (!serviceList?.[1] && serviceList?.[0]) setSelected(serviceList[0]); }, [serviceList]);
+  useEffect(() => { if (serviceList !== false && !serviceList?.[1] && serviceList?.[0]) setSelected(serviceList[0]); }, [serviceList]);
 
   const validateForm = () => {
     if (selected && selected.id && isValid()) {
@@ -80,7 +79,7 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
-        {serviceList !== undefined && !selected && (
+        {serviceList !== false && !selected && (
           <section class="group form small_size_holder">
             {serviceList?.map((x: ServiceInfo) => (
               <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />

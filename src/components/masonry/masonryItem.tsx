@@ -20,15 +20,15 @@ function MasonryItem({ chunks, type }: any) {
 
   return (
 
-    chunks.map((item: (any), itemIndex: number) => (
+    chunks.map((item: any, itemIndex: number) => (
       <div class={style[`item_${itemIndex}`]}>
-        <Link href={`/${type !== 'Topic' ? 'activity' : 'explore'}/${item.title.form}`}>
+        <Link href={`/${type !== 'Topic' ? 'activity' : 'explore'}/${item.title?.form}?l=o`}>
           <picture>
-            <source srcSet={`${getPath(item.title.form)}.webp?alt=media`} type="image/webp" />
-            <img loading="lazy" src={`${getPath(item.title.form)}.jpeg?alt=media`} alt={item.title.name} />
+            <source srcSet={`${getPath(item.title?.form)}.webp?alt=media`} type="image/webp" />
+            <img loading="lazy" src={`${getPath(item.title?.form)}.jpeg?alt=media`} alt={item.title?.name} />
           </picture>
         </Link>
-        <strong>{item.title.name}</strong>
+        <strong>{item.title?.name} {item.count ? `(${item.count.indoor + item.count.outdoor})` : ''}</strong>
         {/* {!hideIcon && type !== 'Topic' && <IonIcon icon={type !== 'Voting' ? bookmarkOutline : getVotingIcon()} slot="end" size={type !== 'Voting' ? 'small' : 'large'} color={!isVotet ? 'danger' : 'success'} onClick={() => action(cat.title.name)} />} */}
       </div>
     ))

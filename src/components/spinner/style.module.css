@@ -1,0 +1,24 @@
+@keyframes color {
+    0% {
+      background-color: #fa8142;
+      transform: scale(1, 0.9) translateY(0);
+    }
+    50% {
+      background-color: #ff4088;
+      transform: scale(0.9, 1) translateY(-5px);
+    }
+    100% {
+      background-color: #fa8142;
+      transform: scale(1, 0.9) translateY(0);
+    }
+  }
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    margin: 10px auto;
+    border-radius: 15px;
+    animation-name: color;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}

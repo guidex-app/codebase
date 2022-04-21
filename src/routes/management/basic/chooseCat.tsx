@@ -1,17 +1,19 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Book, Layers } from 'react-feather';
+import { Book, Info, Layers } from 'react-feather';
 
 import SelectInput from '../../../components/form/selectInput';
+import Item from '../../../components/item';
 import { getFireCollection } from '../../../data/fire';
 import { CatInfo } from '../../../interfaces/categorie';
 
 interface ActivityProps {
     currentCat?: string;
+    disabled: boolean;
     changeCat: (cat?: CatInfo) => void;
 }
 
-const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, changeCat }: ActivityProps) => {
+const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, disabled, changeCat }: ActivityProps) => {
   const [selected, setSelected] = useState<{ belongs?: string, secondary?: string }>({ belongs: undefined, secondary: undefined });
   const [hasSecondary, setHasSecondary] = useState<boolean>(false);
   const [list, setList] = useState<{ belongs: string[], secondary: string[] }>({ belongs: [], secondary: [] });
@@ -75,6 +77,7 @@ const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, changeCat }
         value={selected.belongs}
         options={list.belongs}
         error={selected.belongs ? 'valid' : 'invalid'}
+        disabled={disabled}
         required
         change={changeBelongs}
       />
@@ -87,11 +90,14 @@ const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, changeCat }
           icon={<Layers color="#fea00a" />}
           value={selected.secondary}
           options={list.secondary}
+          disabled={disabled}
           error={selected.secondary ? 'valid' : 'invalid'}
           required
           change={changeSecondary}
         />
       )}
+
+      {disabled && <Item icon={<Info color="var(--red)" />} label="Die Kategorie-Auswahl ist deaktiviert" text="Um die Kategorie zu ändern, muss die Unternehmung offline gestellt sein" />}
 
     </Fragment>
   );

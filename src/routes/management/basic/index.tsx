@@ -26,9 +26,9 @@ interface ActivityProps {
 }
 
 const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }: ActivityProps) => {
-  const data = useCompany(activityID, activity);
+  const data: Activity | undefined = useCompany(activityID, activity);
 
-  if ((!data && activityID !== 'new') || !uid) {
+  if (!data && activityID !== 'new') {
     return (
       <TextHeader
         icon={<Info color="#63e6e1" />}
@@ -44,7 +44,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     category: { value: data?.category?.name, type: 'string', required: true },
     filter: { value: data?.filter || ['Indoor'], type: 'string[]', required: true },
     description: { value: data?.description, type: 'string', required: false },
-    state: { value: data.state, type: 'string[]', required: false },
+    state: { value: data?.state, type: 'string[]', required: false },
   };
 
   const { fields, formState, changeField, isValid } = useForm(formInit);
@@ -56,20 +56,22 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
     changeField(newState, 'state');
   };
 
-  const validateForm = async () => {
+  const validateForm = () => {
     if (isValid()) {
-      const basic = await {
+      const basic = {
         ...(activityID === 'new' && { member: [uid] }),
         title: data?.title || { name: fields.title, form: replaceSpecialCharacters(fields.title) },
         category: { name: fields.category, form: replaceSpecialCharacters(fields.category) },
         filter: fields.filter,
-        state: fields.state,
+        ...(fields.state?.[0] && { state: fields.state }),
         ...(fields.description && { description: fields.description }),
       };
 
-      await fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update');
-      console.log('abgesendet');
-      route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
+      fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update').then(() => {
+        setTimeout(() => {
+          route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
+        }, activityID === 'new' ? 500 : 0);
+      });
     }
   };
 
@@ -106,12 +108,12 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
               value={fields.title}
               placeholder="Wie lautet der Titel ihrer Unternehmung"
               error={formState.title}
-              disabled={activityID !== 'new' || fields.state[0]}
+              disabled={activityID !== 'new' || fields.state?.[0]}
               required
               change={changeField}
             />
 
-            <ChooseCat currentCat={data?.category?.name} changeCat={changeCat} />
+            <ChooseCat currentCat={data?.category?.name} changeCat={changeCat} disabled={!!data?.state?.includes('online')} />
 
             {fields.category && isIndoorAndOutdoor && (
             <PickInput

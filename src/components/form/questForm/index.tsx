@@ -11,7 +11,8 @@ import BasicInput from '../basicInput';
 import CheckInput from '../checkInput';
 import ImgInput from '../imgInput';
 import InfoBox from '../infoBox/infoBox';
-import DayPicker from './dayPicker';
+import OptionInput from '../optionInput';
+import DayValue from './dayValue';
 import Overview from './overview';
 import style from './style.module.css';
 
@@ -30,12 +31,9 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
   const [field, setField] = useState<ServiceField | undefined>();
   const [validation, setValidation] = useState<'valid' | 'notValid'>('notValid');
   const [showOverview, setShowOverview] = useState(false);
-  console.log(structure);
-  const nextButton = () => {
-    if (field) {
-      save(field);
-    }
-  }; // speichert die aktuelle frage und antworten
+
+  // speichert die aktuelle frage und antworten
+  const nextQuestion = () => { if (field && validation === 'valid') save(field); };
 
   /**
    * Findet den nächsten Index in den Fragen (Questions)
@@ -59,50 +57,25 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
     if (showOverview) setShowOverview(false);
   };
 
-  /** validiert bei mehreren möglichen antworten ob der keine tage doppelt gwählt wurden (bei den tagen radio) */
-  const checkboxValidation = (ans: AnsDB): boolean => {
-    if (!ans.name.startsWith('onDay')) return false;
-
-    const currentDays: (string | undefined)[] = ans.onDays || [];
-    const getAllDays = [...currentDays];
-    const isInvalid = !field?.answers?.every((a: AnsDB) => { // wenn keiner gefunden wird
-      if (a.name === ans.name || !a.name.startsWith('onDay') || !a.onDays) return true; // springt zum nächsten
-      return a.onDays?.every((day: (string | undefined)) => {
-        if (day === undefined || !currentDays.includes(day)) { // wenn es nicht enthält zum nächsten
-          if (getAllDays.indexOf(day) === -1) getAllDays.push(day);
-          return true;
-        }
-        return false;
-      });
-    });
-
-    if (!isInvalid && getAllDays.length !== structure?.days?.length) return true;
-
-    return isInvalid;
-  };
-
   /**
    * Validierung aller Felder
    * (Answers werden durchlaufen und wenn ein fehler entdeckt wird (true),
    * dann wird die every schleife abgebrochen (false) und "notValid zurückgegeben")
   */
   const validateField = () => {
-    if (field?.notIsChecked) return setValidation('valid');
-    let isValid: boolean = false;
-    if (field?.answers?.[0]) {
-      isValid = field.answers.every((ans: AnsDB) => {
-        if (question?.info.type === 'simple' && !ans.name.startsWith('onDay')) return true;
-        const checkOnDays: boolean = ans.name.startsWith('onDay') && (!ans.onDays || ans.onDays?.includes(undefined) || (question?.info.type !== 'simple' && ans.onDays?.length !== ans.values?.length));
-        const checkOnService: boolean = question?.info.type === 'onService' && (!service?.serviceName || (ans.values?.includes(undefined) || false));
-        const checkAmountOfFields: boolean = checkOnService && !(ans.values?.length === (ans.amountOfFields?.split(',') || ['1'])?.length);
+    if (!field?.selected) return setValidation('valid');
 
-        const checkIsMulti: boolean = question?.info.type !== 'simple' && ans.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
-        const checkCheckbox: boolean = question?.info.type === 'checkbox' && checkboxValidation(ans);
+    if (question?.info.type === 'simple' && !field.selected.name.startsWith('onDay')) return setValidation('valid');
+    const checkDayGroups: boolean = field.selected.name === 'day' && field.selected.onDays?.length !== openings?.length;
+    const checkOnDays: boolean = field.selected.name.startsWith('onDay') && (!field.selected?.onDays || field.selected.onDays?.includes(undefined) || (question?.info.type !== 'simple' && field.selected.onDays?.length !== field.selected.values?.length));
+    const checkOnService: boolean = question?.info.type === 'onService' && (!service?.serviceName || (field.selected.values?.includes(undefined) || false));
+    const checkAmountOfFields: boolean = checkOnService && !(field.selected.values?.length === (field.selected.amountOfFields?.split(',') || ['1'])?.length);
+    const checkOptionField: boolean = !field.selected.option && !!question?.answers.find((x) => field.selected?.name === x.name)?.options?.[0];
+    const checkIsMulti: boolean = question?.info.type !== 'simple' && field.selected.values?.findIndex((sub) => !sub || sub.toString().startsWith('-') || sub.toString().endsWith('-')) !== -1;
 
-        return !(checkAmountOfFields || checkIsMulti || checkOnService || checkCheckbox || checkOnDays);
-      });
-    }
-    return setValidation(isValid ? 'valid' : 'notValid');
+    const isInvalid = checkAmountOfFields || checkIsMulti || checkOnService || checkOnDays || checkOptionField || checkDayGroups;
+
+    return setValidation(isInvalid ? 'notValid' : 'valid');
   };
 
   const toggleOverview = () => {
@@ -118,76 +91,76 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
   /** togglen einer checkbox */
   const toggle = (value: boolean, name: string) => {
-    const answerIndex: number = field?.answers?.findIndex((f) => f.name === name) || -1;
-    let answers: AnsDB[] = field?.answers || [];
+    let selected: AnsDB | undefined; // default is undefined
 
     if (value) { // checked
-      if (question.info.type === 'radio' || question.info.type === 'simple') {
-        answers = [{ amountOfFields: '1', name, ...(name === 'onDaysDuration' && structure?.days && { onDays: structure.days }) }];
-      } else {
-        answers.push({ amountOfFields: '1', name });
-      }
-    } else { // not checked
-      console.log('notChecked');
-      answers.splice(answerIndex, 1);
+      selected = { amountOfFields: '1', name, ...(name === 'onDaysDuration' && structure?.days && { onDays: structure.days }) };
     }
-    setField({ name: question.info.title.form, answers: [...answers] });
-    console.log({ name: question.info.title.form, answers: [...answers] });
+
+    setField({ name: question.info.title.form, selected });
   };
 
-  const isNot = () => setField({ name: question.info.title.form, notIsChecked: true });
+  // const isNot = () => setField({ name: question.info.title.form, notIsChecked: true });
 
   /** Anzahl der Felder verändern. Bei "remove" wird der letzte Wert auch entfernt */
   const extraField = (type: 'remove' | 'add', answerForm: string) => {
-    const newAnswers: AnsDB[] = field?.answers || [];
-    const answerIndex: number = newAnswers[0] ? newAnswers?.findIndex((f) => f.name === answerForm) : -1;
+    const selected: AnsDB | undefined = field?.selected;
+    if (!selected) return;
 
-    const amount: string[] = newAnswers[answerIndex]?.amountOfFields?.split(',') || ['1'];
+    const amount: string[] = selected?.amountOfFields?.split(',') || ['1'];
     if (type === 'add') {
       amount.push((amount.length + 1).toString());
     } else {
-      newAnswers[answerIndex]?.values?.splice(amount.length - 1);
-      newAnswers[answerIndex]?.onDays?.splice(amount.length - 1);
+      selected?.values?.splice(amount.length - 1);
+      selected?.onDays?.splice(amount.length - 1);
       amount.pop();
     }
 
-    const newAnswer = { ...(newAnswers[answerIndex] || []), name: answerForm, amountOfFields: amount.toString() };
-    newAnswers.splice(answerIndex > -1 ? answerIndex : 0, 1, newAnswer);
-
-    setField({ name: question.info.title.form, answers: [...newAnswers] });
+    const newSelected: AnsDB = { ...selected, name: answerForm, amountOfFields: amount.toString() };
+    setField({ name: question.info.title.form, selected: newSelected });
   };
 
   /** Setzt neue Werte */
-  const setNewValue = (value: any, key: string) => {
-    const newAnswers: AnsDB[] = field?.answers || [];
-    const [answerForm, position]: string[] = key.split('+');
-    const answerIndex: number = newAnswers[0] ? newAnswers?.findIndex((f) => f.name === answerForm) : -1;
+  const setNewValue = (value: any, key: string, option?: string) => {
+    const selected: AnsDB | undefined = field?.selected;
 
-    const amount: string[] = newAnswers[answerIndex]?.amountOfFields?.split(',') || ['1'];
+    const [name, valuePosition]: string[] = key.split('+');
+
+    const amount: string[] = selected?.amountOfFields?.split(',') || ['1'];
     const newValues = amount.map((val: string, valIndex: number) => (
-      valIndex === +position ? value : (newAnswers[answerIndex]?.values?.[valIndex] || undefined)
+      valIndex === +valuePosition ? value : (selected?.values?.[valIndex] || undefined)
     ));
 
-    const newAnswer = { ...(newAnswers[answerIndex] || []), name: answerForm, values: [...newValues] };
-    newAnswers.splice(answerIndex !== -1 ? answerIndex : 0, 1, newAnswer); // replace answer
-    setField({ name: question.info.title.form, answers: [...newAnswers] });
-    console.log({ name: question.info.title.form, answers: [...newAnswers] });
+    const newOptions = amount.map((val: string, valIndex: number) => (
+      valIndex === +valuePosition ? option : (selected?.option?.[valIndex] || undefined)
+    ));
+
+    const newSelected: AnsDB = { ...selected, name, amountOfFields: amount.toString(), values: [...newValues], ...(option ? { option: newOptions } : {}) };
+
+    setField({ name: question.info.title.form, selected: { ...newSelected } });
   };
 
-  const addOnDayValue = (day: string, answerIndex: number, valueIndex: number) => {
-    const newAnswers = field?.answers || [];
-    const amountOfFields = newAnswers[answerIndex].amountOfFields.split(',') || ['1'];
-    const onDays: (string | undefined)[] = amountOfFields.map((val, valIndex) => (
-      valueIndex === valIndex ? day : newAnswers[answerIndex]?.onDays?.[valIndex]
-    )) || [day];
+  const addOnDayValue = (day: string, valueIndex: number) => {
+    const selected: AnsDB | undefined = field?.selected;
+    if (!selected) return;
+
+    const amountOfFields = selected?.amountOfFields.split(',') || ['1'];
+
+    const onDays: (string | undefined)[] = amountOfFields.map((val: string, valIndex: number) => {
+      if (valIndex === valueIndex) return day || undefined;
+      return selected?.onDays?.[valIndex] || undefined;
+    });
+    //   (
+    //   valueIndex === valIndex ? day : newAnswers[answerIndex]?.onDays?.[valIndex]
+    // )) || [day];
 
     // HIER DIE FUNKTION EINBAUEN BEI 'SIMPLE' DAY FIELD MEHRERE TAGE EINFÜGEN KÖNNEN
-
-    newAnswers.splice(answerIndex !== -1 ? answerIndex : 0, 1, { ...newAnswers[answerIndex], onDays }); // replace answer
-    setField({ name: question.info.title.form, answers: [...newAnswers] });
+    const newSelected = { ...selected, onDays };
+    console.log('onDays', onDays);
+    setField({ name: question.info.title.form, selected: newSelected });
   };
 
-  const skipAnswer = (form: string): boolean => {
+  const skipAnswerCheck = (form: string): boolean => {
     const noDays = form.startsWith('onDay') && !structure?.days?.[0]; // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
     const onPerson = ['round', 'onDayDuration'].includes(form) && structure?.foundation === 'person'; // Wenn pro Person
     const duration = ['roundDiscount', 'onDayRoundDiscount'].includes(form) && structure?.duration === 'fixed';
@@ -202,68 +175,70 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
       </header>
 
       <main style={{ paddingBottom: '5px' }}>
-        {question.info.availableActivated && (
+        {/* {question.info.availableActivated && (
         <CheckInput
           label={question.info.availableText || 'Hat keinen Einfluss'}
           value={field?.notIsChecked}
           name="isNot"
           change={isNot}
         />
-        )}
+        )} */}
         {question.info.type === 'onService' && !service?.serviceName?.[0] && <p class="red">Definiere mindestens eine Leistung.</p>}
         {question.answers.map((answer: AnsInfo) => {
-          if (skipAnswer(answer.name)) return;
+          if (skipAnswerCheck(answer.name)) return;
 
-          const getField: number = field?.answers ? field?.answers?.findIndex((g) => g.name === answer.name) : -1;
           const { type } = question.info;
-          const amountOfFields = field?.answers?.[getField]?.amountOfFields ? field?.answers?.[getField]?.amountOfFields?.split(',') : ['1'];
-          const { values, onDays } = field?.answers?.[getField] || { values: undefined, onDays: undefined };
-          const exceptions = (type === 'onOpenings' && openings && getField > -1) || (type === 'onService' && service?.serviceName?.[0]) || (type === 'simple' && answer.inputType === 'dayPicker' && getField > -1);
+          const amountOfFields: string[] = field?.selected?.amountOfFields?.split(',') || ['1'];
+          const { values, option, onDays } = field?.selected || { values: undefined, onDays: [] };
+          const isChecked: boolean = field?.selected?.name === answer.name;
+          const exceptions = (type === 'onOpenings' && openings && isChecked) || (type === 'onService' && service?.serviceName?.[0]) || (type === 'simple' && answer.inputType === 'dayPicker' && isChecked);
 
           return (
             <Fragment key={answer.name}>
               {['onService'].includes(type) ? service?.serviceType === answer.name && (
                 <p><strong>{answer.label}</strong></p>
               ) : (
-                <CheckInput label={answer.label} value={getField > -1} name={answer.name} change={toggle} />
+                <CheckInput label={answer.label} value={isChecked} name={answer.name} change={toggle} />
               )}
 
-              {getField > -1 && type === 'onOpenings' && !openings && <p class="red">Konfigurieren Sie zuerst Ihre Öffnungszeiten</p>}
-              {((getField > -1 && !['simple', 'onOpenings'].includes(type)) || exceptions) && (
+              {isChecked && type === 'onOpenings' && !openings && <p class="red">Konfigurieren Sie zuerst Ihre Öffnungszeiten</p>}
+              {((isChecked && !['simple', 'onOpenings'].includes(type)) || exceptions) && (
               <Fragment>
                 <p style={{ color: 'var(--fifth)' }}>{answer.info}</p>
-                {amountOfFields.map((amountString: string, amountIndex: number) => (
+                {amountOfFields.map((amountString: string, valueIndex: number) => (
                   <Fragment key={amountString}>
                     {answer.inputType === 'image' ? (
                       <ImgInput
                         label={`Anzeigebild für "${service?.serviceName}"`}
                         fileName={amountString.replace(' ', '_').toLowerCase()}
-                        name={`${answer.name}+${amountIndex}`}
+                        name={`${answer.name}+${valueIndex}`}
                         folderPath={folderPath}
                         size={[900, 900]}
-                        hasImage={values?.[amountIndex]}
+                        hasImage={values?.[valueIndex]}
                         // change={(name) => setNewValue(name, `${answer.name}+${amountIndex}`)}
                       />
                     ) : (answer.inputType === 'dayPicker' ? (
-                      question.info.type !== 'simple' ? (
-                        <DayPicker
-                          name={`${answer.name}+${amountIndex}`}
-                          values={values}
-                          position={amountIndex}
-                          change={setNewValue}
-                          openings={openings}
-                        />
-                      ) : (
-                        answer.onDay && (
-                          structure?.days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
-                        )
+                      question.info.type === 'simple' && (
+                        <DayValue valueIndex={valueIndex} days={structure?.days} values={onDays?.[valueIndex]} addOnDayValue={addOnDayValue} />
                       )
+                      //  : (
+                      //   <DayPicker
+                      //     name={`${answer.name}+${valueIndex}`}
+                      //     values={values}
+                      //     position={valueIndex}
+                      //     change={setNewValue}
+                      //     openings={openings}
+                      //   />
+                      // )
                     ) : (
+                      // WERT
                       <div style={answer.onDay ? { backgroundColor: 'var(--fourth)', borderRadius: '10px', padding: '5px 10px', marginBottom: '10px' } : undefined}>
-                        {answer.onDay && (
-                          structure?.days?.map((day: string) => <Chip small label={`${day}.`} type={onDays?.[amountIndex] === day ? 'active' : 'inactive'} key={day} action={() => addOnDayValue(day, getField, amountIndex)} />)
+                        <DayValue days={structure?.days} values={onDays?.[valueIndex]} valueIndex={valueIndex} addOnDayValue={addOnDayValue} />
+                        {answer.options ? (
+                          <OptionInput icon={answer.icon} value={values?.[valueIndex]} optionValue={option?.[valueIndex]} label={answer.label} options={answer.options || []} name={`${answer.name}+${valueIndex}`} placeholder={answer.placeholder} error={!values?.[valueIndex] ? 'invalid' : 'valid'} required change={setNewValue} />
+                        ) : (
+                          <BasicInput icon={answer.icon} isMulti={answer.isMultiField} value={values?.[valueIndex]} label={answer.label} name={`${answer.name}+${valueIndex}`} type={answer.inputType} placeholder={answer.placeholder} error={!values?.[valueIndex] ? 'invalid' : 'valid'} required change={setNewValue} />
                         )}
-                        <BasicInput icon={answer.icon} isMulti={answer.isMultiField} value={values?.[amountIndex]} label={answer.label} name={`${answer.name}+${amountIndex}`} type={answer.inputType} placeholder={answer.placeholder} error={!values?.[amountIndex] ? 'invalid' : 'valid'} required change={setNewValue} />
                       </div>
                     ))}
                   </Fragment>
@@ -276,7 +251,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         })}
       </main>
 
-      <FormButton action={nextButton} label="Weiter" disabled={validation === 'notValid'} />
+      <FormButton action={nextQuestion} label={field?.selected ? `${validation === 'notValid' ? 'Bitte Vervollständige die Anworten' : 'Weiter'}` : question.info.availableText || 'Hat keinen Einfluss'} disabled={field?.selected && validation === 'notValid'} />
 
       <InfoBox title={question.info.advice} text={question.info.example} />
       {question.info.explanation && <InfoBox text={question.info.explanation} />}
