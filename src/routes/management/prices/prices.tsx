@@ -1,6 +1,6 @@
+import { IconCalendar, IconEdit } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Calendar, Edit } from 'react-feather';
 
 import Chip from '../../../components/chip';
 import FormButton from '../../../components/form/basicButton';
@@ -35,6 +35,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
 
   // listen
   const [durationList, setDurationList] = useState<string[]>([]);
+  const [dayGroups, setDayGroups] = useState<string[]>([]);
 
   // tabelle
   const [columns, setColumns] = useState<[number, number][]>([]);
@@ -95,7 +96,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     const newColumns: [number, number][] = [];
 
     const { list: personList } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'persons')?.selected, ['1']);
-    const foundation: string = structure?.foundation || 'person';
+    const { list: foundation } = getQuestFormValue(status.day, structureFields?.find((x) => x.name === 'foundation')?.selected, ['person'], true);
 
     personList.forEach((person: string) => durationList.forEach((duration: string) => {
       // const text: string = foundation === 'object' ? `1 Raum (${getColumnName(p, d)})` : getColumnName(p, d);
@@ -103,7 +104,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     }));
 
     setColumns(newColumns);
-    setStatus({ ...status, foundation });
+    setStatus({ ...status, foundation: foundation[0] });
   };
 
   const checkDuration = () => {
@@ -143,14 +144,85 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     }
   };
 
+  /**
+   * LEISTUNG:
+   * Alter: (Mo, Di, Mi, Do) & (Mi, Do)
+   * Foundation: ALLE
+   * Dauer: (Do, Mi) & (Mo)
+   * Rabatt: Mo, Di, Do
+   *
+   * FOLGENDE GRUPPEN
+   * Nur 1 Tag: Mo, Do
+   */
+
+  const generateDayGroups = (fields: ServiceField[]): string[] => {
+    const allGroups: string[][] = [];
+    const usedDays: string[] = [];
+    const einzelneTage: string[] = [];
+
+    fields.forEach((x: ServiceField) => {
+      if (x.selected?.values) {
+        x.selected.values.forEach((element) => {
+          if (element.onDays && !allGroups.some((v) => v.toString() === element.onDays?.toString())) { // hier werden noch doppelte gruppen hinzugefügt
+            allGroups.push(element.onDays);
+            if (element.onDays.length === 1) {
+              einzelneTage.push(element.onDays[0]);
+              usedDays.push(element.onDays[0]);
+            }
+          }
+        });
+      }
+    });
+    console.log('ALLE', allGroups);
+
+    const uniqeGroups: string[][] = [];
+    ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach((day: string) => {
+      if (!usedDays.includes(day)) {
+        const alleAngelegten: string[][] = [];
+        const alleMitTag: string[] = [];
+
+        allGroups.forEach((x) => {
+          if (x.includes(day)) {
+            alleAngelegten.push(x);
+            x.forEach((y) => {
+              if (!alleMitTag.includes(y) && !usedDays.includes(y)) alleMitTag.push(y);
+            });
+          }
+        });
+
+        const splitted: string[] = [];
+        alleMitTag.forEach((x: string) => {
+          if (!usedDays.includes(x)) {
+            const isInAllGroups = alleAngelegten.every((g) => g.includes(x));
+            const otherIsInOther = allGroups.some((l) => l.includes(x) && alleAngelegten.findIndex((f) => f.toString() === l.toString()) === -1);
+            if (isInAllGroups && !otherIsInOther) {
+              splitted.push(x);
+              usedDays.push(x);
+            }
+          }
+        });
+
+        if (splitted[0]) uniqeGroups.push(splitted);
+      }
+    });
+
+    if (usedDays.length !== 7) uniqeGroups.push(['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].filter((d) => !usedDays.includes(d)));
+
+    // 1. Wenn etwas nur für einen Tag definiert wurde, muss der Tag einzelnt erstellt werden
+    // 2. Wenn eine Gruppe nicht immer gemeinsam auftritt muss jeder Tag einzelnt erstellt werden.
+    const newGroups: string[] = uniqeGroups.map((x) => x.join(', '));
+    setDayGroups([...newGroups, ...einzelneTage]);
+    console.table([...newGroups, ...einzelneTage]);
+    return newGroups;
+  };
+
   const loadStructureFields = async () => {
     try {
       const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structure.id}/fields`, false);
       if (serviceFieldData[0]) {
-        const days = structure?.days;
+        const days = generateDayGroups(serviceFieldData);
         setStatus({ ...status, day: days?.[1] ? undefined : days?.[0] || 'nothing' });
         setStructureFields(serviceFieldData || []);
-        console.log('day', days?.[1] ? undefined : days?.[0] || 'nothing');
       }
     } catch {
       setStructureFields([]);
@@ -183,12 +255,12 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     <Fragment>
       <h1 style={{ marginBottom: '20px' }}>Preis-Tabelle anpassen</h1>
 
-      {structure?.days?.[1] && questionLength === structureFields?.length && (
+      {dayGroups[1] && questionLength === structureFields?.length && (
         <SelectInput
           label="Wähle eine Tagesgruppe"
           name="day"
-          icon={<Calendar />}
-          options={structure.days || []}
+          icon={<IconCalendar />}
+          options={dayGroups || []}
           error={status.day ? 'valid' : 'invalid'}
           change={changeDay}
           value={status.day}
@@ -208,7 +280,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
                 <tr>
                   {status.hasTime && <th>Uhrzeit</th>}
                   <th style={{ padding: '5px 0' }}>Rabatte</th>
-                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. für {structure.duration === 'round' ? '1 Runde' : `${duration} Min.`}</th>)}
+                  {columns?.map(([persons, duration]: [number, number]) => <th>{persons} Pers. für {status.isRound ? '1 Runde' : `${duration} Min.`}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -230,7 +302,7 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
 
         </Fragment>
       ) : (
-        <Item icon={<Edit color="var(--orange)" />} label="Tabelle jetzt abschließen" type="info" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
+        <Item icon={<IconEdit color="var(--orange)" />} label="Tabelle jetzt abschließen" type="info" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
       )}
 
     </Fragment>

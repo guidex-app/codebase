@@ -1,6 +1,6 @@
+import { IconBuilding, IconHome, IconMap, IconMapSearch, IconPhoneCall, IconSelect } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Home, MapPin, Navigation, PhoneCall, Type } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -23,7 +23,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
   if (!data) {
     return (
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        icon={<IconHome color="#ff5613" />}
         title="Kontakt"
         text="Geben Sie den Nutzern kontaktinfos"
       />
@@ -96,7 +96,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
   return (
     <Fragment>
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        icon={<IconHome color="#ff5613" />}
         title="Kontakt"
         text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
       />
@@ -111,7 +111,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
               <Fragment>
                 {addressString && <h4>Rechnungsadresse</h4>}
                 <BasicInput
-                  icon={<MapPin color="#63e6e1" />}
+                  icon={<IconBuilding color="#63e6e1" />}
                   type="text"
                   label="Straßenname und Hausnummer"
                   name={addressString ? 'invoiceStreet' : 'street'}
@@ -124,7 +124,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
                 />
 
                 <BasicInput
-                  icon={<Navigation color="#63e6e1" />}
+                  icon={<IconMap color="#63e6e1" />}
                   type="text"
                   label="Ort"
                   name={addressString ? 'invoicePlace' : 'place'}
@@ -137,7 +137,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
                 />
 
                 <BasicInput
-                  icon={<Navigation color="#63e6e1" />}
+                  icon={<IconMapSearch color="#63e6e1" />}
                   type="number"
                   label="Postleitzahl"
                   name={addressString ? 'invoicePlz' : 'plz'}
@@ -177,7 +177,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
             {fields.hasGuidexContact && (
             <Fragment>
               <BasicInput
-                icon={<Type color="#fea00a" />}
+                icon={<IconSelect color="#fea00a" />}
                 type="text"
                 label="Ansprechpartner:"
                 name="guidexContactName"
@@ -190,7 +190,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
               />
 
               <BasicInput
-                icon={<PhoneCall color="#fea00a" />}
+                icon={<IconPhoneCall color="#fea00a" />}
                 type="number"
                 label="Tel:"
                 name="guidexContactPhone"

@@ -1,5 +1,5 @@
+import { IconFocus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { Info } from 'react-feather';
 
 import { Questions } from '../../../interfaces/company';
 import Item from '../../item';
@@ -22,7 +22,7 @@ const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, showB
       {fields?.includes(questions[0].info.title.form) ? questions.map((x: Questions, index: number) => (
         fields?.includes(x.info.title.form) && <Item icon={x.info.icon} label={x.info.title.name} text={x.info.question} action={() => select(index)} />
       )) : (
-        <Item icon={<Info />} label="Bitte beantworten Sie zuerst die Fragen." action={close} />
+        <Item icon={<IconFocus />} label="Bitte beantworten Sie zuerst die Fragen." action={close} />
       )}
 
       {fields && fields?.length !== questions.length && questions[fields.length] && <Item icon={questions[fields.length].info.icon} label={`${questions[fields.length].info.title.name} (Nächste Frage)`} type="large" text={questions[fields.length]?.info.question} action={() => select(fields.length)} />}

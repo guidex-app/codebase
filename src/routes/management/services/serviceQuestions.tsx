@@ -1,5 +1,5 @@
+import { IconDoorEnter, IconFlag, IconPhoto, IconScubaMask, IconSelect, IconSoccerField, IconUserPlus } from '@tabler/icons';
 import { h } from 'preact';
-import { Dribbble, Flag, Home, Image, Type, UserPlus, Users } from 'react-feather';
 
 import { Questions } from '../../../interfaces/company';
 
@@ -10,15 +10,15 @@ const ServiceQuestions: Questions[] = [{
     explanation: 'Definieren sie hier die Art Ihrer Leistungsgruppe. Wenn Sie mehrere Optionen vertreten, legen sie diese Einzelnt an.',
     example: 'Wenn sie z.B. ein Abenteuerspielplatz sind und ein Eintritt definieren wollen, wählen sie Eintritt(e) aus. Wenn sie verschieden Räume zur verfügung stellen, wählen sie stattdessen Räume/Bereich(e)',
     advice: 'Wird die Anzahl in Räumen, Objekten oder Eintrittsangeboten definiert',
-    icon: <Flag color="#ff5613" />,
+    icon: <IconFlag color="#ff5613" />,
     type: 'radio',
     availableActivated: false,
     availableText: 'Keine Preis-Unterschiede',
   },
   answers: [
-    { icon: <Users color="#63e6e1" />, label: 'Eintritt', name: 'entry', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, placeholder: 'Bitte benennen sie Ihren Eintritt', isMultiField: false },
-    { icon: <Dribbble color="#d4be21" />, label: 'Verleihobjekt', name: 'object', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihr Verleihobjekt', onDay: false, isMultiField: false },
-    { icon: <Home color="#bf5bf3" />, label: 'Raum/Bahn/Spiel', name: 'section', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihren Raum/Bahn/Spiel', onDay: false, isMultiField: false },
+    { icon: <IconDoorEnter color="#63e6e1" />, label: 'Eintritt', name: 'entry', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, placeholder: 'Bitte benennen sie Ihren Eintritt', isMultiField: false },
+    { icon: <IconScubaMask color="#d4be21" />, label: 'Verleihobjekt', name: 'object', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihr Verleihobjekt', onDay: false, isMultiField: false },
+    { icon: <IconSoccerField color="#bf5bf3" />, label: 'Raum/Bahn/Spiel', name: 'section', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihren Raum/Bahn/Spiel', onDay: false, isMultiField: false },
   ],
 },
 // {
@@ -46,13 +46,13 @@ const ServiceQuestions: Questions[] = [{
     explanation: 'Geben Sie Ihren Kunden einen Einblick in die gebotenen Leistungen',
     example: 'z.B. Der Escape Room Mystery entführt dich in eine Welt voller Spannungen. Das Abenteuer basiert auf Mysteriösen Umständen, die dich immer wieder vor neue Herausforderungen stellen. Im Paket ist enthalten ...',
     advice: 'Definieren Sie die wichtigsten Informationen.',
-    icon: <Type color="#63e6e1" />,
+    icon: <IconSelect color="#63e6e1" />,
     type: 'onService',
     availableActivated: false,
     availableText: 'Keine Beschreibung',
   },
   answers: [
-    { icon: <Type />, label: 'Beschreibung', name: 'description', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
+    { icon: <IconSelect />, label: 'Beschreibung', name: 'description', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
   ],
 },
 {
@@ -62,13 +62,13 @@ const ServiceQuestions: Questions[] = [{
     explanation: 'Für einige Aktivitäten werden bestimmte Dinge benötigt. Bitte definieren sie diese in einem kurzen Text.',
     example: 'z.B. Badehose, Wechselklamotten, Sonnenschutze',
     advice: 'Welche Dinge werden benötigt?',
-    icon: <UserPlus color="#63e6e1" />,
+    icon: <IconUserPlus color="#63e6e1" />,
     type: 'onService',
     availableActivated: false,
     availableText: '',
   },
   answers: [
-    { icon: <Type />, label: 'Was muss mitgebracht werden', name: 'bringWith', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Badehose, Wechselklamotten, Sonnenschutze, ...' },
+    { icon: <IconSelect />, label: 'Was muss mitgebracht werden', name: 'bringWith', inputType: 'textarea', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Badehose, Wechselklamotten, Sonnenschutze, ...' },
   ],
 },
 {
@@ -78,13 +78,13 @@ const ServiceQuestions: Questions[] = [{
     explanation: 'Geben Sie Ihren Kunden einen Einblick in die gebotene Leistung.',
     example: 'Ein Bild sagt mehr als tausend Worte, wählen sie daher Bilder, die Ihre Leistung gut veranschaulichen. Die Bilder sollten mind. den maßen 1200x900px entsprechen.',
     advice: 'Wählen sie Helle und kontrastreiche Bilder und achten sie auf eine positive Bildstimmung.',
-    icon: <Image color="#ff375e" />,
+    icon: <IconPhoto color="#ff375e" />,
     type: 'onService',
     availableActivated: false,
-    availableText: 'Keine Beschreibung',
+    availableText: 'Keine Bilder',
   },
   answers: [
-    { icon: <Image />, label: 'Bild', name: 'image', inputType: 'image', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
+    { icon: <IconPhoto />, label: 'Bild', name: 'image', inputType: 'image', info: '', onDay: false, isMultiField: false, placeholder: 'z.B.: Die Einführung und Schwimmwesten sind im Preis enthalten.' },
   ],
 },
 ];

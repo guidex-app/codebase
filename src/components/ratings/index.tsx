@@ -1,6 +1,6 @@
+import { IconEdit, IconToggleLeft } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Edit, ToggleLeft } from 'react-feather';
 
 import Modal from '../../container/modal';
 import { getFireCollection, voteItem } from '../../data/fire';
@@ -48,7 +48,7 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
   return (
     <div style={{ padding: '10px', backgroundColor: 'rgba(255,255,255,0.03', borderRadius: '20px', marginBottom: '20px' }}>
 
-      <Item icon={<ToggleLeft color="var(--orange)" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
+      <Item icon={<IconToggleLeft color="var(--orange)" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
       {segment === 'rating' && (
         <Fragment>
           <VisuellOverview rating={rating} />
@@ -60,7 +60,7 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
         </Fragment>
       )}
 
-      <Item type="info" icon={<Edit />} label={`Verfasse eine${segment === 'rating' ? ' neue Bewertung' : 'n neuen Tipp'}`} text="Hast du eine Bericht oder eine Erklärung zu deiner Bewertung" action={() => setNewRating(3)} />
+      <Item type="info" icon={<IconEdit />} label={`Verfasse eine${segment === 'rating' ? ' neue Bewertung' : 'n neuen Tipp'}`} text="Hast du eine Bericht oder eine Erklärung zu deiner Bewertung" action={() => setNewRating(3)} />
 
       {/* <Item icon={<PlusCircle />} type="grey" label={segment === 'rating' ? 'Jetzt bewerten' : 'Neuer Tipp'} text={`Lege ein${segment === 'rating' ? ' Tipp' : 'e Bewertung'} an`} action={toggleRating} /> */}
 

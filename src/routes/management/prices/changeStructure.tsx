@@ -1,5 +1,5 @@
+import { IconAlignJustified } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { AlignJustify } from 'react-feather';
 
 import Item from '../../../components/item';
 
@@ -11,7 +11,7 @@ const ChangeStructure: FunctionalComponent<ChangeStructureProps> = ({ select }: 
   <Fragment>
     <h1>Preis-Tabelle konfigurieren</h1>
     <p style={{ color: 'var(--fifth)' }}>Um Ihre Preise zu definieren wird eine Struktur benötigt. Diese definiert die Rabatte und abweichungen. Definieren sie im nächsten Schritt diese Struktur. Oder wählen sie eine bereits vorhanden Struktur aus, wenn die Eigenschaften die gleichen sind und sich nur die jeweiligen Preise unterscheiden.</p>
-    <Item icon={<AlignJustify color="var(--orange)" />} label="Neue Preis-Tabelle anlegen" type="info" action={() => select(undefined)} />
+    <Item icon={<IconAlignJustified color="var(--orange)" />} label="Neue Preis-Tabelle anlegen" type="info" action={() => select(undefined)} />
     {/*
     <section class="group form" style={{ marginTop: '20px' }}>
       {structureList?.map((x: Structure) => (

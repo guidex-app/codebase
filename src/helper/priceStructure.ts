@@ -1,46 +1,54 @@
-import { AnsDB } from '../interfaces/company';
+import { Selected } from '../interfaces/company';
 
-const getQuestFormValue = (day?: string, selected?: AnsDB, defaultVal?: string[]): { list: string[], isRound?: boolean } => {
+const getQuestFormValue = (day?: string, selected?: Selected, defaultVal?: string[], isFoundation?: true): { list: string[], isRound?: boolean } => {
+  console.log('day', day);
   let list: string[] = defaultVal || [];
-  let isRound: boolean = false;
+  let isRound = false;
+  if (!selected) return { list };
 
-  if (!selected) return { list, isRound };
-
-  const findOnDayIndex = (onDays?: (string | undefined)[]): number[] => {
-    if (!onDays || !day || day === 'nothing') return [];
-
-    const indexList: number[] = [];
-    onDays.forEach((dayName: (string | undefined), onDayIndex: number) => {
-      if (dayName && dayName.indexOf(day) > -1) indexList.push(onDayIndex);
-    });
-
-    return indexList;
-  };
-
-  if (selected.values && !isRound) {
-    if (selected.name.startsWith('onDay')) { // DayValue
-      const dayIndexList: number[] = findOnDayIndex(selected.onDays);
-      dayIndexList.forEach((indexValue: number) => {
-        const currentValue: any = selected.values?.[indexValue];
-
-        if (currentValue) {
-          if (selected.isRound?.[indexValue]) isRound = true; // es sind runden
-          if (selected.name === 'onDayObject') {
-            list.push(currentValue.split(','));
-          } else {
-            list.push(currentValue);
-          }
+  selected.values?.forEach((val: { value: any; onDays?: string[]; option?: string; isRound?: boolean; }) => {
+    if (selected.name.startsWith('onDay') || isFoundation) {
+      if (day && val.onDays?.findIndex((x: string) => day.indexOf(x) !== -1) !== -1) {
+        if (isFoundation) {
+          list = ['object'];
+        } else {
+          list.push(val.value);
         }
-      });
-    } else if (selected.isRound?.[0]) {
-      isRound = true;
-      list.push(selected.values?.[0]);
-    } else {
-      list = [...list, ...selected.values];
-    }
-  }
 
-  return { list, isRound };
+        if (selected.name === 'onDayDuration' && val.option === 'rundenpreis') isRound = true;
+      }
+    } else {
+      list.push(val.value);
+    }
+  });
+  // const list: string[] = defaultVal || [];
+  // let isRound: boolean = false;
+
+  // if (!selected) return { list, isRound };
+
+  // if (selected.values && !isRound) {
+  //   if (selected.name.startsWith('onDay')) { // DayValue
+  //     selected.values.forEach((currentValue: any) => {
+  //       if (currentValue && day && currentValue?.onDays === day) {
+  //         if (currentValue.isRound) isRound = true; // es sind runden
+  //         if (selected.name === 'onDayObject') {
+  //           list.push(currentValue.value.split(','));
+  //         } else {
+  //           list.push(currentValue.value);
+  //         }
+  //       }
+  //     });
+  //   } else if (selected.values?.[0].isRound) {
+  //     isRound = true;
+  //     list.push(selected.values?.[0].value);
+  //   } else {
+  //     selected.values.forEach((x) => {
+  //       list.push(x.value);
+  //     });
+  //   }
+  // }
+
+  return { list, ...(isRound ? { isRound } : {}) };
 };
 
 export default getQuestFormValue;

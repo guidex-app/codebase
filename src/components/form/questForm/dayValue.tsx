@@ -4,17 +4,16 @@ import Chip from '../../chip';
 
 interface DayValueProps {
   valueIndex: number;
-  days?: string[];
-  values?: string;
-  onlySingle?: true;
-  addOnDayValue: (days: string, valueIndex: number) => void;
+  values?: string[];
+  disabled?: true;
+  options: string[];
+  addOnDayValue: (days: string[], valueIndex: number) => void;
 }
 
-const DayValue: FunctionalComponent<DayValueProps> = ({ valueIndex, values, days, addOnDayValue, onlySingle }: DayValueProps) => {
+const DayValue: FunctionalComponent<DayValueProps> = ({ valueIndex, values, options, disabled, addOnDayValue }: DayValueProps) => {
   const updateValue = (dayValue: string) => {
-    if (onlySingle) return addOnDayValue(dayValue, valueIndex);
-
-    const newDayValue: string[] = values?.split('+') || [];
+    if (disabled) return;
+    const newDayValue: string[] = values || [];
     const findValue: number = newDayValue.indexOf(dayValue);
 
     if (findValue > -1) {
@@ -23,12 +22,12 @@ const DayValue: FunctionalComponent<DayValueProps> = ({ valueIndex, values, days
       newDayValue.push(dayValue);
     }
 
-    addOnDayValue(newDayValue.join('+'), valueIndex);
+    addOnDayValue(newDayValue, valueIndex);
   };
 
   return (
     <div>
-      {days && days?.map((dayName: string) => (
+      {options.map((dayName: string) => (!disabled || (values?.includes(dayName))) && (
         <Chip small label={`${dayName}.`} type={values && values.indexOf(dayName) > -1 ? 'active' : 'inactive'} key={dayName} action={() => updateValue(dayName)} />
       ))}
     </div>

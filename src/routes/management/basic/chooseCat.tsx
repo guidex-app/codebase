@@ -1,6 +1,6 @@
+import { IconBook, IconInfoCircle, IconLayersDifference } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Book, Info, Layers } from 'react-feather';
 
 import SelectInput from '../../../components/form/selectInput';
 import Item from '../../../components/item';
@@ -73,7 +73,7 @@ const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, disabled, c
         label="Kategorie"
         name="mainCat"
         placeholder="Ordnen Sie sich einer Kategorie zu"
-        icon={<Book color="#fea00a" />}
+        icon={<IconBook color="#fea00a" />}
         value={selected.belongs}
         options={list.belongs}
         error={selected.belongs ? 'valid' : 'invalid'}
@@ -87,7 +87,7 @@ const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, disabled, c
           label={`Welche Art von "${selected.belongs}"`}
           name="category"
           placeholder="Ordnen Sie sich einer Unterkategorie zu"
-          icon={<Layers color="#fea00a" />}
+          icon={<IconLayersDifference color="#fea00a" />}
           value={selected.secondary}
           options={list.secondary}
           disabled={disabled}
@@ -97,7 +97,7 @@ const ChooseCat: FunctionalComponent<ActivityProps> = ({ currentCat, disabled, c
         />
       )}
 
-      {disabled && <Item icon={<Info color="var(--red)" />} label="Die Kategorie-Auswahl ist deaktiviert" text="Um die Kategorie zu ändern, muss die Unternehmung offline gestellt sein" />}
+      {disabled && <Item icon={<IconInfoCircle color="var(--red)" />} label="Die Kategorie-Auswahl ist deaktiviert" text="Um die Kategorie zu ändern, muss die Unternehmung offline gestellt sein" />}
 
     </Fragment>
   );

@@ -40,12 +40,13 @@ const OptionInput: FunctionalComponent<OptionInputProps> = ({ label, icon, name,
   };
 
   const changeOption = (e: any) => {
-    const getValue: any = e.target.id;
+    const getValue: any = e.target.value;
     setValues({ ...values, option: getValue });
   };
 
   useEffect(() => {
-    if (values?.value && values.option) change(values?.value, name, values?.option);
+    if (values.option) change(values?.value, name, values?.option);
+    console.log(values);
   }, [values]);
 
   return (
@@ -59,7 +60,8 @@ const OptionInput: FunctionalComponent<OptionInputProps> = ({ label, icon, name,
         <div class={style.radioBox}>
           {options.map((x: string) => (
             <Fragment>
-              <input type="radio" id={replaceSpecialCharacters(x)} name={name} checked={replaceSpecialCharacters(x) === values.option} onInput={changeOption} /><label for={replaceSpecialCharacters(x)}>{x}</label>
+              <input type="radio" id={`${replaceSpecialCharacters(x)}_${name}`} name={name} checked={replaceSpecialCharacters(x) === values.option} value={replaceSpecialCharacters(x)} onInput={changeOption} />
+              <label for={`${replaceSpecialCharacters(x)}_${name}`}>{x}</label>
             </Fragment>
           ))}
         </div>

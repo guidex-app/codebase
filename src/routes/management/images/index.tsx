@@ -1,7 +1,7 @@
+import { IconInfoCircle, IconPhoto } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Image, Info } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -23,7 +23,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   if (!data) {
     return (
       <TextHeader
-        icon={<Image color="#ff375e" />}
+        icon={<IconPhoto color="#ff375e" />}
         title="Bilder"
         text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
       />
@@ -46,7 +46,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   return (
     <Fragment>
       <TextHeader
-        icon={<Image color="#ff375e" />}
+        icon={<IconPhoto color="#ff375e" />}
         title="Bilder"
         text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
       />
@@ -55,7 +55,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
 
         <form>
           <section class="group form">
-            <Item type="info" icon={<Info color="var(--orange)" />} label="Info zum Upload" text="Das aktualisieren der Bilder dauert bis zu einem Tag" />
+            <Item type="info" icon={<IconInfoCircle color="var(--orange)" />} label="Info zum Upload" text="Das aktualisieren der Bilder dauert bis zu einem Tag" />
             <ImgInput
               fileName="image1"
               label="Bild 1 auswählen (JPG/JPEG)."

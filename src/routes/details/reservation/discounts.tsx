@@ -1,6 +1,6 @@
+import { IconUserPlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
-import { UserPlus } from 'react-feather';
 
 import FormButton from '../../../components/form/basicButton';
 import Counter from '../../../components/form/counter';
@@ -33,7 +33,7 @@ const Discounts: FunctionalComponent<DiscountsProps> = ({ maxPersons, list, valu
 
   return (
     <Fragment>
-      <Item type="info" icon={<UserPlus />} label={`Verfügbar: ${maxPersons - countUsedDiscounts()} Pers.`} />
+      <Item type="info" icon={<IconUserPlus />} label={`Verfügbar: ${maxPersons - countUsedDiscounts()} Pers.`} />
 
       {list.map((disc: string) => (
         <Counter

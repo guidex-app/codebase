@@ -1,7 +1,7 @@
+import { IconBlockquote, IconCheck, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { CheckCircle, Info, Type } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -31,7 +31,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
   if (!data && activityID !== 'new') {
     return (
       <TextHeader
-        icon={<Info color="#63e6e1" />}
+        icon={<IconInfoCircle color="#63e6e1" />}
         title="Unternehmungs-Informationen"
         text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
         Der Name Ihrer Unternehmung ist ihr öffentliches Label"
@@ -91,7 +91,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
   return (
     <Fragment>
       <TextHeader
-        icon={<Info color="#63e6e1" />}
+        icon={<IconInfoCircle color="#63e6e1" />}
         title={activityID === 'new' ? 'Unternehmung anlegen' : 'Unternehmungs-Informationen'}
         text="Es ist Zeit sich unseren Nutzern vorzustellen."
       />
@@ -101,7 +101,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
         <form>
           <section class="group form">
             <BasicInput
-              icon={<CheckCircle color="#fea00a" />}
+              icon={<IconCheck color="#fea00a" />}
               type="text"
               label="Name Ihrer Unternehmung"
               name="title"
@@ -146,7 +146,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
             <BasicInput
             //   icon={textOutline}
             // type="textarea"
-              icon={<Type />}
+              icon={<IconBlockquote />}
               label="Was sollten Nutzer über sie wissen?"
               name="description"
               type="textarea"

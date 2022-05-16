@@ -1,7 +1,7 @@
+import { IconCreditCard } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { CreditCard } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -22,7 +22,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
   if (!data) {
     return (
       <TextHeader
-        icon={<CreditCard color="#ff375e" />}
+        icon={<IconCreditCard color="#ff375e" />}
         title="Dokumente"
         text="Bitte lade alle nötigen Dokumente hoch"
       />
@@ -44,7 +44,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
   return (
     <Fragment>
       <TextHeader
-        icon={<CreditCard color="#ff375e" />}
+        icon={<IconCreditCard color="#ff375e" />}
         title="Dokumente"
         text="Lade Dokumente hoch"
       />

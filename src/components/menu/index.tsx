@@ -1,7 +1,7 @@
+import { IconCompass, IconGlobe, IconLock, IconLogin, IconLogout, IconMenu, IconPaperclip, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Compass, Globe, List, Lock, LogIn, LogOut, Paperclip, User } from 'react-feather';
 
 import { getUser } from '../../data/auth';
 import Item from '../item';
@@ -17,15 +17,15 @@ const Menu: FunctionalComponent = () => {
   const container = useRef<any>(null);
 
   const routes: { title: string; link: string; icon: any }[] = [
-    { title: 'Für mich', link: '/', icon: <Compass /> },
-    { title: 'Entdecken', link: '/explore', icon: <Globe /> },
+    { title: 'Für mich', link: '/', icon: <IconCompass /> },
+    { title: 'Entdecken', link: '/explore', icon: <IconGlobe /> },
   ];
 
   const userRoutes: { title: string; link: string; icon: any }[] = [
     // { title: 'Listen', link: '/lists', icon: <Bookmark /> },
     // { title: 'Einstellungen', link: '/settings', icon: <Settings /> },
-    { title: 'Profile', link: '/profile', icon: <User /> },
-    { title: 'Verwaltung', link: '/company', icon: <Paperclip /> },
+    { title: 'Profile', link: '/profile', icon: <IconUser /> },
+    { title: 'Verwaltung', link: '/company', icon: <IconPaperclip /> },
   ];
 
   const checkUserState = async (): Promise<void> => {
@@ -45,7 +45,7 @@ const Menu: FunctionalComponent = () => {
   return (
     <Fragment>
       <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
-        <List color="var(--white)" size="24" />
+        <IconMenu color="var(--white)" size="24" />
       </button>
 
       {show && container.current && createPortal(
@@ -67,12 +67,12 @@ const Menu: FunctionalComponent = () => {
                       <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                     ))}
                     {user.email.endsWith('@guidex.app') && (
-                    <Item label="Admin" icon={<Lock />} link="/admin" action={toggleModal} />
+                    <Item label="Admin" icon={<IconLock />} link="/admin" action={toggleModal} />
                     )}
-                    <Item label="Ausloggen" icon={<LogOut />} link="/logout" action={toggleModal} />
+                    <Item label="Ausloggen" icon={<IconLogout />} link="/logout" action={toggleModal} />
                   </Fragment>
                 ) : (
-                  <Item label="Einloggen" icon={<LogIn />} link="/login/" action={toggleModal} />
+                  <Item label="Einloggen" icon={<IconLogin />} link="/login/" action={toggleModal} />
                 )}
 
               </nav>

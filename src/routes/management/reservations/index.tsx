@@ -1,6 +1,6 @@
+import { IconBrandDribbble, IconEye, IconHome, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
-import { Columns, Dribbble, Home, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import TextHeader from '../../../components/iconTextHeader';
@@ -22,7 +22,7 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID }
   if (!data) {
     return (
       <TextHeader
-        icon={<Columns color="#bf5bf3" />}
+        icon={<IconEye color="#bf5bf3" />}
         title="Reservierungen"
         text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
       />
@@ -43,13 +43,13 @@ const Reservation: FunctionalComponent<ActivityProp> = ({ activity, activityID }
   const toggleShowReservation = () => setShowReservation(!showReservation);
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
+    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
   };
 
   return (
     <Fragment>
       <TextHeader
-        icon={<Columns color="#bf5bf3" />}
+        icon={<IconEye color="#bf5bf3" />}
         title="Reservierungen"
         text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
       />

@@ -1,6 +1,6 @@
+import { IconStar } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Star } from 'react-feather';
 
 import { getFireDocument, setNewRating } from '../../data/fire';
 import { User } from '../../interfaces/user';
@@ -81,7 +81,7 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
         <div class={style.rate}>
           {[1, 2, 3, 4, 5].map((starNum: number) => (
             <button key={starNum} type="button" onClick={() => changeValue(starNum, 'rating')}>
-              <Star fill={(starNum <= (ownComment.rating || 0) || starNum - 0.5 === ownComment.rating) ? 'var(--orange)' : 'white'} />
+              <IconStar fill={(starNum <= (ownComment.rating || 0) || starNum - 0.5 === ownComment.rating) ? 'var(--orange)' : 'white'} />
             </button>
           ))}
 

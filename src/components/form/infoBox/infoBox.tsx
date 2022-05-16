@@ -1,5 +1,5 @@
+import { IconMessageCircle } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
-import { MessageCircle } from 'react-feather';
 
 import style from './style.module.css';
 
@@ -10,7 +10,7 @@ interface InfoBoxProps {
 
 const InfoBox: FunctionalComponent<InfoBoxProps> = ({ title, text }: InfoBoxProps) => (
   <div class={style.box}>
-    <MessageCircle color="var(--fifth)" />
+    <IconMessageCircle color="var(--fifth)" />
     {title && <p>{title}</p>}
     {text && <p style={{ color: 'var(--fifth)' }}>{text}</p>}
   </div>

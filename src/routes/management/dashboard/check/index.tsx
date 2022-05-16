@@ -1,7 +1,7 @@
+import { IconAlertCircle, IconClock, IconColumns, IconCurrencyDollar, IconDeviceDesktopAnalytics, IconHome, IconInfoCircle, IconPhoto, IconWriting } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { AlertCircle, Clock, Columns, DollarSign, Home, Image, Info, Monitor, PenTool } from 'react-feather';
 
 import FormButton from '../../../../components/form/basicButton';
 import Item from '../../../../components/item';
@@ -28,17 +28,17 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
   });
 
   const checkListItems = [
-    { percent: 10, title: 'Lade ein Anzeigebild hoch', description: 'Das Anzeigebild ist der erste Eindruck für die Nutzer.', icon: <Image color="#ff375e" />, color: 'danger', link: 'basic', check: !activity.state?.includes('thumbnail'), required: true },
-    { percent: 10, title: 'Gebe Deine Beschreibung an', description: 'Beschreibe Deine Aktivität', color: 'danger', icon: <Info color="#63e6e1" />, link: 'basic', check: !activity.description, required: true },
-    { percent: 10, title: 'Füge Deine Adresse hinzu', description: 'Wo befindet sich die Aktivität', icon: <Home color="#ff5613" />, color: 'danger', link: 'contact', check: !activity.address?.street, required: true },
-    { percent: 10, title: 'Gebe Deine Öffnungszeiten an', description: 'Wann seit Ihr für die Nutzer verfügbar.', icon: <Clock color="#63d2ff" />, color: 'danger', link: 'openings', check: !activity.openings, required: true },
+    { percent: 10, title: 'Lade ein Anzeigebild hoch', description: 'Das Anzeigebild ist der erste Eindruck für die Nutzer.', icon: <IconPhoto color="#ff375e" />, color: 'danger', link: 'basic', check: !activity.state?.includes('thumbnail'), required: true },
+    { percent: 10, title: 'Gebe Deine Beschreibung an', description: 'Beschreibe Deine Aktivität', color: 'danger', icon: <IconInfoCircle color="#63e6e1" />, link: 'basic', check: !activity.description, required: true },
+    { percent: 10, title: 'Füge Deine Adresse hinzu', description: 'Wo befindet sich die Aktivität', icon: <IconHome color="#ff5613" />, color: 'danger', link: 'contact', check: !activity.address?.street, required: true },
+    { percent: 10, title: 'Gebe Deine Öffnungszeiten an', description: 'Wann seit Ihr für die Nutzer verfügbar.', icon: <IconClock color="#63d2ff" />, color: 'danger', link: 'openings', check: !activity.openings, required: true },
     { percent: 10, title: 'Definiere Deine Leistungen', description: 'Welche Leistungen stellt ihr zur verfügung', color: 'danger', link: 'services', check: !activity.state?.includes('services') },
-    { percent: 10, title: 'Gebe die Verfügbarkeiten an', description: 'Wann sind eure Leistungen verfügbar', icon: <Columns color="#bf5bf3" />, color: 'danger', link: 'availabilities', check: !activity.state?.includes('available') },
-    { percent: 10, title: 'Definiere die Preise', description: 'Welche Preise haben eure Leistungen', color: 'danger', icon: <DollarSign color="#fea00a" />, link: 'prices', check: !activity.state?.includes('prices') },
+    { percent: 10, title: 'Gebe die Verfügbarkeiten an', description: 'Wann sind eure Leistungen verfügbar', icon: <IconColumns color="#bf5bf3" />, color: 'danger', link: 'availabilities', check: !activity.state?.includes('available') },
+    { percent: 10, title: 'Definiere die Preise', description: 'Welche Preise haben eure Leistungen', color: 'danger', icon: <IconCurrencyDollar color="#fea00a" />, link: 'prices', check: !activity.state?.includes('prices') },
 
-    { percent: 10, title: 'Bis zu 4 Bilder hinzufügen', description: 'Wie sieht eure Aktivität aus', color: 'warning', icon: <Image color="#ff375e" />, link: 'images', check: !activity?.state?.includes('image4'), required: true },
-    { percent: 10, title: 'Gebe Kontaktinfos an.', description: 'Wie können Nutzer euch erreichen', color: 'warning', icon: <Home color="#ff5613" />, link: 'contact', check: (!activity.customerContact?.website || !activity.guidexContact?.name), required: true },
-    { percent: 10, title: 'Vertragsbedingungen zustimmn', description: 'Damit unsere Partnerschaft beginnen kann, stimmen sie bitte den Vertragsbedingungen zu', color: 'warning', icon: <PenTool color="#ff375e" />, link: 'contract', check: !activity?.termsAccepted, required: true },
+    { percent: 10, title: 'Bis zu 4 Bilder hinzufügen', description: 'Wie sieht eure Aktivität aus', color: 'warning', icon: <IconPhoto color="#ff375e" />, link: 'images', check: !activity?.state?.includes('image4'), required: true },
+    { percent: 10, title: 'Gebe Kontaktinfos an.', description: 'Wie können Nutzer euch erreichen', color: 'warning', icon: <IconHome color="#ff5613" />, link: 'contact', check: (!activity.customerContact?.website || !activity.guidexContact?.name), required: true },
+    { percent: 10, title: 'Vertragsbedingungen zustimmn', description: 'Damit unsere Partnerschaft beginnen kann, stimmen sie bitte den Vertragsbedingungen zu', color: 'warning', icon: <IconWriting color="#ff375e" />, link: 'contract', check: !activity?.termsAccepted, required: true },
   ];
 
   const generatePercent = () => {
@@ -116,7 +116,7 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
               <h2 style={{ marginTop: '0' }}>Ihre Unternehmung ist online</h2>
               <p style={{ marginTop: '0', padding: '10px 0', color: 'var(--fifth)' }}>Ihre Unternehmung ist bei uns gelistet und für alle Nutzer verfügbar.</p>
               <FormButton disabled={checkData.percent < 100} label="Unternehmung offline stellen" action={toggleActivityState} />
-              <Item icon={<AlertCircle color="var(--orange)" />} type="info" label="Info" text="Wenn sie Ihre Unternehmung offline stellen, können sie nicht mehr auf unserer Seite gefunden werden. Jedoch, bleiben ihre Daten bestehen und können im Mitgliederbereich bearbeitet werden." />
+              <Item icon={<IconAlertCircle color="var(--orange)" />} type="info" label="Info" text="Wenn sie Ihre Unternehmung offline stellen, können sie nicht mehr auf unserer Seite gefunden werden. Jedoch, bleiben ihre Daten bestehen und können im Mitgliederbereich bearbeitet werden." />
             </Fragment>
           ) : (
             <Fragment>
@@ -132,13 +132,13 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
                     Ihre Unternehmung ist jetzt bereit online gestellt zu werden.
                     Der erste Eindruck zählt, daher empfiehlt es sich die Unternehmung in der Vorschau zu überprüfen.
                   </p>
-                  <Item icon={<Monitor color="var(--blue)" />} type="info" label="Jetzt Vorschau ansehen" text="Siehe Dir die Vorschau und Verbesserungsvorschläge an" />
+                  <Item icon={<IconDeviceDesktopAnalytics color="var(--blue)" />} type="info" label="Jetzt Vorschau ansehen" text="Siehe Dir die Vorschau und Verbesserungsvorschläge an" />
                 </Fragment>
               )}
               {checkData.percent < 100 && (
               <section class="form group">
                 {notFinished.map((item: any) => (
-                  <Item label={item.title} text={item.description} icon={item.icon || <Home />} key={item.title} action={() => route(`/company/${item.link}/${activity.title.form}`)} type="large" />
+                  <Item label={item.title} text={item.description} icon={item.icon || <IconHome />} key={item.title} action={() => route(`/company/${item.link}/${activity.title.form}`)} type="large" />
                 ))}
               </section>
               )}

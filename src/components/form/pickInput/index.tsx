@@ -1,5 +1,5 @@
+import { IconCheck } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
-import { CheckCircle } from 'react-feather';
 
 import Chip from '../../chip';
 import style from './style.module.css';
@@ -21,7 +21,7 @@ const PickInput: FunctionalComponent<PickInputProps> = ({ label, options, name, 
       {options.map((item: string) => {
         const itemIndex: number = value?.indexOf(item);
         return (
-          <Chip label={item} icon={<CheckCircle />} type={itemIndex !== -1 ? 'active' : 'inactive'} key={item} action={() => change(item, name, itemIndex)} />
+          <Chip label={item} icon={<IconCheck />} type={itemIndex !== -1 ? 'active' : 'inactive'} key={item} action={() => change(item, name, itemIndex)} />
         );
       })}
     </div>

@@ -1,10 +1,11 @@
+import { IconAdjustmentsHorizontal } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Feather, Info } from 'react-feather';
 
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
 import FilterList from '../../components/filter';
+import InfoBox from '../../components/form/infoBox/infoBox';
 import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
 import Modal from '../../container/modal';
@@ -79,8 +80,8 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
 
       <main style={{ padding: '20px 10px' }} class="size_holder">
 
-        {list === undefined && <Item icon={<Info />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
-        {parameter?.l && <Item type="warning" icon={<Feather />} label={`Aufgrund des Wetters werden ${parameter.l === 'o' ? 'Draußen' : 'Drinnen'} Aktivitäten rausgefiltert`} action={openFilter} />}
+        {list === undefined && <Item icon={<InfoBox />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
+        {parameter?.l && <Item type="warning" icon={<IconAdjustmentsHorizontal />} label={`Aufgrund des Wetters werden ${parameter.l === 'o' ? 'Draußen' : 'Drinnen'} Aktivitäten rausgefiltert`} action={openFilter} />}
 
         <div class={style.list}>
           {list && list?.map((x: Activity) => <ActivityItem activity={x} dayNr={parameter?.dayNr} />)}
@@ -88,7 +89,7 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
 
       </main>
 
-      <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={openFilter} />
+      <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={openFilter} />
       {!!openModal && (
       <Modal title={openModal} close={closeModal}>
         {openModal === 'Filtern' && <FilterList data={activityFilter} values={filter} change={updateFilter} close={closeModal} />}

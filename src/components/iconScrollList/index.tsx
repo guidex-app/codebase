@@ -1,5 +1,5 @@
+import { IconChartPie, IconPin, IconSun } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
-import { MapPin, PieChart, Sun } from 'react-feather';
 
 import style from './style.module.css';
 
@@ -9,15 +9,15 @@ interface IconScrollListProp {
 
 const IconScrollList: FunctionalComponent<IconScrollListProp> = ({ filter }: IconScrollListProp) => {
   const iconMap: any = {
-    Geburtstagsfeiern: <PieChart color="var(--fifth)" />,
-    'Öffentliche Toiletten': <MapPin color="var(--fifth)" />,
-    Outdoor: <Sun />,
+    Geburtstagsfeiern: <IconChartPie color="var(--fifth)" />,
+    'Öffentliche Toiletten': <IconPin color="var(--fifth)" />,
+    Outdoor: <IconSun />,
   };
 
   return (
     <div class={style.slider}>
       {filter?.map((x: string) => (
-        <div>{iconMap[x] || <Sun color="var(--fifth)" />}<br /><small>{x}</small></div>
+        <div>{iconMap[x] || <IconSun color="var(--fifth)" />}<br /><small>{x}</small></div>
       ))}
     </div>
   );

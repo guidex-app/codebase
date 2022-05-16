@@ -1,7 +1,7 @@
+import { IconBrandDribbble, IconCalendar, IconDoorEnter, IconHome, IconInfoCircle, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Calendar, Columns, Dribbble, Home, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -30,7 +30,7 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
   if (!data) {
     return (
       <TextHeader
-        icon={<Columns color="#bf5bf3" />}
+        icon={<IconDoorEnter color="#bf5bf3" />}
         title="Verfügbarkeiten"
         text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
       />
@@ -67,76 +67,84 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
   };
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
+    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
   };
 
   return (
     <Fragment>
       <TextHeader
-        icon={<Columns color="#bf5bf3" />}
+        icon={<IconDoorEnter color="#bf5bf3" />}
         title="Verfügbarkeiten"
         text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
       />
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
-        {serviceList !== false && !selected && (
-          <section class="group form small_size_holder">
-            {serviceList?.map((x: ServiceInfo) => (
-              <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />
-            ))}
-          </section>
-        )}
 
-        {selected !== false && (
+        {data.openings ? (
           <Fragment>
-            <form>
-              <section class="group form">
-                <h3>Kapazitäten</h3>
-                <Counter
-                  label="Mindest Personenanzahl"
-                  name="countMinPerson"
-                  value={fields.countMinPerson}
-                  required
-                  change={changeField}
-                />
-                {selected.serviceType !== 'entry' && (
-                <Counter
-                  label="Maximale Personenanzahl"
-                  name="countMaxRoomPerson"
-                  value={fields.countMaxRoomPerson}
-                  required
-                  change={changeField}
-                />
-                )}
-              </section>
 
-              <section class="group form">
-                <h3>Reservierung</h3>
+            {serviceList !== false && !selected && (
+            <section class="group form small_size_holder">
+              {serviceList?.map((x: ServiceInfo) => (
+                <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={x.serviceName || 'Nicht definiert'} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => setSelected(x)} />
+              ))}
+            </section>
+            )}
 
-                <Counter label="Vorlaufzeit (Minuten)" name="leadTimeInMin" value={fields.leadTimeInMin} change={changeField} />
-                <Counter label="Welches Mindestalter ist erforderlich" name="minAge" value={fields.minAge} change={changeField} />
+            {selected !== false && (
+            <Fragment>
+              <form>
+                <section class="group form">
+                  <h3>Kapazitäten</h3>
+                  <Counter
+                    label="Mindest Personenanzahl"
+                    name="countMinPerson"
+                    value={fields.countMinPerson}
+                    required
+                    change={changeField}
+                  />
+                  {selected.serviceType !== 'entry' && (
+                  <Counter
+                    label="Maximale Personenanzahl"
+                    name="countMaxRoomPerson"
+                    value={fields.countMaxRoomPerson}
+                    required
+                    change={changeField}
+                  />
+                  )}
+                </section>
 
-                <PickInput
-                  label="Stornierungs-Möglichkeiten"
-                  name="storno"
-                  options={['48 Std.', '24 Std.', '12 Std.', '8 Std.', '1 Std.', 'Nicht möglich']}
-                  value={[fields.storno]}
-                  error={formState.storno}
-                  required
-                  change={changeField}
-                />
-              </section>
+                <section class="group form">
+                  <h3>Reservierung</h3>
 
-              <section class="group form">
-                <h3>Anzahl der Verfügbarkeiten</h3>
+                  <Counter label="Vorlaufzeit (Minuten)" name="leadTimeInMin" value={fields.leadTimeInMin} change={changeField} />
+                  <Counter label="Welches Mindestalter ist erforderlich" name="minAge" value={fields.minAge} change={changeField} />
 
-                <Counter label="Standartverfügbarkeiten" name="defaultCapacity" value={fields.defaultCapacity} change={changeField} />
-                <Item icon={<Calendar />} label="Individuell konfigurieren (Tag / Uhrzeit)" text="Klicke um für bestimmte Uhrzeiten oder Tage eine Individuelle verfügbarkeit anzugeben" type="grey" action={toggleShowCapacity} />
-              </section>
-            </form>
+                  <PickInput
+                    label="Stornierungs-Möglichkeiten"
+                    name="storno"
+                    options={['48 Std.', '24 Std.', '12 Std.', '8 Std.', '1 Std.', 'Nicht möglich']}
+                    value={[fields.storno]}
+                    error={formState.storno}
+                    required
+                    change={changeField}
+                  />
+                </section>
 
-            <FormButton label="Speichern" action={validateForm} />
+                <section class="group form">
+                  <h3>Anzahl der Verfügbarkeiten</h3>
+
+                  <Counter label="Standartverfügbarkeiten" name="defaultCapacity" value={fields.defaultCapacity} change={changeField} />
+                  <Item icon={<IconCalendar />} label="Individuell konfigurieren (Tag / Uhrzeit)" text="Klicke um für bestimmte Uhrzeiten oder Tage eine Individuelle verfügbarkeit anzugeben" type="grey" action={toggleShowCapacity} />
+                </section>
+              </form>
+
+              <FormButton label="Speichern" action={validateForm} />
+            </Fragment>
+            )}
           </Fragment>
+        ) : (
+          <Item icon={<IconInfoCircle color="var(--orange)" />} type="info" label="Bitte definiere zuerst die Öffnungszeiten" text="Die Öffnungszeiten sind erforderlich um die Verfügbarkeiten zu definieren" />
         )}
 
       </main>

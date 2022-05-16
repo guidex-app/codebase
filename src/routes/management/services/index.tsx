@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
+import { IconBrandDribbble, IconCirclePlus, IconHome, IconSelect, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Archive, Dribbble, Home, PlusCircle, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -15,7 +15,7 @@ import { fireArray, fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
-import { AnsDB, ServiceField, ServiceInfo } from '../../../interfaces/company';
+import { Selected, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import ServiceQuestions from './serviceQuestions';
 
 interface ActivityProp {
@@ -25,10 +25,10 @@ interface ActivityProp {
 
 const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) return <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
+  if (!data) return <TextHeader icon={<IconSelect color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
+    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
   };
 
   const fields = ['serviceName', 'structure', 'description', 'image', 'bringWith'];
@@ -46,7 +46,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
     Object.entries(select || []).forEach(([name, values]: [string, any]) => {
       if (fields.includes(name)) {
         const isServiceName: boolean = name === 'serviceName';
-        const selected: AnsDB = { name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values };
+        const selected: Selected = { name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values };
         newFields.push({ name, selected });
       }
     });
@@ -87,7 +87,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
     const getServiceID: string = service && service.id ? service.id : `${getName}_${Date.now()}`;
 
     if (getName) {
-      const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.selected?.values?.[0] };
+      const updatedField: any = { ...(isInitial ? { id: getServiceID, serviceType: getName } : []), [newField.name]: newField.selected?.values?.[0].value };
 
       fireDocument(`activities/${activityID}/services/${getServiceID}`, updatedField, isInitial ? 'set' : 'update').then(() => {
         const newService = { ...(!isInitial ? service : []), ...updatedField };
@@ -106,12 +106,12 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
 
   return (
     <Fragment>
-      <TextHeader icon={<Archive color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
+      <TextHeader icon={<IconSelect color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
 
       <BackButton url={`/company/dashboard/${activityID}`} />
       {serviceList !== false ? (
         <section class="group form small_size_holder">
-          <Item type="grey" icon={<PlusCircle />} label="Leistung Hinzufügen" action={() => selectService(undefined)} />
+          <Item type="grey" icon={<IconCirclePlus />} label="Leistung Hinzufügen" action={() => selectService(undefined)} />
 
           {serviceList?.map((x: ServiceInfo) => (
             <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />

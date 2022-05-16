@@ -1,6 +1,6 @@
+import { IconAdjustmentsHorizontal } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Feather } from 'react-feather';
 
 import FabButton from '../../components/fabButton';
 import FilterList from '../../components/filter';
@@ -78,7 +78,7 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, getNewLocation, intere
       <Teaser openModal={setOpenModal} location={location} />
       <FilterBar />
       <Masonry list={filteredCats} />
-      <FabButton icon={<Feather size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filtern')} />
+      <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filtern')} />
       {!!openModal && (
       <Modal title={openModal} close={closeModal}>
         {openModal === 'Filtern' && <FilterList data={catFilter} values={filter} change={updateFilter} close={closeModal} />}

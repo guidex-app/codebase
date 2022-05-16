@@ -1,6 +1,6 @@
+import { IconLock, IconPlus, IconToggleLeft } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Lock, PlusCircle, ToggleLeft } from 'react-feather';
 
 import BackButton from '../../components/backButton';
 import FilterList from '../../components/filter';
@@ -50,10 +50,10 @@ const Admin: FunctionalComponent = () => {
   return (
     <Fragment>
       <BackButton title="Startseite" url="/" />
-      <TextHeader icon={<Lock color="#fea00a" />} title={`${type === 'catInfos' ? 'Kategorien' : 'Topics'}`} text="Verwalte die Kategorien oder die Topics" />
+      <TextHeader icon={<IconLock color="#fea00a" />} title={`${type === 'catInfos' ? 'Kategorien' : 'Topics'}`} text="Verwalte die Kategorien oder die Topics" />
       <main class="small_size_holder">
-        <Item icon={<ToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
-        <Item icon={<PlusCircle color="var(--orange)" />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
+        <Item icon={<IconToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
+        <Item icon={<IconPlus color="var(--orange)" />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
 
         {list.map((x) => (
           <Item key={x.title.form} label={x.title.name} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type === 'topics' ? 'topics' : 'categories'}%2F${x.title.form}%2F${x.title.form}_250x200`} action={() => setItem(x)} />

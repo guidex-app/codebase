@@ -39,8 +39,6 @@ const AppRoutes: FunctionalComponent = () => {
       setWeatherList(weather);
     }
 
-    console.log(weather);
-
     setStorageKeys({ location: JSON.stringify({ ...location, weather: weather[forDay] }) });
     updateUser({ location: { ...location, weather: weather[forDay] } });
   };

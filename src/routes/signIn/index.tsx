@@ -1,7 +1,7 @@
+import { IconKey, IconLogin } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Key, LogIn } from 'react-feather';
 
 import FormButton from '../../components/form/basicButton';
 import BasicInput from '../../components/form/basicInput';
@@ -87,8 +87,8 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
 
         <FormButton action={logIn} label="Einloggen" />
 
-        <Item type="info" icon={<LogIn color="#2fd159" />} label="Als Nutzer registrieren" action={() => route('/register')} />
-        <Item type="info" icon={<Key color="var(--orange)" />} label="Ihre Freizeitunternehmung anmelden" action={() => route('/register/company')} />
+        <Item type="info" icon={<IconLogin color="#2fd159" />} label="Als Nutzer registrieren" action={() => route('/register')} />
+        <Item type="info" icon={<IconKey color="var(--orange)" />} label="Ihre Freizeitunternehmung anmelden" action={() => route('/register/company')} />
 
       </form>
 

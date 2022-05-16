@@ -1,6 +1,6 @@
+import { IconCalendar } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
-import { Calendar } from 'react-feather';
 
 import { generateDateString } from '../../helper/date';
 import Item from '../item';
@@ -25,10 +25,10 @@ const WeatherList: FunctionalComponent<LocationProps> = ({ changeDay }: Location
 
   return (
     <Fragment>
-      <Item label="Heute" icon={<Calendar />} type="grey" action={() => changeDay(0)} />
+      <Item label="Heute" icon={<IconCalendar />} type="grey" action={() => changeDay(0)} />
 
       {dayList?.map((day: string, index: number) => (
-        <Item label={day} icon={<Calendar />} action={() => changeDay(index + 1)} />
+        <Item label={day} icon={<IconCalendar />} action={() => changeDay(index + 1)} />
       ))}
     </Fragment>
   );

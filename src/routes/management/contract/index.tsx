@@ -1,7 +1,7 @@
+import { IconHome, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Home, Info } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -22,7 +22,7 @@ const Contract: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   if (!data) {
     return (
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        icon={<IconHome color="#ff5613" />}
         title="Vertrag & Rechtliches"
         text="Geben Sie den Nutzern kontaktinfos"
       />
@@ -43,7 +43,7 @@ const Contract: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   return (
     <Fragment>
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        icon={<IconHome color="#ff5613" />}
         title="Vertrag & Rechtliches"
         text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
       />
@@ -69,7 +69,7 @@ const Contract: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
             <FormButton action={save} label="Speichern" />
 
           </form>
-        ) : <Item icon={<Info />} type="info" label="Bitte geben sie zuerst ihre Adresse an" />}
+        ) : <Item icon={<IconInfoCircle />} type="info" label="Bitte geben sie zuerst ihre Adresse an" />}
       </main>
     </Fragment>
   );

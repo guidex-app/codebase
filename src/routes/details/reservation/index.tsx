@@ -1,6 +1,6 @@
+import { IconCalendarTime } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Calendar } from 'react-feather';
 
 import FabButton from '../../../components/fabButton';
 import Modal from '../../../container/modal';
@@ -49,7 +49,7 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
           {modalState === 'available' && selectedService?.serviceName && <ReserveAvailable service={selectedService} activityID={activityID} openings={openings} changeState={setModalState} day={day} />}
         </Modal>
       )}
-      <FabButton icon={<Calendar color="black" />} action={() => setModalState('info')} />
+      <FabButton icon={<IconCalendarTime color="black" />} action={() => setModalState('info')} />
     </Fragment>
   );
 };

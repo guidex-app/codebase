@@ -1,7 +1,7 @@
+import { IconGift, IconKey, IconLocation, IconMail, IconPhone, IconSelect } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { Gift, Key, Mail, Navigation2, Phone, Type } from 'react-feather';
 
 import BackButton from '../../components/backButton';
 import FormButton from '../../components/form/basicButton';
@@ -107,7 +107,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
           <BasicInput
             label="E-Mail"
             name="email"
-            icon={<Mail />}
+            icon={<IconMail />}
             value={fields.email}
             error={formState.email}
             autocomplete="email"
@@ -117,7 +117,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
           />
 
           <BasicInput
-            icon={<Key />}
+            icon={<IconKey />}
             label="Passwort"
             name="password"
             type="password"
@@ -138,7 +138,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
               type="text"
               label="Vorname:"
               name="firstName"
-              icon={<Type />}
+              icon={<IconSelect />}
               value={fields.plz}
               placeholder="Dein Vorname"
               error={formState.plz}
@@ -150,7 +150,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
               type="text"
               label="Nachname:"
               name="firstName"
-              icon={<Type />}
+              icon={<IconSelect />}
               value={fields.plz}
               placeholder="Dein Vorname"
               error={formState.plz}
@@ -162,7 +162,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
               type="tel"
               label="Telefonnummer:"
               name="firstName"
-              icon={<Phone />}
+              icon={<IconPhone />}
               value={fields.plz}
               placeholder="Deine Telefonnummer"
               error={formState.plz}
@@ -180,7 +180,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
                 type="number"
                 label="Postleitzahl:"
                 name="plz"
-                icon={<Navigation2 />}
+                icon={<IconLocation />}
                 value={fields.plz}
                 placeholder="Deine Postleitzahl"
                 error={formState.plz}
@@ -194,7 +194,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
                 type="date"
                 label="Geburtstag:"
                 name="birthday"
-                icon={<Gift />}
+                icon={<IconGift />}
                 value={fields.birthday}
                 placeholder="Dein Geburtstag"
                 error={formState.birthday}

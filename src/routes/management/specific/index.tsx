@@ -1,6 +1,6 @@
+import { IconGlobe, IconSelect, IconStar } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Globe, Star, Type } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -24,7 +24,7 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   if (!data) {
     return (
       <TextHeader
-        icon={<Star color="#2fd159" />}
+        icon={<IconStar color="#2fd159" />}
         title="Spezifische Infos"
         text="Bitte gebe alle gesonderten Informationen zu deiner Unternehmung an."
       />
@@ -54,7 +54,7 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   return (
     <Fragment>
       <TextHeader
-        icon={<Star color="#2fd159" />}
+        icon={<IconStar color="#2fd159" />}
         title="Spezifische Infos"
         text="Bitte gebe alle gesonderten Informationen zu deiner Unternehmung an."
       />
@@ -108,7 +108,7 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
             />
 
             <BasicInput
-              icon={<Type />}
+              icon={<IconSelect />}
               label="Zusätzliche Informationen zu den Sicherheitsmaßnahmen"
               name="description"
               type="textarea"
@@ -124,7 +124,7 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
             <h3>Sprachen</h3>
 
             <SelectInput
-              icon={<Globe />}
+              icon={<IconGlobe />}
               label="Welche Sprachen sprechen Sie oder Ihre Mitarbeiter?"
               name="language"
               options={['Deutsch', 'Englisch', 'Französisch', 'Russisch', 'Spanisch']}

@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
+import { IconArrowLeftCircle, IconBrandDribbble, IconCurrencyDollar, IconHome, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
-import { ArrowLeftCircle, DollarSign, Dribbble, Home, Users } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
@@ -30,15 +30,15 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   if (!data) {
     return (
       <TextHeader
-        icon={<DollarSign color="#fea00a" />}
-        title="Preis-Tabellen"
+        icon={<IconCurrencyDollar color="#fea00a" />}
+        title="Preise"
         text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
       />
     );
   }
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <Users color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <Dribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <Home color="#bf5bf3" /> },
+    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
   };
 
   const [show, setShow] = useState<'prices' | 'structure' | 'belongs'>('structure');
@@ -87,16 +87,16 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
     const description: string[] = [];
     const newSpecs: any = {};
     const suffixList: { [key: string]: string } = { persons: 'Pers.', time: 'Uhr', age: 'Jahre', discount: 'Rabatt', duration: 'Min.', roundDiscount: 'Runden' };
-    const specFieldIds = ['foundation', 'persons', 'duration', 'days'];
+    const specFieldIds = ['persons', 'days'];
 
     fields?.forEach((element: ServiceField) => {
-      if ((!element.notIsChecked || element.name === 'days') && element.name) {
-        const values = element.selected?.values?.join(' & ');
+      if ((!!element.selected || element.name === 'days') && element.name) {
+        const values = element.selected?.values?.map((x) => (x.value ? x.value : '')).join(' & ');
         if (values) description.push(`(${values} ${suffixList[element.name] || ''})`);
 
         if (specFieldIds.includes(element.name)) {
           if (element.name !== 'days') newSpecs[element.name] = element.selected?.name;
-          if (element.name === 'days') newSpecs.days = element.notIsChecked ? [] : element.selected?.values;
+          if (element.name === 'days') newSpecs.days = !element.selected ? [] : element.selected?.values;
         }
       }
     });
@@ -117,6 +117,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       return fireDocument(`activities/${data.title.form}/structures/${structureID}`, initialField, 'set');
     }
 
+    console.log('specs', specs);
     setSelected({ ...selected, structure: { id: structureID, ...specs } });
     fireDocument(`activities/${data.title.form}/structures/${structureID}`, specs, 'update');
   };
@@ -125,6 +126,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
     if (selected && selected.service?.id && selected.service?.serviceName) {
       const isInit = !serviceFields;
       const getStructureID: number = isInit ? +Date.now() : selected.structure?.id || selected.service.structureID;
+      console.log('newField', newField);
       fireDocument(`activities/${data.title.form}/structures/${getStructureID}/fields/${newField.name}`, newField, 'set').then(() => {
         updateStructure(newField, getStructureID, isInit);
         updateServiceFields(newField);
@@ -167,8 +169,8 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   return (
     <Fragment>
       <TextHeader
-        icon={<DollarSign color="#fea00a" />}
-        title="Preis-Tabellen"
+        icon={<IconCurrencyDollar color="#fea00a" />}
+        title="Preise"
         text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
       />
 
@@ -179,7 +181,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
           {serviceList ? (
             serviceList.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
           ) : (
-            <Item icon={<ArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
+            <Item icon={<IconArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
           )}
         </section>
       ) : <Spinner />}
@@ -196,7 +198,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
               questions={StructureQuestions}
               service={selected?.service}
               serviceFields={serviceFields}
-              openings={data.openings}
+              openingDays={['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].filter((x, index) => !!data.openings[index])}
               structure={selected.structure}
               save={saveQuestions}
             />

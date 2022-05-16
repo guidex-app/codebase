@@ -25,19 +25,15 @@ export interface Structure {
 
   foundation?: 'object' | 'person';
   duration?: 'round' | 'fixed';
-  days?: string[];
 }
 
 /**
  * Answers sind den Fields untergeordnete antworten
  */
-export interface AnsDB {
+export interface Selected {
   name: string,
   amountOfFields: string,
-  isRound?: boolean[],
-  onDays?: (string | undefined)[], // auf den Value Index spezifizierte Tage
-  values?: any[];
-  option?: (string | undefined)[];
+  values?: { value: any; onDays?: string[]; option?: string; isRound?: boolean; }[];
 }
 
 /**
@@ -45,8 +41,8 @@ export interface AnsDB {
  */
 export interface ServiceField {
   name: string;
-  notIsChecked?: boolean;
-  selected?: AnsDB;
+  // notIsChecked?: boolean;
+  selected?: Selected;
 }
 
 /**

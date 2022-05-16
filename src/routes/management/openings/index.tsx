@@ -1,6 +1,6 @@
+import { IconCalendar, IconClock, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
-import { Calendar, Clock, Info } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
@@ -26,7 +26,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   if (!data) {
     return (
       <TextHeader
-        icon={<Clock color="#63d2ff" />}
+        icon={<IconClock color="#63d2ff" />}
         title="Öffnungszeiten"
         text="Bitte legen sie fest, an welchen Tagen und Uhrzeiten sie geöffnet haben."
       />
@@ -82,7 +82,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
   return (
     <Fragment>
       <TextHeader
-        icon={<Clock color="#63d2ff" />}
+        icon={<IconClock color="#63d2ff" />}
         title="Öffnungszeiten"
         text="Bitte legen sie fest, an welchen Tagen und Uhrzeiten sie geöffnet haben."
       />
@@ -97,7 +97,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
               <Chip label={day} type={fields.openings?.[index] ? 'active' : 'inactive'} action={() => changeOpening(fields.openings?.[index] ? false : '-', index.toString())} />
             ))}
 
-            <Item icon={<Info />} type="info" label="Markiere alle geöffneten Tage in Orange." />
+            <Item icon={<IconInfoCircle />} type="info" label="Markiere alle geöffneten Tage in Orange." />
           </section>
 
           <section class="group form">
@@ -114,7 +114,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
 
                 {fields.isEqual ? (
                   <BasicInput
-                    icon={<Calendar />}
+                    icon={<IconCalendar />}
                     type="time"
                     label="Standart Öffnungszeiten (Von / Bis)"
                     name="equalValue"
@@ -128,7 +128,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
                 ) : (
                   dayNames.map((day: string, index: number) => (fields.openings?.[index] && (
                     <BasicInput
-                      icon={<Calendar />}
+                      icon={<IconCalendar />}
                       type="time"
                       label={`${day} (Von / Bis)`}
                       name={index.toString()}
@@ -143,7 +143,7 @@ const Openings: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
               </Fragment>
 
             ) : (
-              <Item icon={<Info />} type="info" label="Konfiguriere zuerst alle geöffneten Tage." />
+              <Item icon={<IconInfoCircle />} type="info" label="Konfiguriere zuerst alle geöffneten Tage." />
             )}
 
           </section>

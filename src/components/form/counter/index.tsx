@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import { IconMinus, IconPlus } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
-import { Minus, Plus } from 'react-feather';
 
 import style from './style.module.css';
 
@@ -31,12 +31,12 @@ const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, require
 
   return (
     <div class={`${style.counter} ${large ? style.large : ''}`}>
-              {icon && icon}
+      {icon && icon}
       <label for={name}>{required && '*'}{label}</label>
       <div>
-        <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, color: '#ccc' }}><Minus /></button>
+        <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, color: '#ccc' }}><IconMinus /></button>
         <input id={name} type="number" value={value} min={min} max={max} onInput={setValue} />
-        <button onClick={() => newValue('add')} type="button" style={(+value + steps) <= max ? undefined : { opacity: 0.5, color: '#ccc' }}><Plus /></button>
+        <button onClick={() => newValue('add')} type="button" style={(+value + steps) <= max ? undefined : { opacity: 0.5, color: '#ccc' }}><IconPlus /></button>
       </div>
     </div>
   );

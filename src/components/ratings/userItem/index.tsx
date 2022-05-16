@@ -1,5 +1,5 @@
+import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
-import { ChevronDown, ChevronUp } from 'react-feather';
 
 import { RatingComment } from '../../../interfaces/rating';
 import style from './style.module.css';
@@ -27,11 +27,11 @@ const UserCommentItem: FunctionalComponent<UserCommentItemProps> = ({ rate, vote
 
       <div class={style.upvote}>
         <button type="button" disabled={rate.vote === 1} onClick={() => vote(rate.uid, 'add', rate.vote)}>
-          <ChevronUp />
+          <IconChevronUp />
         </button>
         <strong>{rate.vote}</strong>
         <button type="button" disabled={rate.vote === -1} onClick={() => vote(rate.uid, 'remove', rate.vote)}>
-          <ChevronDown />
+          <IconChevronDown />
         </button>
       </div>
     </div>

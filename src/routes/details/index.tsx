@@ -1,6 +1,6 @@
+import { IconGlobe, IconMapPin, IconPhone } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Globe, MapPin, Phone } from 'react-feather';
 
 import BackButton from '../../components/backButton';
 import IconScrollList from '../../components/iconScrollList';
@@ -44,9 +44,9 @@ const Details: FunctionalComponent<DetailsProps> = ({ activityID, user, day }: D
         <h1 style={{ marginTop: '20px' }}>{data?.title.name}&nbsp;</h1>
         <p style={{ color: 'var(--fifth)' }}>{data?.description}&nbsp;</p>
         <OpeningsList openings={data?.openings} day={day} />
-        <Item icon={<MapPin />} label={data ? `${data.address?.street || ''} ${data.address?.houseNumber || ''}, ${data.address?.plz || ''} ${data.address?.place || ''}` : ''} text="Klicke zum kopieren" type="info" />
-        {data?.customerContact?.website && <Item icon={<Globe />} label={data.customerContact?.website} text="Klicke zum öffnen" type="grey" />}
-        {data?.customerContact?.phone && <Item icon={<Phone />} label={data?.customerContact?.phone} text="Klicke zum anrufen" type="grey" />}
+        <Item icon={<IconMapPin />} label={data ? `${data.address?.street || ''} ${data.address?.houseNumber || ''}, ${data.address?.plz || ''} ${data.address?.place || ''}` : ''} text="Klicke zum kopieren" type="info" />
+        {data?.customerContact?.website && <Item icon={<IconGlobe />} label={data.customerContact?.website} text="Klicke zum öffnen" type="grey" />}
+        {data?.customerContact?.phone && <Item icon={<IconPhone />} label={data?.customerContact?.phone} text="Klicke zum anrufen" type="grey" />}
         {data?.openings && <Reservation activityID={activityID} openings={data?.openings} day={day} />}
         <IconScrollList filter={data?.filter} />
         <Rating user={user} activityId={activityID} rating={data?.rating} />

@@ -1,6 +1,6 @@
+import { IconHome } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { Link, route } from 'preact-router';
-import { Home } from 'react-feather';
 
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
@@ -22,7 +22,7 @@ const Dashboard: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
   if (!data) {
     return (
       <TextHeader
-        icon={<Home color="#ff5613" />}
+        icon={<IconHome color="#ff5613" />}
         title=""
         text="Willkommen in Ihrer Unternehmensverwaltung. Hier können Sie ihre angegebenen Informationen verwalten. Wenn Sie Fragen haben, wenden Sie sich an den Support."
       />

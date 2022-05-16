@@ -1,6 +1,6 @@
+import { IconArchive, IconCalendar, IconClock, IconDeviceWatch, IconUserPlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
-import { Archive, Calendar, Clock, UserPlus, Watch } from 'react-feather';
 
 import FormButton from '../../../components/form/basicButton';
 import Item from '../../../components/item';
@@ -82,7 +82,7 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activi
       </div>
       {(!!contains?.discount?.[0]) && (
       <Fragment>
-        <Item type="info" icon={<UserPlus color="var(--orange)" />} label="Rabatt hinzufügen" text="Klick um einen Rabatt auszuwählen" action={() => setShowDiscount(true)} />
+        <Item type="info" icon={<IconUserPlus color="var(--orange)" />} label="Rabatt hinzufügen" text="Klick um einen Rabatt auszuwählen" action={() => setShowDiscount(true)} />
         {showDiscount && (
         <Popup close={() => setShowDiscount(false)}>
           <Discounts maxPersons={personAmount} list={contains.discount} values={discounts} change={changeDiscount} />
@@ -93,11 +93,11 @@ const Confirm: FunctionalComponent<ConfirmProps> = ({ goBack, foundation, activi
       <section class="group form">
 
         {/* <Item icon={<Clock color="#ffa500" />} type="info" label={`Deine Reservierung für ${reservationTime} Uhr ${amountRooms >= 2 ? `(Für ${amountRooms} Räume)` : ''} ${durationList.isRound ? `(${duration} Runden)` : ''}`} /> */}
-        <Item icon={<Archive />} label="Leistung" text={serviceName} />
-        <Item icon={<UserPlus />} label={personAmount > 1 ? `${personAmount} Personen (${amountRooms} Räume)` : `${personAmount} Person (${amountRooms} Raum)`} text={amountRooms.toString()} />
-        <Item icon={<Calendar />} label="Datum" text={date} />
-        <Item icon={<Clock />} label="Uhrzeit" text={`${time} Uhr`} />
-        <Item icon={<Watch />} label={durationList.isRound ? 'Runden' : 'Dauer'} text={durationList.isRound && duration ? `${duration} Runden (ca. ${parseInt(duration, 10) * durationList.list[0]} Min.)` : `${duration} Min.`} />
+        <Item icon={<IconArchive />} label="Leistung" text={serviceName} />
+        <Item icon={<IconUserPlus />} label={personAmount > 1 ? `${personAmount} Personen (${amountRooms} Räume)` : `${personAmount} Person (${amountRooms} Raum)`} text={amountRooms.toString()} />
+        <Item icon={<IconCalendar />} label="Datum" text={date} />
+        <Item icon={<IconClock />} label="Uhrzeit" text={`${time} Uhr`} />
+        <Item icon={<IconDeviceWatch />} label={durationList.isRound ? 'Runden' : 'Dauer'} text={durationList.isRound && duration ? `${duration} Runden (ca. ${parseInt(duration, 10) * durationList.list[0]} Min.)` : `${duration} Min.`} />
       </section>
 
       {!!totalPrice && <FormButton label={`Reservierung abschließen (${totalPrice}€)`} action={completeReservation} />}

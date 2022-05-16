@@ -1,11 +1,12 @@
 /* eslint-disable no-nested-ternary */
+import { IconCalendar, IconUserPlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Calendar, Info, UserPlus } from 'react-feather';
 
 import Chip from '../../../components/chip';
 import BasicInput from '../../../components/form/basicInput';
 import Counter from '../../../components/form/counter';
+import InfoBox from '../../../components/form/infoBox/infoBox';
 import SelectInput from '../../../components/form/selectInput';
 import Item from '../../../components/item';
 import OpeningList from '../../../components/openingList/openings';
@@ -170,7 +171,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   useEffect(() => { loadDayData(); }, [reservationData.structure]);
   useEffect(() => { chooseDay(getSimpleDateString(day ? new Date(day) : new Date())); }, []); // init
 
-  if (!reservationData.loaded && reservationData.isOpened) return <Item icon={<Info />} type="info" label="Die Unternehmung ist noch nicht reservierbar" />;
+  if (!reservationData.loaded && reservationData.isOpened) return <Item icon={<InfoBox />} type="info" label="Die Unternehmung ist noch nicht reservierbar" />;
   if (show === 'confirm' && fields.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} date={fields.calendar} shortDay={fields.selectedShortDay} personAmount={fields.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} time={fields.reservationTime} />;
 
   return (
@@ -180,7 +181,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
       <BasicInput
         name="selectedDay"
         label="Tag auswählen"
-        icon={<Calendar />}
+        icon={<IconCalendar />}
         change={chooseDay}
         value={fields.selectedDay}
         type="date"
@@ -204,7 +205,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
             name="personAmount"
             label={`Personen Anzahl (max.: ${reservationData.available?.countMaxRoomPerson || 1} Pers.)`}
             max={reservationData.available?.countMaxRoomPerson || 1}
-            icon={<UserPlus />}
+            icon={<IconUserPlus />}
             change={choosePerson}
             value={fields.personAmount}
           />

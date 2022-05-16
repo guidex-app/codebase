@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { IconAlignCenter, IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp, IconGitCommit, IconUpload } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GitCommit, Upload } from 'react-feather';
 
 import Popup from '../../../container/popup';
 import { replaceSpecialCharacters } from '../../../helper/string';
@@ -149,7 +149,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
 
   return (
     <Fragment>
-      <Item type="info" text={text} image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <Upload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
+      <Item type="info" text={text} image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <IconUpload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
 
       {isOpen && (
       <Popup close={() => setIsOpen(false)}>
@@ -169,12 +169,12 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
           <div class={style.preview}>
             <Chip small label="Neues Bild wählen" type="active" action={removeFile} />
             <div class={style.preview_position}>
-              <button onClick={() => changePosition('left', false)} type="button" aria-label="ausrichten"><ChevronLeft color={imgPosition[0] === 'left' ? 'var(--red)' : undefined} /></button>
-              <button onClick={() => changePosition('center', false)} type="button" aria-label="ausrichten"><AlignCenter color={imgPosition[0] === 'center' ? 'var(--red)' : undefined} /></button>
-              <button onClick={() => changePosition('right', false)} type="button" aria-label="ausrichten"><ChevronRight color={imgPosition[0] === 'right' ? 'var(--red)' : undefined} /></button>
-              <button onClick={() => changePosition('top', true)} type="button" aria-label="ausrichten"><ChevronUp color={imgPosition[1] === 'top' ? 'var(--red)' : undefined} /></button>
-              <button onClick={() => changePosition('middle', true)} type="button" aria-label="ausrichten"><GitCommit color={imgPosition[1] === 'middle' ? 'var(--red)' : undefined} /></button>
-              <button onClick={() => changePosition('bottom', true)} type="button" aria-label="ausrichten"><ChevronDown color={imgPosition[1] === 'bottom' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('left', false)} type="button" aria-label="ausrichten"><IconChevronLeft color={imgPosition[0] === 'left' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('center', false)} type="button" aria-label="ausrichten"><IconAlignCenter color={imgPosition[0] === 'center' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('right', false)} type="button" aria-label="ausrichten"><IconChevronRight color={imgPosition[0] === 'right' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('top', true)} type="button" aria-label="ausrichten"><IconChevronUp color={imgPosition[1] === 'top' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('middle', true)} type="button" aria-label="ausrichten"><IconGitCommit color={imgPosition[1] === 'middle' ? 'var(--red)' : undefined} /></button>
+              <button onClick={() => changePosition('bottom', true)} type="button" aria-label="ausrichten"><IconChevronDown color={imgPosition[1] === 'bottom' ? 'var(--red)' : undefined} /></button>
             </div>
             <div id={`${name}_preview`} class={style.preview_image} />
             {size[0] === 700 && size[1] === 900 && (

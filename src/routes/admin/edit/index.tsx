@@ -1,5 +1,5 @@
+import { IconFilter } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { Filter } from 'react-feather';
 
 import AddRemove from '../../../components/form/addRemove';
 import FormButton from '../../../components/form/basicButton';
@@ -80,10 +80,6 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
     }
   };
 
-  const deleteTopic = () => {
-    console.log('Löschen');
-  };
-
   const openFilter = () => {
     close(getCorrectFields(), true);
   };
@@ -143,7 +139,7 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       )}
 
       {(!fields.type || (fields.type && ['quickfilter', 'topicpage', 'seopage'].indexOf(fields.type) !== -1)) && (
-        <Item icon={<Filter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={fields.filter?.join(' | ') || ''} />
+        <Item icon={<IconFilter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={fields.filter?.join(' | ') || ''} />
       )}
 
       <BasicInput
@@ -193,7 +189,6 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       )}
 
       <FormButton action={validation} />
-      <FormButton label="Löschen" type="outline" action={deleteTopic} />
     </Fragment>
   );
 };
