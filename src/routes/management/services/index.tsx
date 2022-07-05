@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { IconBrandDribbble, IconCirclePlus, IconHome, IconSelect, IconUser } from '@tabler/icons';
+import { IconBrandDribbble, IconHome, IconPlus, IconSelect, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -25,7 +25,10 @@ interface ActivityProp {
 
 const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) return <TextHeader icon={<IconSelect color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />;
+  const header = (
+    <TextHeader icon={<IconSelect color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
+  );
+  if (!data) return header;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
     entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
@@ -40,17 +43,19 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
 
   /** Lade alle services von der activity ID */
   const generateFields = (select: ServiceInfo | undefined) => {
-    if (!select) setServiceFields(undefined);
+    if (!select) setServiceFields(false);
     const newFields: ServiceField[] = [];
 
     Object.entries(select || []).forEach(([name, values]: [string, any]) => {
       if (fields.includes(name)) {
         const isServiceName: boolean = name === 'serviceName';
-        const selected: Selected = { name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values };
+        const newValues = [{ value: values }];
+        const selected: Selected = { name: (isServiceName && select?.serviceType) || name, amountOfFields: '1', values: newValues };
         newFields.push({ name, selected });
       }
     });
 
+    console.log('ServiceFields', newFields[0] ? newFields : undefined);
     setServiceFields(newFields[0] ? newFields : undefined);
   };
 
@@ -106,12 +111,11 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
 
   return (
     <Fragment>
-      <TextHeader icon={<IconSelect color="#0983fe" />} title="Leistungen konfigurieren" text="Bitte füge alle angebotenen Leistungen hinzu" />
-
+      {header}
       <BackButton url={`/company/dashboard/${activityID}`} />
       {serviceList !== false ? (
         <section class="group form small_size_holder">
-          <Item type="grey" icon={<IconCirclePlus />} label="Leistung Hinzufügen" action={() => selectService(undefined)} />
+          <Item type="grey" icon={<IconPlus />} label="Leistung Hinzufügen" action={() => selectService(undefined)} />
 
           {serviceList?.map((x: ServiceInfo) => (
             <Item key={x.id} text={x.serviceType && serviceProps[x.serviceType].name} label={generateServiceLabel(x)} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />
@@ -122,7 +126,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
       <FormButton action={() => route(`/company/prices/${data.title.form}`)} label="Speichern und weiter" />
 
       {service !== false && serviceFields !== false && (
-      <Modal title="" close={() => closeService()} type="large">
+      <Modal title="" close={() => closeService()} type="large" background="#46244C">
         <QuestForm
           questions={ServiceQuestions}
           service={service}

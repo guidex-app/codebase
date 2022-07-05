@@ -6,7 +6,7 @@ import { Questions } from '../../../interfaces/company';
 const ServiceQuestions: Questions[] = [{
   info: {
     title: { name: 'Leistungen', form: 'serviceName' },
-    question: 'Welche Leistung möchten sie anlegen?',
+    question: 'Welche Art von Leistung möchten sie anbieten?',
     explanation: 'Definieren sie hier die Art Ihrer Leistungsgruppe. Wenn Sie mehrere Optionen vertreten, legen sie diese Einzelnt an.',
     example: 'Wenn sie z.B. ein Abenteuerspielplatz sind und ein Eintritt definieren wollen, wählen sie Eintritt(e) aus. Wenn sie verschieden Räume zur verfügung stellen, wählen sie stattdessen Räume/Bereich(e)',
     advice: 'Wird die Anzahl in Räumen, Objekten oder Eintrittsangeboten definiert',
@@ -16,9 +16,9 @@ const ServiceQuestions: Questions[] = [{
     availableText: 'Keine Preis-Unterschiede',
   },
   answers: [
-    { icon: <IconDoorEnter color="#63e6e1" />, label: 'Eintritt', name: 'entry', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, placeholder: 'Bitte benennen sie Ihren Eintritt', isMultiField: false },
-    { icon: <IconScubaMask color="#d4be21" />, label: 'Verleihobjekt', name: 'object', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihr Verleihobjekt', onDay: false, isMultiField: false },
-    { icon: <IconSoccerField color="#bf5bf3" />, label: 'Raum/Bahn/Spiel', name: 'section', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihren Raum/Bahn/Spiel', onDay: false, isMultiField: false },
+    { icon: <IconDoorEnter color="#63e6e1" />, label: 'Eintritt', name: 'entry', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, placeholder: 'Bitte benennen sie Ihren Eintritt', isMultiField: false },
+    { icon: <IconScubaMask color="#d4be21" />, label: 'Verleihobjekt', name: 'object', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihr Verleihobjekt', onDay: false, isMultiField: false },
+    { icon: <IconSoccerField color="#bf5bf3" />, label: 'Raum/Bahn/Spiel', name: 'section', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', placeholder: 'Bitte benennen sie Ihren Raum/Bahn/Spiel', onDay: false, isMultiField: false },
   ],
 },
 // {
@@ -34,9 +34,9 @@ const ServiceQuestions: Questions[] = [{
 //     availableText: 'Keine Preis-Unterschiede',
 //   },
 //   answers: [
-//     { icon: <Flag />, label: 'Eintrittspreise', name: 'entry', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Eintrittspreis?' },
-//     { icon: <Flag />, label: 'Spiele/Räume/Bahnen', name: 'section', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Spiele, Räume oder Bahn?' },
-//     { icon: <Flag />, label: 'Verleihobjekte', name: 'object', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Objekte an, die gegen eine Gebühr ausgeliehen werden können.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Objekte oder Verleihobjekt?' },
+//     { icon: <Flag />, label: 'Eintrittspreise', name: 'entry', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Eintrittspreis?' },
+//     { icon: <Flag />, label: 'Spiele/Räume/Bahnen', name: 'section', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Spiele, Räume oder Bahn?' },
+//     { icon: <Flag />, label: 'Verleihobjekte', name: 'object', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Objekte an, die gegen eine Gebühr ausgeliehen werden können.', onDay: false, isMultiField: false, placeholder: 'Wie heißt dein Objekte oder Verleihobjekt?' },
 //   ],
 // },
 {
@@ -102,8 +102,8 @@ const ServiceQuestions: Questions[] = [{
 //     availableText: 'Keine Preis-Unterschiede',
 //   },
 //   answers: [
-//     { icon: <Flag />, label: 'Eine Leistung', name: 'single', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, isMultiField: false },
-//     { icon: <Flag />, label: 'mehrere Leistungen', name: 'multi', inputType: 'text', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', onDay: false, isMultiField: false },
+//     { icon: <Flag />, label: 'Eine Leistung', name: 'single', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Eintrittsangebote an. Z.B. Eintritt-Normal und Fast Lane. etc.', onDay: false, isMultiField: false },
+//     { icon: <Flag />, label: 'mehrere Leistungen', name: 'multi', inputType: 'string', info: 'Bitte legen Sie die verschiedenen Räume/Bahnen/Spiele an, die bei Ihnen gespielt werden können. Selbst wenn diese preislich gleich sind.', onDay: false, isMultiField: false },
 //   ],
 // },
 

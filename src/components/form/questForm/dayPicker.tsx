@@ -33,7 +33,7 @@ const DayPicker: FunctionalComponent<DayPickerProps> = ({ name, values, position
   return (
     <div className="ion-no-padding ion-text-center" style={{ backgroundColor: 'var(--fourth)', borderRadius: '10px', margin: '2.5px 0', padding: '0 10px' }}>
       {dayNames.map((day: string, index: number) => openings?.[index] && (
-        <Chip small label={`${day}.`} type={values?.[position] && values?.[position].indexOf(day) > -1 ? 'active' : 'inactive'} key={day} action={() => updateValue(day)} />
+        <Chip size="small" label={`${day}.`} type={values?.[position] && values?.[position].indexOf(day) > -1 ? 'active' : 'inactive'} key={day} action={() => updateValue(day)} />
       ))}
     </div>
   );

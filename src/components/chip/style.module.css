@@ -1,7 +1,5 @@
 .chip {
     display: inline-block;
-    padding: 6px 10px;
-    border: none;
     border-radius: 20px;
     margin: 7.5px 2.5px;
     cursor: pointer;
@@ -10,14 +8,14 @@
     font-weight: bold;
     height: auto;
     transform: scale(1);
+    border: 1px solid transparent;
 
-    transition: background 0.2s ease-out, opacity 0.3s ease-in-out, border 0.2s ease-out;
+    transition: background 0.2s ease-out, opacity 0.3s ease-in-out, border 0.2s ease-out, transform 0.3s ease-out;
     will-change: background;
 }
 
-.chip:hover {
-    opacity: 0.8;
-}
+.chip:active { transform: scale(0.98); }
+.chip:hover { opacity: 0.8; }
 
 .chip svg {
     display: inline-block;
@@ -30,13 +28,13 @@
 }
 
 .inactive {
-    border: 1px solid var(--red);
+    border-color: #414551;
     background-color: #342935;
     color: var(--red);
 }
 
 .active {
-    border: 1px solid var(--orange);
+    border-color: var(--orange);
     background-color: #342935;
     color: var(--orange);
 }
@@ -62,6 +60,17 @@
 }
 
 .small {
-    border-radius: 7px;
-    padding: 7px 15px;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+.medium {
+    padding: 7px 16px;
+    font-size: 18px;
+    border-radius: 25px;
+}
+
+.large {
+    width: 150px;
+    height: 150px;
 }

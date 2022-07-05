@@ -1,0 +1,172 @@
+.container {
+    margin-bottom: 15px;
+    width: 100%;
+
+    background-color: #262c3d;
+    border-radius: 10px;
+    vertical-align: middle;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 7px 0 5px 15px;
+
+    font-size: 15px;
+    border: 1px solid #373d4e;
+
+    border-width: 1px;
+}
+
+.group {
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 0;
+}
+.group + .group { 
+    border-radius: 0;
+    border-top: none;
+}
+
+.group + .container:not(.group) {
+    border-radius: 0 0 10px 10px;
+    border-top: none;
+}
+
+.group:last-child {
+    border-radius: 10px;
+}
+
+.container > div {
+    flex-grow: 1;
+}
+
+.container svg {
+    width: 22px;
+    color: var(--fifth);
+    flex-shrink: 0;
+}
+
+.container label {
+    display: block;
+    padding: 0 10px 0 0;
+    color: #9295af;
+    font-size: 16px;
+    line-height: 13px;
+    transform: translateY(16px);
+    transition: 0.3s transform ease-in-out, 0.3s font-size ease-in-out, 0.3s color ease-in-out;
+    cursor: text;
+    will-change: transform, font-size, color;
+}
+
+.disabled {
+    background: repeating-linear-gradient(-55deg,#222,#222 5px,#262c3d 5px,#262c3d 10px);
+}
+
+.hasFocus label, .hasValue label {
+    font-size: 13px;
+    transform: translateY(0);
+    color: #8184a1;
+}
+
+.container input, .container textarea {
+    display: block;
+    margin: 0;
+    padding-right: 10px;
+    width: 100%;
+    min-height: 30px;
+    text-align: left;
+    font: inherit;
+    line-height: 30px;
+    border: none;
+    background-color: transparent;
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: var(--white);
+    text-align: left;
+}
+
+.container button {
+    position: relative;
+    display: block;
+    padding: 5px 10px 5px 0;
+    width: 100%;
+    height: 32px;
+    border: none;
+    background-color: transparent;
+
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: left;
+    color: var(--white);
+    
+    cursor: pointer;
+    outline: none;
+}
+
+.container button::before {
+    content: "";
+
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    transform: translateY(-50%) scale(1.5);
+
+	border-style: solid;
+	border-width: 2px 2px 0 0;
+	display: block;
+	height: 8px;
+
+	transform: rotate(135deg);
+	width: 8px;
+}
+
+.multi input:nth-child(odd) {
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.hasFocus { border-width: 2px; padding: 6px 0 4px 14px; }
+
+.hasValue.valid { border-color: #306d4a }
+.hasValue.error, .hasValue.invalid { border-color: rgba(252, 66, 75, 0.5); }
+
+.hasFocus:not(.hasValue) { border-color: #50739b; }
+
+.hasFocus ::-webkit-input-placeholder { color: #a7a9be; }
+.hasFocus :-ms-input-placeholder { color: #a7a9be; }
+.hasFocus ::placeholder { color: #a7a9be; }
+
+.container input::-webkit-input-placeholder { color: transparent }
+.container input:-ms-input-placeholder { color: transparent }
+.container input::placeholder { color: transparent }
+
+.multi input::-webkit-input-placeholder { color: #a7a9be; }
+.multi input:-ms-input-placeholder { color: #a7a9be; }
+.multi input::placeholder { color: #a7a9be; }
+
+.container textarea {
+    padding: 0;
+    line-height: 1.4em;
+    padding-top: 5px;
+}
+
+.container input[type="date"]::-webkit-calendar-picker-indicator,
+.container input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(100%) brightness(50%) sepia(80%) saturate(10000%);
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.search {
+    display: block;
+    width: 100%;
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: var(--fourth);
+    font-size: 15px;
+    color: var(--white);
+}

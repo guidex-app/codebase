@@ -1,18 +1,17 @@
-import { IconGift, IconKey, IconLocation, IconMail, IconPhone, IconSelect } from '@tabler/icons';
+import { IconGift, IconKey, IconLocation, IconMail, IconPhone, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
 
 import BackButton from '../../components/backButton';
 import FormButton from '../../components/form/basicButton';
-import BasicInput from '../../components/form/basicInput';
+import NormalInput from '../../components/form/Inputs/basic';
 import PickInput from '../../components/form/pickInput';
 import Modal from '../../container/modal';
 import { createUser, updateUserProfil } from '../../data/auth';
 import { fireDocument } from '../../data/fire';
 import { setStorageKeys } from '../../data/localStorage';
 import useForm from '../../hooks/useForm';
-import { FormInit } from '../../interfaces/form';
 import { User } from '../../interfaces/user';
 import Confirmation from './confirmation';
 import style from './style.module.css';
@@ -23,18 +22,27 @@ interface RegisterProps {
 }
 
 const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: RegisterProps) => {
-  const form: FormInit = {
-    firstName: { type: 'string', required: true },
-    lastName: { type: 'string', required: true },
-    title: { value: 'Herr', type: 'string', required: true },
-    email: { type: 'email', required: true },
-    password: { type: 'password', required: true },
-    plz: { type: 'plz', required: true },
-    interests: { value: [], type: 'string[]', required: true },
-    phone: { type: 'phone', required: true },
-    birthday: { type: 'string', required: true },
-  };
-  const { fields, formState, changeField, isValid } = useForm(form);
+  const { form, changeForm, isValid } = useForm({
+    // for all
+    email: undefined,
+    password: undefined,
+
+    // for users
+    title: 'Herr',
+    plz: '',
+    birthday: '',
+    interests: [],
+
+    // for reservation
+    firstName: undefined,
+    lastName: undefined,
+    phone: undefined,
+
+    // for company
+    companyFirstName: undefined,
+    companyLastName: undefined,
+    companyPhone: undefined,
+  }, ['email', 'password']);
   const [success, setSuccess] = useState(false);
 
   const updateUserKeys = (newStorageData: any) => {
@@ -64,30 +72,37 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
   ];
 
   const register = () => {
-    if (isValid()) {
-      createUser(fields.email, fields.password).then((userData: any) => {
+    if (isValid) {
+      createUser(form.email, form.password).then((userData: any) => {
         const uid = userData?.user?.uid;
         if (uid) {
-          const newUser = {
-            firstName: fields.firstName,
-            lastName: fields.lastName,
-            displayName: `${fields.firstName} ${fields.lastName.charAt(0)}.`,
-            title: fields.title,
-            email: fields.email,
-            plz: fields.plz,
-            interests: fields.interests,
-            phone: fields.phone,
-            birthday: fields.birthday,
+          const newUser: any = {
+            displayName: `${company ? form.companyFirstName : form.firstName} ${company ? form.companyLastName.charAt(0) : form.lastName.charAt(0)}.`,
+            email: form.email,
             uid,
+
+            ...(company ? {
+              companyFirstName: form.companyFirstname,
+              companyLastName: form.companyLastName,
+              companyPhone: form.companyPhone,
+            } : {
+              firstName: form.firstName,
+              lastName: form.lastName,
+              title: form.title,
+              plz: form.plz,
+              birthday: form.birthday,
+              interests: form.interests,
+              phone: form.phone,
+            }),
           };
 
           fireDocument(`user/${uid}`, newUser, 'set').then(() => {
             setSuccess(true);
           });
 
-          updateUserKeys({ email: newUser.email, displayName: newUser.displayName, interests: newUser.interests });
+          updateUserKeys({ email: newUser.email, displayName: newUser.displayName, ...(newUser.interests ? { interests: newUser.interests } : {}) });
         } else {
-          changeField('', 'password');
+          changeForm('', 'password');
         }
       });
     }
@@ -104,29 +119,28 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
       <form>
         <section class="group form">
           <h3>Dein Login</h3>
-          <BasicInput
+          <NormalInput
             label="E-Mail"
             name="email"
             icon={<IconMail />}
-            value={fields.email}
-            error={formState.email}
+            value={form.email}
+            group
             autocomplete="email"
             placeholder="Gebe eine E-Mail an"
             required
-            change={changeField}
+            change={changeForm}
           />
 
-          <BasicInput
+          <NormalInput
             icon={<IconKey />}
             label="Passwort"
             name="password"
             type="password"
-            value={fields.password}
-            error={formState.password}
+            value={form.password}
             autocomplete="current-password"
             placeholder="Neues Passwort"
             required
-            change={changeField}
+            change={changeForm}
           />
         </section>
 
@@ -134,40 +148,38 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
           <section class="group form">
             <h3>Ansprechpartner</h3>
 
-            <BasicInput
-              type="text"
+            <NormalInput
+              type="string"
               label="Vorname:"
-              name="firstName"
-              icon={<IconSelect />}
-              value={fields.plz}
+              name="companyFirstName"
+              group
+              icon={<IconUser />}
+              value={form.companyFirstName}
               placeholder="Dein Vorname"
-              error={formState.plz}
               required
-              change={changeField}
+              change={changeForm}
             />
 
-            <BasicInput
-              type="text"
+            <NormalInput
+              type="string"
               label="Nachname:"
-              name="firstName"
-              icon={<IconSelect />}
-              value={fields.plz}
-              placeholder="Dein Vorname"
-              error={formState.plz}
+              name="companyLastName"
+              icon={<IconUser />}
+              value={form.companyLastName}
+              placeholder="Dein Name"
               required
-              change={changeField}
+              change={changeForm}
             />
 
-            <BasicInput
-              type="tel"
+            <NormalInput
+              type="phone"
               label="Telefonnummer:"
-              name="firstName"
+              name="companyPhone"
               icon={<IconPhone />}
-              value={fields.plz}
+              value={form.companyPhone}
               placeholder="Deine Telefonnummer"
-              error={formState.plz}
               required
-              change={changeField}
+              change={changeForm}
             />
 
           </section>
@@ -176,97 +188,89 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
             <section class="group form">
               <h3>Für Deine Vorschläge</h3>
 
-              <BasicInput
+              <NormalInput
                 type="number"
                 label="Postleitzahl:"
                 name="plz"
                 icon={<IconLocation />}
-                value={fields.plz}
+                value={form.plz}
                 placeholder="Deine Postleitzahl"
-                error={formState.plz}
                 autocomplete="postal-code"
             // errorMessage="Bitte gebe eine Postleitzahl an"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
-              <BasicInput
+              <NormalInput
                 type="date"
                 label="Geburtstag:"
                 name="birthday"
                 icon={<IconGift />}
-                value={fields.birthday}
+                value={form.birthday}
                 placeholder="Dein Geburtstag"
-                error={formState.birthday}
                 autocomplete="bday"
             // errorMessage="Bitte gebe Dein Geburtsdatum an"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
               <PickInput
                 label="Titel"
                 name="title"
                 options={['Herr', 'Frau']}
-                value={fields.title}
-                error={formState.title}
+                value={form.title}
             // errorMessage="Bitte wähle Deinen Titel"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
               <PickInput
                 label="Wähle Deine Interessen"
                 name="interests"
                 options={interests.map((x) => x.name)}
-                value={fields.interests}
-                error={formState.interests}
+                value={form.interests}
             // errorMessage="Bitte wähle Deine Interessen"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
             </section>
 
             <section class="group form">
               <h3>Für die Reservierungen</h3>
-              <BasicInput
-                type="text"
+              <NormalInput
+                type="string"
                 label="Vorname:"
                 name="firstName"
+                group
                 autocomplete="given-name"
-                value={fields.firstName}
+                value={form.firstName}
                 placeholder="Deinen Vornamen"
-                error={formState.firstName}
-            // errorMessage="Bitte gebe ein Vornamen an"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
-              <BasicInput
-                type="text"
+              <NormalInput
+                type="string"
                 label="Nachname:"
                 name="lastName"
                 autocomplete="family-name"
-                value={fields.lastName}
+                value={form.lastName}
                 placeholder="Deinen Nachnamen"
-                error={formState.lastName}
-            // errorMessage="Bitte gebe ein Nachnamen an"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
-              <BasicInput
-                type="tel"
+              <NormalInput
+                type="phone"
                 label="Telefon:"
                 name="phone"
-                value={fields.phone}
+                value={form.phone}
                 placeholder="Deine Telefon-Nr."
-                error={formState.phone}
                 autocomplete="tel"
             // errorMessage="Bitte gebe eine Telefon-Nr. an"
                 required
-                change={changeField}
+                change={changeForm}
               />
             </section>
           </Fragment>

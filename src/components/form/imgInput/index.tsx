@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IconAlignCenter, IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp, IconGitCommit, IconUpload } from '@tabler/icons';
+import { IconAlignCenter, IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp, IconGitCommit, IconPhoto } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -14,12 +14,12 @@ import style from './style.module.css';
 interface ImgInputProps {
     label?: string,
     text?: string,
-    fileName: string,
+    fileName?: string,
     name: string,
     folderPath?: string,
     size: [number, number],
     hasImage: boolean,
-    change?: (name: string) => void;
+    change: (name: string) => void;
 }
 
 /**
@@ -35,7 +35,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
   const [imgPosition, setImgPosition] = useState<[('center' | 'left' | 'right'), ('top' | 'bottom' | 'middle')]>(['center', 'middle']);
 
   const uploadImage = () => {
-    const imageName = replaceSpecialCharacters(fileName);
+    const imageName = replaceSpecialCharacters(fileName || '');
     if (imageName && folderPath && progress === 0 && !!newImage) setUpload({ file: newImage, fileName: imageName, folderPath });
   };
 
@@ -132,7 +132,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
   useEffect(() => {
     if (progress === -1) {
       setIsOpen(false);
-      if (change) change(name);
+      change(name);
     }
   }, [progress]);
 
@@ -149,7 +149,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
 
   return (
     <Fragment>
-      <Item type="info" text={text} image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <IconUpload color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
+      <Item type="info" text={text} image={hasImage ? getImageUrl() : undefined} icon={hasImage ? undefined : <IconPhoto color="var(--orange)" />} label={label} action={() => setIsOpen(true)} />
 
       {isOpen && (
       <Popup close={() => setIsOpen(false)}>
@@ -167,7 +167,7 @@ const ImgInput: FunctionalComponent<ImgInputProps> = ({ change, hasImage, size, 
           />
 
           <div class={style.preview}>
-            <Chip small label="Neues Bild wählen" type="active" action={removeFile} />
+            <Chip label="Neues Bild wählen" type="active" action={removeFile} />
             <div class={style.preview_position}>
               <button onClick={() => changePosition('left', false)} type="button" aria-label="ausrichten"><IconChevronLeft color={imgPosition[0] === 'left' ? 'var(--red)' : undefined} /></button>
               <button onClick={() => changePosition('center', false)} type="button" aria-label="ausrichten"><IconAlignCenter color={imgPosition[0] === 'center' ? 'var(--red)' : undefined} /></button>

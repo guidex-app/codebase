@@ -9,6 +9,7 @@ import Counter from '../../../components/form/counter';
 import PickInput from '../../../components/form/pickInput';
 import TextHeader from '../../../components/iconTextHeader';
 import Item from '../../../components/item';
+import Spinner from '../../../components/spinner';
 import Modal from '../../../container/modal';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
@@ -17,7 +18,6 @@ import useForm from '../../../hooks/useForm';
 import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceInfo } from '../../../interfaces/company';
-import { FormInit } from '../../../interfaces/form';
 import Capacity from './capacity';
 
 interface ActivityProp {
@@ -27,27 +27,23 @@ interface ActivityProp {
 
 const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconDoorEnter color="#bf5bf3" />}
-        title="Verfügbarkeiten"
-        text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconDoorEnter color="#bf5bf3" />}
+      title="Verfügbarkeiten"
+      text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
+    />
+  );
+  if (!data) return header;
 
-  const formInit: FormInit = {
-    countMinPerson: { value: 1, type: 'number', required: false },
-    countMaxRoomPerson: { value: 10, type: 'number', required: false },
-
-    leadTimeInMin: { value: 30, type: 'number', required: false },
-    minAge: { value: 1, type: 'number', required: false },
-
-    defaultCapacity: { value: 10, type: 'number', required: true },
-    storno: { value: '24 Std.', type: 'string', required: false },
-  };
-  const { fields, formState, changeField, isValid } = useForm(formInit);
+  const { form, changeForm, isValid } = useForm({
+    countMinPerson: 1,
+    countMaxRoomPerson: 10,
+    leadTimeInMin: 30,
+    minAge: 1,
+    defaultCapacity: 10,
+    storno: '24 Std.',
+  }, ['countMinPerson', 'leadTimeInMin', 'minAge', 'defaultCapacity', 'storno']);
 
   const [selected, setSelected] = useState<ServiceInfo | false>(false);
   const { serviceList } = useServiceList(activityID);
@@ -58,30 +54,28 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
   useEffect(() => { if (serviceList !== false && !serviceList?.[1] && serviceList?.[0]) setSelected(serviceList[0]); }, [serviceList]);
 
   const validateForm = () => {
-    if (selected && selected.id && isValid()) {
-      fireDocument(`activities/${activityID}/available/${selected.id}`, fields, 'set').then(() => {
+    if (selected && selected.id && isValid) {
+      fireDocument(`activities/${activityID}/available/${selected.id}`, form, 'set').then(() => {
         if (!data.state?.includes('available')) fireDocument(`activities/${activityID}`, { online: false, state: mergeUnique(['available'], data.state) }, 'update');
         route(`/company/dashboard/${activityID}`);
       });
     }
   };
 
-  const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
-    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
+  const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', capacityText: string, icon: any } } = {
+    entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" />, capacityText: 'Verfügbare Eintrittskarten (Personen)' }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" />, capacityText: 'Verfügbare Objekte ' }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" />, capacityText: 'Verfügbare Räume/Bahnen/Spiele' },
   };
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconDoorEnter color="#bf5bf3" />}
-        title="Verfügbarkeiten"
-        text="Die Verfügbarkeiten geben für jeder Ihrer definierten Leistungen, Kapazitäten für jeden Tag an. Sie Definieren somit wie viele und wann gebucht werden kann."
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
         {data.openings ? (
           <Fragment>
+
+            {serviceList === false && <Spinner />}
 
             {serviceList !== false && !selected && (
             <section class="group form small_size_holder">
@@ -91,7 +85,7 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
             </section>
             )}
 
-            {selected !== false && (
+            {selected !== false && selected && (
             <Fragment>
               <form>
                 <section class="group form">
@@ -99,17 +93,17 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
                   <Counter
                     label="Mindest Personenanzahl"
                     name="countMinPerson"
-                    value={fields.countMinPerson}
+                    value={form.countMinPerson}
                     required
-                    change={changeField}
+                    change={changeForm}
                   />
                   {selected.serviceType !== 'entry' && (
                   <Counter
-                    label="Maximale Personenanzahl"
+                    label="Maximale Personenanzahl pro Raum/Bahn/Spiel/Objekt"
                     name="countMaxRoomPerson"
-                    value={fields.countMaxRoomPerson}
+                    value={form.countMaxRoomPerson}
                     required
-                    change={changeField}
+                    change={changeForm}
                   />
                   )}
                 </section>
@@ -117,24 +111,23 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
                 <section class="group form">
                   <h3>Reservierung</h3>
 
-                  <Counter label="Vorlaufzeit (Minuten)" name="leadTimeInMin" value={fields.leadTimeInMin} change={changeField} />
-                  <Counter label="Welches Mindestalter ist erforderlich" name="minAge" value={fields.minAge} change={changeField} />
+                  <Counter label="Vorlaufzeit (Minuten)" name="leadTimeInMin" value={form.leadTimeInMin} change={changeForm} />
+                  <Counter label="Welches Mindestalter ist erforderlich" name="minAge" value={form.minAge} change={changeForm} />
 
                   <PickInput
                     label="Stornierungs-Möglichkeiten"
                     name="storno"
                     options={['48 Std.', '24 Std.', '12 Std.', '8 Std.', '1 Std.', 'Nicht möglich']}
-                    value={[fields.storno]}
-                    error={formState.storno}
+                    value={[form.storno]}
                     required
-                    change={changeField}
+                    change={changeForm}
                   />
                 </section>
 
                 <section class="group form">
                   <h3>Anzahl der Verfügbarkeiten</h3>
 
-                  <Counter label="Standartverfügbarkeiten" name="defaultCapacity" value={fields.defaultCapacity} change={changeField} />
+                  <Counter label={serviceProps[selected.serviceType || 'entry'].capacityText} name="defaultCapacity" value={form.defaultCapacity} change={changeForm} />
                   <Item icon={<IconCalendar />} label="Individuell konfigurieren (Tag / Uhrzeit)" text="Klicke um für bestimmte Uhrzeiten oder Tage eine Individuelle verfügbarkeit anzugeben" type="grey" action={toggleShowCapacity} />
                 </section>
               </form>
@@ -148,13 +141,14 @@ const Availabilities: FunctionalComponent<ActivityProp> = ({ activity, activityI
         )}
 
       </main>
-      {showCapacity && data.openings && selected && selected.id && (
+      {showCapacity && data.openings && selected && selected.id && selected.serviceType && (
         <Modal title="Kapazitäten bearbeiten" close={toggleShowCapacity} type="large">
           <Capacity
             openings={data.openings}
             activityID={activityID}
             serviceID={selected.id}
-            defaultValue={fields.defaultCapacity || 10}
+            serviceType={selected.serviceType}
+            defaultValue={form.defaultCapacity || 10}
           />
         </Modal>
       )}

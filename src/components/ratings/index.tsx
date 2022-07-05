@@ -21,18 +21,19 @@ interface RatingProps {
 const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [0, 0, 0, 0, 0] }: RatingProps) => {
   const [newRating, setNewRating] = useState<number | false>(false);
   const [segment, setSegment] = useState<'tipps' | 'rating'>('rating');
-  const [list, setList] = useState<RatingComment[]>([]);
+  const [list, setList] = useState<RatingComment[] | undefined>(undefined);
+
+  const getRatings = async () => {
+    const data: RatingComment[] | undefined = await getFireCollection(`activities/${activityId}/${segment}`, 'vote', undefined, 30);
+    setList(data);
+  };
 
   useEffect(() => {
-    if (segment && activityId) {
-      getFireCollection(`activities/${activityId}/${segment}`, 'vote', undefined, 30).then((data: RatingComment[]) => {
-        setList(data);
-      });
-    }
+    if (segment && activityId) getRatings();
   }, [activityId, segment]);
 
   const vote = (commentUID: string, type: 'add' | 'remove', userVote?: number) => {
-    if (user.uid && commentUID) {
+    if (user.uid && commentUID && list) {
       voteItem(`activities/${activityId}/${segment}`, `activities/${activityId}/${segment}/${commentUID}/votes`, user.uid, commentUID, type).then(() => {
         const ratingIndex = list.findIndex((ra: RatingComment) => ra.uid === commentUID);
         if (ratingIndex !== -1) {
@@ -52,11 +53,11 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
       {segment === 'rating' && (
         <Fragment>
           <VisuellOverview rating={rating} />
-          <Chip small type="active" label="1 ★" action={() => setNewRating(1)} />
-          <Chip small type="active" label="2 ★" action={() => setNewRating(2)} />
-          <Chip small type="active" label="3 ★" action={() => setNewRating(3)} />
-          <Chip small type="active" label="4 ★" action={() => setNewRating(4)} />
-          <Chip small type="active" label="5 ★" action={() => setNewRating(5)} />
+          <Chip type="active" label="1 ★" action={() => setNewRating(1)} />
+          <Chip type="active" label="2 ★" action={() => setNewRating(2)} />
+          <Chip type="active" label="3 ★" action={() => setNewRating(3)} />
+          <Chip type="active" label="4 ★" action={() => setNewRating(4)} />
+          <Chip type="active" label="5 ★" action={() => setNewRating(5)} />
         </Fragment>
       )}
 

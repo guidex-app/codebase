@@ -5,7 +5,7 @@
 	background: transparent;
 	overflow: hidden;
 
-	display: grid; 
+	display: grid;
 	grid-template-columns: 100px calc(100% - 212px) 100px; 
 	grid-template-rows: 60px;
 	gap: 0px 5px; 
@@ -45,19 +45,22 @@
 	border: none;
 	text-decoration: none;
 	color: #ed576b;
-	height: 55px;
-	width: 55px;
+	height: 32px;
+	width: 32px;
 	vertical-align: middle;
-	background-color: transparent;
+	background-color: #232732;
 	border-radius: 50%;
 	cursor: pointer;
 	transition: 0.3s background ease-in-out;
-	will-change: background;
+	will-change: background, transform;
+	transition: 0.3s transform;
+	transform: scale(1);
 }
 
 .menu svg {
-	width: 25px;
-	height: 55px;
+	display: inline-block;
+	width: 20px;
+	height: 30px;
 }
 
-.menu button:hover { background: rgba(0,0,0,0.2); }
+.menu button:hover { background: var(--white); transform: scale(1.1) }

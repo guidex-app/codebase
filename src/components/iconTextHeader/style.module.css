@@ -9,6 +9,7 @@
 .textHeader > div {
 	flex-grow: 1;
 	width: 100%;
+	/* min-height: 158px; */
 }
 
 .textHeader h1 { padding-bottom: 15px; }
@@ -29,6 +30,25 @@
     background-color: #323643;
     color: transparent;
     margin: 5px 0;
+}
+
+.textHeader .showMore {
+	display: inline-block;
+	border: none;
+	border-bottom: 2px solid #989cb3;
+	color: #989cb3;
+	font: inherit;
+	font-size: 16px;
+	line-height: 18px;
+	font-weight: bolder;
+	cursor: pointer;
+}
+
+.textHeader .showMore + span {
+	display: inline-block;
+	max-height: 0;
+	color: transparent;
+	overflow: hidden;
 }
 
 .image img { width: 100%; height: auto; }

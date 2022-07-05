@@ -5,6 +5,7 @@ import BackButton from '../../components/backButton';
 import Masonry from '../../components/masonry';
 import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
+import useTitle from '../../hooks/seo/useTitle';
 import useCompany from '../../hooks/useCompany';
 import { Location } from '../../interfaces/user';
 import style from './style.module.css';
@@ -17,12 +18,13 @@ interface TopicProps {
 const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, location }: TopicProps) => {
   const data: any = useCompany(topicID, undefined, 'topics');
   const [list, setList] = useState<any[] | undefined>(undefined);
+  useTitle(`Guidex | ${data?.title?.name || 'Entdeckungen'}`);
 
   const loadTopicList = async () => {
     if (!data?.title) return;
     const cats: any = await getFireCollection(`geo/${location.geoHash}/categories`, false, undefined, 100);
 
-    const filteredCats = await filterCats(cats, data.filter, location.weather);
+    const filteredCats = await filterCats(cats, data.filter); // weather hinzufügen
 
     return setList(filteredCats);
   };

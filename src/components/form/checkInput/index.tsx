@@ -8,12 +8,12 @@ interface CheckInputProps {
     value?: boolean;
     disabled?: boolean;
     required?: true;
-    list?: true;
+    type?: 'small' | 'large' | 'list';
     change: (value: boolean, name: string) => void,
 }
 
-const CheckInput: FunctionalComponent<CheckInputProps> = ({ label, name, disabled, required, list, value, change }: CheckInputProps) => (
-  <div class={`${style.checkbox} ${list ? style.list : ''}`} onClick={() => !disabled && change(!value, name)} role="button" tabIndex={0}>
+const CheckInput: FunctionalComponent<CheckInputProps> = ({ label, name, disabled, required, value, type = 'small', change }: CheckInputProps) => (
+  <div class={`${style.checkbox} ${style[type]}`} onClick={() => !disabled && change(!value, name)} role="button" tabIndex={0}>
     <input type="checkbox" id={name} name={name} checked={!!value} />
     <span />
     <label for={name}>{required && '*'}{label}</label>

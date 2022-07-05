@@ -4,14 +4,13 @@ import { route } from 'preact-router';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
-import BasicInput from '../../../components/form/basicInput';
 import CheckInput from '../../../components/form/checkInput';
+import NormalInput from '../../../components/form/Inputs/basic';
 import TextHeader from '../../../components/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
 import { ActContact, Activity } from '../../../interfaces/activity';
-import { FormInit } from '../../../interfaces/form';
 
 interface ActivityProp {
     activityID: string;
@@ -20,143 +19,129 @@ interface ActivityProp {
 
 const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconHome color="#ff5613" />}
-        title="Kontakt"
-        text="Geben Sie den Nutzern kontaktinfos"
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconHome color="#ff5613" />}
+      title="Kontakt"
+      text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
+    />
+  );
+  if (!data) return header;
 
-  const formInit: FormInit = {
-    hasGuidexContact: { value: data?.guidexContact || true, type: 'boolean', required: false },
-    hasCustomerContact: { value: data?.customerContact || true, type: 'boolean', required: false },
+  const { form, changeForm, isValid } = useForm({
+    guidexContactName: data?.guidexContact?.name,
+    guidexContactPhone: data?.guidexContact?.phone,
 
-    guidexContactName: { value: data?.guidexContact?.name, type: 'string', required: false },
-    guidexContactPhone: { value: data?.guidexContact?.phone, type: 'phone', required: false },
+    hasCustomerContact: data?.customerContact || true,
+    customerContactPhone: data?.customerContact?.phone,
+    customerContactWebsite: data?.customerContact?.website,
 
-    customerContactPhone: { value: data?.customerContact?.phone, type: 'phone', required: false },
-    customerContactWebsite: { value: data?.customerContact?.website, type: 'website', required: false },
+    street: data?.address?.street || '',
+    place: data?.address?.place || '',
+    plz: data?.address?.plz || '',
 
-    street: { value: data?.address?.street || '', type: 'string', required: true },
-    place: { value: data?.address?.place || '', type: 'string', required: true },
-    plz: { value: data?.address?.plz || '', type: 'plz', required: true },
+    hasInvoiceAddress: !data?.hasInvoiceAddress || false,
 
-    hasInvoiceAddress: { value: !data?.hasInvoiceAddress || false, type: 'boolean', required: false },
-
-    invoiceStreet: { value: data?.invoiceAddress?.street || '', type: 'string', required: true },
-    invoicePlace: { value: data?.invoiceAddress?.place || '', type: 'string', required: true },
-    invoicePlz: { value: data?.invoiceAddress?.plz || '', type: 'plz', required: true },
-  };
-
-  const { fields, formState, changeField, isValid } = useForm(formInit);
-
-  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && route(`/company/openings/${activityID}`);
+    invoiceStreet: data?.invoiceAddress?.street || '',
+    invoicePlace: data?.invoiceAddress?.place || '',
+    invoicePlz: data?.invoiceAddress?.plz || '',
+  }, ['guidexContactName', 'guidexContactPhone', 'street', 'place', 'plz']);
 
   const validateForm = async () => {
-    if (isValid()) {
-      const contactFields: ActContact = {
-        ...(fields.hasGuidexContact && {
-          guidexContact: {
-            name: fields.guidexContactName || '',
-            phone: fields.guidexContactPhone || '',
-          },
-        }),
-        ...(fields.hasCustomerContact && {
+    if (isValid) {
+      const contactform: ActContact = {
+        guidexContact: {
+          name: form.guidexContactName || '',
+          phone: form.guidexContactPhone || '',
+        },
+        ...(form.hasCustomerContact && {
           customerContact: {
-            website: fields.customerContactWebsite || '',
-            phone: fields.customerContactPhone || '',
+            website: form.customerContactWebsite || '',
+            phone: form.customerContactPhone || '',
           },
         }),
-        hasInvoiceAddress: fields.hasInvoiceAddress,
-        ...(fields.hasInvoiceAddress && {
+        hasInvoiceAddress: form.hasInvoiceAddress,
+        ...(form.hasInvoiceAddress && {
           invoiceAddress: {
-            street: fields?.invoiceStreet,
-            place: fields?.invoicePlace,
-            plz: fields?.invoicePlz,
+            street: form?.invoiceStreet,
+            place: form?.invoicePlace,
+            plz: form?.invoicePlz,
           },
         }),
         address: {
-          street: fields?.street,
-          place: fields?.place,
-          plz: fields?.plz,
+          street: form?.street,
+          place: form?.place,
+          plz: form?.plz,
         },
       };
 
-      console.log(contactFields);
+      console.log(contactform);
 
-      await fireDocument(`activities/${data.title.form}`, contactFields, 'update');
+      await fireDocument(`activities/${data.title.form}`, contactform, 'update');
 
-      navigate();
+      route(`/company/openings/${activityID}`);
     }
   };
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconHome color="#ff5613" />}
-        title="Kontakt"
-        text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
         <form>
           <section class="group form">
-            <h3>Wo befindet sich Ihre Unternehmung?</h3>
+            <h3>Wo möchten sie ihr Erlebnis anbieten?</h3>
 
-            {['', ...(!fields.hasInvoiceAddress ? ['invoice'] : [])].map((addressString: string) => (
+            {['', ...(!form.hasInvoiceAddress ? ['invoice'] : [])].map((addressString: string) => (
               <Fragment>
-                {addressString && <h4>Rechnungsadresse</h4>}
-                <BasicInput
+                <NormalInput
                   icon={<IconBuilding color="#63e6e1" />}
-                  type="text"
+                  type="street"
+                  group
                   label="Straßenname und Hausnummer"
                   name={addressString ? 'invoiceStreet' : 'street'}
-                  value={fields[addressString ? 'invoiceStreet' : 'street']}
+                  value={form[addressString ? 'invoiceStreet' : 'street']}
                   placeholder="Straße bitte angeben"
-                  error={formState[addressString ? 'invoiceStreet' : 'street']}
-            //   errorMessage="Bitte gebe eine Straße an. Hausnummer im unteren Feld angeben."
                   required
-                  change={changeField}
+                  change={changeForm}
                 />
 
-                <BasicInput
+                <NormalInput
                   icon={<IconMap color="#63e6e1" />}
-                  type="text"
+                  type="string"
                   label="Ort"
+                  group
                   name={addressString ? 'invoicePlace' : 'place'}
-                  value={fields[addressString ? 'invoicePlace' : 'place']}
+                  value={form[addressString ? 'invoicePlace' : 'place']}
                   placeholder="z.B. Hamburg"
-                  error={formState[addressString ? 'invoicePlace' : 'place']}
-            //   errorMessage="Bitte geben Sie einen Ort an"
                   required
-                  change={changeField}
+                  change={changeForm}
                 />
 
-                <BasicInput
+                <NormalInput
                   icon={<IconMapSearch color="#63e6e1" />}
-                  type="number"
+                  type="plz"
                   label="Postleitzahl"
                   name={addressString ? 'invoicePlz' : 'plz'}
-                  value={fields[addressString ? 'invoicePlz' : 'plz']}
+                  value={form[addressString ? 'invoicePlz' : 'plz']}
                   placeholder="Ihre Postleitzahl"
-                  error={formState[addressString ? 'invoicePlz' : 'plz']}
-            //   errorMessage="Bitte geben Sie eine Postleitzahl an"
                   required
-                  change={changeField}
+                  change={changeForm}
                 />
 
                 {!addressString && (
-                <CheckInput
-                  label="Die angegebene Adresse entspricht der Rechnungsadresse"
-                  name="hasInvoiceAddress"
-                  value={fields.hasInvoiceAddress}
-                  change={changeField}
-                />
+                <Fragment>
+                  <h4>Rechnungsadresse</h4>
+                  <CheckInput
+                    label="Die angegebene Adresse entspricht der Rechnungsadresse"
+                    name="hasInvoiceAddress"
+                    value={form.hasInvoiceAddress}
+                    change={changeForm}
+                  />
+                </Fragment>
                 )}
+
               </Fragment>
             ))}
 
@@ -167,42 +152,28 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
           <section class="group form">
             <h3>Ansprechpartner für Guidex vor Ort</h3>
 
-            <CheckInput
-              label="Wir haben einen extra Ansprechpartner vor Ort"
-              name="hasGuidexContact"
-              value={fields.hasGuidexContact}
-              change={changeField}
+            <NormalInput
+              icon={<IconSelect color="#fea00a" />}
+              type="string"
+              label="Ansprechpartner:"
+              name="guidexContactName"
+              group
+              value={form.guidexContactName}
+              placeholder="Name der des Ansprechpartners"
+              required
+              change={changeForm}
             />
 
-            {fields.hasGuidexContact && (
-            <Fragment>
-              <BasicInput
-                icon={<IconSelect color="#fea00a" />}
-                type="text"
-                label="Ansprechpartner:"
-                name="guidexContactName"
-                value={fields.guidexContactName}
-                placeholder="Name der des Ansprechpartners"
-                error={formState.guidexContactName}
-                // errorMessage="Bitte gebe einen Ansprechpartner an"
-                required
-                change={changeField}
-              />
-
-              <BasicInput
-                icon={<IconPhoneCall color="#fea00a" />}
-                type="number"
-                label="Tel:"
-                name="guidexContactPhone"
-                value={fields.guidexContactPhone}
-                placeholder="Tel. des Ansprechpartners"
-                error={formState.guidexContactPhone}
-                // errorMessage="Bitte gebe einen Telefonnummer an"
-                required
-                change={changeField}
-              />
-            </Fragment>
-            )}
+            <NormalInput
+              icon={<IconPhoneCall color="#fea00a" />}
+              type="phone"
+              label="Tel:"
+              name="guidexContactPhone"
+              value={form.guidexContactPhone}
+              placeholder="Tel. des Ansprechpartners"
+              required
+              change={changeForm}
+            />
 
             <p style={{ color: 'var(--fifth)' }}>*Der Ansprechpartner wird nur für interne Fragen benötigt und wird nicht veröffentlicht.</p>
 
@@ -214,36 +185,31 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
             <CheckInput
               label="Wir haben einen Kontakt (für Nutzer)"
               name="hasCustomerContact"
-              value={fields.hasCustomerContact}
-              change={changeField}
+              value={form.hasCustomerContact}
+              change={changeForm}
             />
 
-            {fields.hasCustomerContact && (
+            {form.hasCustomerContact && (
             <Fragment>
-              <BasicInput
-                // icon={laptopOutline}
-                type="text"
+              <NormalInput
+                type="string"
                 label="Web:"
+                group
                 name="customerContactWebsite"
-                value={fields.customerContactWebsite}
+                value={form.customerContactWebsite}
                 placeholder="Tel. des Ansprechpartners"
-                error={formState.customerContactWebsite}
-                // errorMessage="Bitte gebe einen Website an"
                 required
-                change={changeField}
+                change={changeForm}
               />
 
-              <BasicInput
-                // icon={laptopOutline}
-                type="number"
+              <NormalInput
                 label="Tel.:"
+                type="phone"
                 name="customerContactPhone"
-                value={fields.customerContactPhone}
+                value={form.customerContactPhone}
                 placeholder="Kundentelefon bitte angeben"
-                error={formState.customerContactPhone}
-                // errorMessage="Bitte gebe ein Kundentelefon an"
                 required
-                change={changeField}
+                change={changeForm}
               />
             </Fragment>
             )}
@@ -252,7 +218,7 @@ const Contact: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Ac
 
           </section>
 
-          <FormButton action={validateForm} label="Speichern" />
+          <FormButton action={validateForm} disabled={!isValid} label="Speichern" />
 
         </form>
 

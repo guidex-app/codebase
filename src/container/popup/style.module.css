@@ -3,7 +3,7 @@
     z-index: 80;
 
     overflow-y: scroll;
-    background-color: black;
+    background-color: var(--third);
 
     left: 50%;
     top: 50%;
@@ -20,5 +20,5 @@
   .content {
     overflow: auto;
     min-height: 200px;
-    padding: 0 10px 10px 10px;
+    padding: 15px;
   }

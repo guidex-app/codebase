@@ -10,7 +10,6 @@
     background-color: var(--fourth);
 }
 
-.errorMessage { color: rgba(252, 66, 75, 0.5); }
 .container .valid { border: 1px solid rgba(0, 210, 91, 0.5); }
 .container .error, .container .invalid { border: 1px solid rgba(252, 66, 75, 0.5); }
 

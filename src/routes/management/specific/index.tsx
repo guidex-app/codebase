@@ -1,18 +1,16 @@
-import { IconGlobe, IconSelect, IconStar } from '@tabler/icons';
+import { IconSelect, IconStar } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
-import BasicInput from '../../../components/form/basicInput';
+import TextInput from '../../../components/form/Inputs/textArea';
 import PickInput from '../../../components/form/pickInput';
-import SelectInput from '../../../components/form/selectInput';
 import TextHeader from '../../../components/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
-import { FormInit } from '../../../interfaces/form';
 
 interface ActivityProp {
     activityID: string;
@@ -21,43 +19,34 @@ interface ActivityProp {
 
 const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconStar color="#2fd159" />}
-        title="Spezifische Infos"
-        text="Bitte gebe alle gesonderten Informationen zu deiner Unternehmung an."
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconStar color="#2fd159" />}
+      title="Spezifische Infos"
+      text="Bitte gebe alle gesonderten Informationen zu deiner Unternehmung an."
+    />
+  );
+  if (!data) return header;
 
-  const formInit: FormInit = {
-    filter: { value: data.filter, type: 'string[]', required: false },
-    language: { value: data.language, type: 'string[]', required: false },
-  };
-
-  const { fields, formState, changeField, isValid } = useForm(formInit);
-
-  const navigate = (finished?: true) => (formState.image !== 'valid' || finished) && route(`/company/images/${data.title.form}`);
+  const { form, changeForm, isValid } = useForm({
+    filter: data.filter,
+    language: data.language,
+  });
 
   const validateForm = async () => {
-    if (isValid()) {
+    if (isValid) {
       const formFields = {
-        ...(fields.filter && { filter: fields.filter }),
+        ...(form.filter && { filter: form.filter }),
       };
       await fireDocument(`activities/${data.title.form}`, formFields, 'update');
 
-      navigate();
+      route(`/company/images/${data.title.form}`);
     }
   };
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconStar color="#2fd159" />}
-        title="Spezifische Infos"
-        text="Bitte gebe alle gesonderten Informationen zu deiner Unternehmung an."
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
@@ -69,11 +58,10 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
               label="Welche Events können bei euch veranstaltet werden?"
               name="filter"
               options={['Weihnachtsfeiern', 'Geburtstagsfeiern', 'Schulausflüge', 'Firmenevents']}
-              value={fields.filter}
-              error="valid"
-            // errorMessage="Bitte wähle Deine Interessen"
+              value={form.filter}
+              multi
               required
-              change={changeField}
+              change={changeForm}
             />
 
           </section>
@@ -85,11 +73,9 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
               label="Wähle alle vorhandenen Ausstattungen aus."
               name="filter"
               options={['Parkmöglichkeiten', 'Barrierefrei', 'Gastronomie', 'Hunde sind erlaubt', 'Öffentliche Toiletten']}
-              value={fields.filter}
-              error="valid"
-            // errorMessage="Bitte wähle Deine Interessen"
-              required
-              change={changeField}
+              value={form.filter}
+              multi
+              change={changeForm}
             />
 
           </section>
@@ -100,22 +86,18 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
               label="Welche Sicherheitsmaßnahmen gelten bei euch?"
               name="filter"
               options={['Corona Maßnahmen', 'Maskenpflicht', '3G', '3G+', '2G', '2G+']}
-              value={fields.filter}
-              error="valid"
-            // errorMessage="Bitte wähle Deine Interessen"
-              required
-              change={changeField}
+              value={form.filter}
+              multi
+              change={changeForm}
             />
 
-            <BasicInput
+            <TextInput
               icon={<IconSelect />}
               label="Zusätzliche Informationen zu den Sicherheitsmaßnahmen"
               name="description"
-              type="textarea"
-              value={fields.description}
+              value={form.description}
               placeholder="z.B.: Die maximale Gruppengröße beträgt 4 Personen und die Mindestabstände sind einzuhalten."
-              error={formState.description}
-              change={changeField}
+              change={changeForm}
             />
 
           </section>
@@ -123,21 +105,18 @@ const Specific: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
           <section class="group form">
             <h3>Sprachen</h3>
 
-            <SelectInput
-              icon={<IconGlobe />}
+            <PickInput
               label="Welche Sprachen sprechen Sie oder Ihre Mitarbeiter?"
               name="language"
               options={['Deutsch', 'Englisch', 'Französisch', 'Russisch', 'Spanisch']}
-              value={fields.language}
-              error={formState.language}
-              change={changeField}
+              multi
+              value={form.language}
+              change={changeForm}
             />
-
-            <p style={{ color: 'var(--orange)' }}>MEHRERE ANHAKEN ERMÖGLICHEN</p>
 
           </section>
 
-          <FormButton action={validateForm} label="Speichern und weiter" />
+          <FormButton action={validateForm} disabled={!isValid} label="Speichern und weiter" />
 
         </form>
 

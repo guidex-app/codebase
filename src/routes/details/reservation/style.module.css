@@ -1,23 +1,65 @@
 .price {
     color: var(--white);
     border-radius: 20px;
-    margin-bottom: 15px;
     display: flex;
-    align-items: center;
-    padding: 10px 10px 10px 20px;
+    place-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+    /* padding: 15px 15px 5px 15px; */
 }
 
-.price div {
-    width: calc(100% - 100px);
+.room {
+    position: relative;
+    width: 100%;
+    margin-bottom: 7px;
+    padding: 5px 20px 22px 20px;
+}
+
+.room .row td {
+    width: calc(100% / 3);
+}
+
+.room .head {
+    display: block;
+    margin-top: -13px;
+    margin-left: -10px;
+}
+
+.room .head td {
+    display: block;
+    padding-bottom: 5px;
     font-weight: bolder;
 }
 
-.price strong {
-    display: block;
-    width: 100px;
-    padding: 20px;
-    text-align: center;
-    background-color: var(--white);
-    border-radius: 20px;
-    color: #ffa500;
+.head strong {
+    display: inline-block;
+    position: relative;
+    padding: 0 10px;
+    color: var(--orange);
+    background-color: #20192a;
 }
+
+.room:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 10px;
+    clip-path: polygon(0% 0%, 0% 100%, 7px 100%, 7px 7px, calc(100% - 7px) 7px, calc(100% - 7px) calc(100% - 7px), 0 calc(100% - 10px), 0 100%, 100% 100%, 100% 0%);
+    background: 
+    linear-gradient(-45deg, transparent 45%, var(--orange) 45%, var(--orange) 55%, transparent 55%) 0 0/10px 10px,
+    linear-gradient(-45deg, transparent 45%, var(--orange) 45%, var(--orange) 55%, transparent 55%) 5px 0px/10px 10px;
+    background-color:rgba(255,255,255,0.3);
+  }
+
+  .totalPrice {
+      display: block;
+      padding: 15px;
+      font-weight: bolder;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    background: rgb(255,199,8);
+    background: linear-gradient(90deg,#fa8142, #ff4088);
+  }

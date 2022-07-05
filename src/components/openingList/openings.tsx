@@ -1,10 +1,10 @@
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { isInTimeRange, shortDay } from '../../helper/date';
+import { getCurrentShortname, isInTimeRange, shortDay } from '../../helper/date';
 import style from './style.module.css';
 
-interface OpeningListProp { openings?: (string | false)[]; day?: number }
+interface OpeningListProp { openings?: (string | false)[]; day?: string }
 
 const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings, day }: OpeningListProp) => {
   const [list, setList] = useState<[string, string][]>([['', ''], ['', ''], ['', ' ']]);
@@ -23,7 +23,9 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings, day }: Op
   };
 
   const generateOpenings = () => {
-    const currentDayNr = day ? new Date(day).getDay() : new Date().getDay();
+    const currentDay = getCurrentShortname(day ? new Date(day).getDay() : undefined);
+    console.log(currentDay);
+    const currentDayNr = shortDay?.indexOf(currentDay);
     const newList: [string, string][] = [];
 
     openings?.forEach((x: (string | false), dayIndex: number) => {
@@ -40,7 +42,7 @@ const OpeningList: FunctionalComponent<OpeningListProp> = ({ openings, day }: Op
 
   return (
     <div class={style.openings}>
-      {today && <div style={{ color: 'var(--fifth)' }}><strong style={{ color: today[0] ? 'var(--green)' : 'var(--red)' }}>{`${day ? shortDay[new Date(day).getDay()] : 'Heute'}, `}{today[0] ? 'Geöffnet' : 'Geschlossen'}</strong> ⋅ {today[1]}</div>}
+      {today && <div style={{ color: 'var(--fifth)' }}><strong style={{ color: today[0] ? 'var(--green)' : 'var(--red)' }}>{`${day ? getCurrentShortname(new Date(day).getDay()) : 'Heute'}, `}{today[0] ? 'Geöffnet' : 'Geschlossen'}</strong> ⋅ {today[1]}</div>}
       {list?.map((days: [string, string]) => <div><strong>{days[0] ? `${days[0]}:` : ''}&nbsp;</strong>{days[1]}</div>)}
 
       <div style={{ color: 'var(--red)' }}>

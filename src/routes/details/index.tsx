@@ -16,7 +16,7 @@ import Reservation from './reservation';
 interface DetailsProps {
     activityID: string;
     user: User;
-    day?: number;
+    day?: string;
 }
 
 const Details: FunctionalComponent<DetailsProps> = ({ activityID, user, day }: DetailsProps) => {
@@ -47,7 +47,7 @@ const Details: FunctionalComponent<DetailsProps> = ({ activityID, user, day }: D
         <Item icon={<IconMapPin />} label={data ? `${data.address?.street || ''} ${data.address?.houseNumber || ''}, ${data.address?.plz || ''} ${data.address?.place || ''}` : ''} text="Klicke zum kopieren" type="info" />
         {data?.customerContact?.website && <Item icon={<IconGlobe />} label={data.customerContact?.website} text="Klicke zum öffnen" type="grey" />}
         {data?.customerContact?.phone && <Item icon={<IconPhone />} label={data?.customerContact?.phone} text="Klicke zum anrufen" type="grey" />}
-        {data?.openings && <Reservation activityID={activityID} openings={data?.openings} day={day} />}
+        {data?.openings && <Reservation uid={user.uid} activityID={activityID} openings={data?.openings} day={day} />}
         <IconScrollList filter={data?.filter} />
         <Rating user={user} activityId={activityID} rating={data?.rating} />
       </main>

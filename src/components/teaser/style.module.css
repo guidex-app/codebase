@@ -10,28 +10,40 @@
   position: relative;
   padding-top: 70px;
   background: rgb(82,117,109);
-  background: linear-gradient(180deg, rgba(243, 118, 22, 0.7) 0%, rgba(43, 0, 121, 0.7) 100%);
+  background: linear-gradient(180deg, rgba(243, 118, 22, 0.85) 0%, rgba(43, 0, 121, 0.8) 100%);
   height: 370px;
 }
 
 .weatherText {
   position: relative;
   display: inline-block;
-  background: var(--dark);
+  background: var(--first);
   line-height: 30px;
-  letter-spacing: 2px;
-  border-radius: 10px;
+
+  border-radius: 12px;
   min-width: 200px;
   font-size: 11px;
+
+  letter-spacing: 2px;
+
   padding: 0 15px;
   z-index: 1;
   color: var(--orange);
   text-transform: uppercase;
 }
 
+.weatherText strong {
+  background-image: linear-gradient(to right,#f5af19,#f12711);
+  background-clip: text;
+  font-weight: 500;
+  text-fill-color: transparent;
+  color: transparent;
+}
+
 .teaser h1 {
   line-height: 1.1em;
   font-size: 2.2em;
+  font-weight: 800;
 }
 
 .teaser p {
@@ -39,8 +51,11 @@
   margin: 0 auto;
 
   display: inline-block;
-  font-size: 1.1em;
+  font-size: 1.05em;
+  font-weight: 500;
   padding: 7px 0 20px;
+  font-style: italic;
+  letter-spacing: 1px;
   color: #e1e1e1;
 }
 

@@ -5,7 +5,8 @@ import { useEffect, useState } from 'preact/hooks';
 import { getFireDocument, setNewRating } from '../../data/fire';
 import { User } from '../../interfaces/user';
 import FormButton from '../form/basicButton';
-import BasicInput from '../form/basicInput';
+import NormalInput from '../form/Inputs/basic';
+import TextInput from '../form/Inputs/textArea';
 import style from './style.module.css';
 
 interface AddRatingProps {
@@ -88,23 +89,22 @@ const AddRating: FunctionalComponent<AddRatingProps> = ({ user, activityId, rati
         </div>
       )}
 
-      <BasicInput
-        type="text"
+      <NormalInput
+        type="string"
         label="Titel (optional)"
         name="capture"
+        group
         value={ownComment.capture}
         placeholder="Gebe einen Titel an"
         // error={fieldErrors.capture}
         change={changeValue}
       />
 
-      <BasicInput
-        type="textarea"
+      <TextInput
         label={`Dein ${type === 'rating' ? 'Bewertung (optional)' : 'Tipp'}`}
         name="comment"
         value={ownComment.comment}
         placeholder="Beschreibe dein Statement"
-        // error={fieldErrors.comment}
         change={changeValue}
       />
 

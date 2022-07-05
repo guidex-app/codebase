@@ -1,6 +1,7 @@
 :root {
     /* TEXT COLOR */
-    --white: #f2f2f2;
+    --white: #fdfdfd;
+    --black: #2f2f2f;
     --red: #f04c54;
     --orange: #ffab00;
     --blue: #0090e7;
@@ -11,7 +12,7 @@
     /* DARK COLORS */
     --dark: #111218; /* black */
 
-    --first: #191C25; /* background */
+    --first: #181122; /* background */
     --second: #20192a; /* modal */
 
     --third: #232732; /* group */

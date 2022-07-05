@@ -8,16 +8,18 @@ interface CounterProps {
     label: string;
     name: string;
     value?: number;
+    group?: true;
     min?: number;
     max?: number;
     steps?: number;
     icon?: any;
     required?: true;
+    text?: string;
     large?: true;
     change: (value: any, key: string) => void,
 }
 
-const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, required, min = 1, large, max = 10000, value = 0, steps = 1, change }: CounterProps) => {
+const Counter: FunctionalComponent<CounterProps> = ({ label, icon, text, group, name, required, min = 1, large, max = 10000, value = 0, steps = 1, change }: CounterProps) => {
   const newValue = (typ: 'add' | 'remove') => {
     const checkAdd: boolean = typ === 'add' && (+value + steps) <= max;
     const checkRemove: boolean = typ === 'remove' && (+value - steps) >= min;
@@ -30,13 +32,13 @@ const Counter: FunctionalComponent<CounterProps> = ({ label, icon, name, require
   };
 
   return (
-    <div class={`${style.counter} ${large ? style.large : ''}`}>
+    <div class={`${style.counter} ${large ? style.large : ''} ${group ? style.group : ''}`}>
       {icon && icon}
-      <label for={name}>{required && '*'}{label}</label>
+      <label for={name}>{required && '*'}{label}&nbsp; {text && <small>{text}</small>}</label>
       <div>
-        <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, color: '#ccc' }}><IconMinus /></button>
+        <button onClick={() => newValue('remove')} type="button" style={(+value - steps) >= min ? undefined : { opacity: 0.5, cursor: 'not-allowed', color: '#ccc' }}><IconMinus /></button>
         <input id={name} type="number" value={value} min={min} max={max} onInput={setValue} />
-        <button onClick={() => newValue('add')} type="button" style={(+value + steps) <= max ? undefined : { opacity: 0.5, color: '#ccc' }}><IconPlus /></button>
+        <button onClick={() => newValue('add')} type="button" style={(+value + steps) <= max ? undefined : { opacity: 0.5, cursor: 'not-allowed', color: '#ccc' }}><IconPlus /></button>
       </div>
     </div>
   );

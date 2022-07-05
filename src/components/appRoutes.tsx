@@ -1,79 +1,79 @@
-import { FunctionalComponent, h } from 'preact';
-import { useEffect, useReducer, useState } from 'preact/hooks';
+import { Fragment, FunctionalComponent, h } from 'preact';
+import { useEffect, useReducer } from 'preact/hooks';
 import { Route, Router } from 'preact-router';
 
 import { getStorageKeys, setStorageKeys } from '../data/localStorage';
-import getWeather from '../data/weather';
-import { Location, User, Weather } from '../interfaces/user';
+import { Location, User } from '../interfaces/user';
 import ActivityList from '../routes/activity';
 import Admin from '../routes/admin';
 import Cats from '../routes/cats';
 import Details from '../routes/details';
 import Explore from '../routes/explore';
+import Lists from '../routes/lists';
 import Management from '../routes/management';
 import NotFoundPage from '../routes/notfound';
 import Profile from '../routes/profile';
 import Register from '../routes/register';
 import SignIn from '../routes/signIn';
 import TopicPage from '../routes/topic';
+import Menu from './menu';
 
 const AppRoutes: FunctionalComponent = () => {
   const [user, updateUser] = useReducer((state: User, newState: User) => ({ ...state, ...newState }), {});
-  const [weatherList, setWeatherList] = useState<Weather[] | undefined>();
 
-  const getNewLocation = async (forDay: number) => {
-    const location: Location = {
-      lat: 53.5510846,
-      lng: 9.9936818,
-      city: 'Hamburg',
-      geoHash: 'u1x0',
-      date: new Date(new Date().setDate(new Date().getDate() + forDay)).getTime(),
-    };
-
-    let weather: Weather[] | undefined;
-
-    if (weatherList) {
-      weather = weatherList;
-    } else {
-      weather = await getWeather(location.lat, location.lng);
-      setWeatherList(weather);
-    }
-
-    setStorageKeys({ location: JSON.stringify({ ...location, weather: weather[forDay] }) });
-    updateUser({ location: { ...location, weather: weather[forDay] } });
-  };
-
-  const getUserData = async () => {
-    const userData: User = await getStorageKeys(['displayName', 'email', 'location', 'uid']);
-    updateUser(userData);
-    // if (userData.location?.weather && isDayGreater(userData.location.date, 1)) return updateUser(userData);
-    return getNewLocation(0);
+  /**
+   * Verwaltet die User-Daten beim Seitenaufruf
+   * 1. Daten werden aus dem Storage geladen.
+   * 2. Überprüfen ob die Daten aktuell sind.
+   * 3. Alten oder ggf. neue Daten einstellen.
+   */
+  const firstData = async () => {
+    const store: User = await getStorageKeys(['location', 'day', 'weather']);
+    const DEFAULT_LOCATION: Location = { lat: 53.5510846, lng: 9.9936818, city: 'Hamburg', geoHash: 'u1x0' };
+    updateUser(store.location ? store : { ...store, location: DEFAULT_LOCATION });
   };
 
   /** lädt die user daten beim start */
-  useEffect(() => { getUserData(); }, []);
+  useEffect(() => { firstData(); }, []);
+
+  const updateData = async (newData: User) => {
+    updateUser(newData);
+    setStorageKeys(newData);
+  };
+
+  /**
+   * 1. Location
+   *    1. Storage sonst standart
+   * 2. Geohash kriegen
+   * 3. Wetter & Kategorien laden
+   * 4. Kategorien Filtern
+   */
 
   return (
+    <Fragment>
+      <Menu email={user.email} />
 
-    <Router>
-      <Route path="/" component={Cats} getNewLocation={getNewLocation} location={user.location} interests={user.interests} />
-      <Route path="/explore/" component={Explore} />
-      <Route path="/explore/:topicID" component={TopicPage} location={user.location} />
+      <Router>
+        <Route path="/" component={Cats} updateUser={updateData} day={user.day} weather={user.weather} location={user.location} />
+        <Route path="/explore/" component={Explore} />
+        <Route path="/explore/:topicID" component={TopicPage} location={user.location} />
 
-      <Route path="/admin/" component={Admin} />
+        <Route path="/admin/" component={Admin} />
 
-      {/* <AsyncRoute path="/company/:rest*" component={Management} user={user} /> */}
-      <Route path="/company/:rest*" component={Management} uid={user.uid} />
-      <Route path="/activity/:categoryID" component={ActivityList} day={user.location?.date} />
-      <Route path="/profile/" component={Profile} updateUser={updateUser} />
-      <Route path="/register/" component={Register} updateUser={updateUser} />
-      <Route path="/register/:company" component={Register} updateUser={updateUser} />
-      <Route path="/login/" component={SignIn} updateUser={updateUser} />
-      <Route path="/logout" component={SignIn} updateUser={updateUser} logout="logout" />
-      <Route path="/activity/:categoryID/:activityID" user={user} component={Details} day={user.location?.date} />
-      <NotFoundPage default />
-    </Router>
+        <Route path="/lists" component={Lists} uid={user.uid} />
+        {/* <Route path="/lists/:id" component={ListPage} uid={user.uid} /> */}
 
+        <Route path="/company/:rest*" component={Management} uid={user.uid} />
+        <Route path="/activity/:categoryID" component={ActivityList} day={user.day} />
+        <Route path="/profile/" component={Profile} updateUser={updateUser} />
+        <Route path="/register/" component={Register} updateUser={updateUser} />
+        <Route path="/register/:company" component={Register} updateUser={updateUser} />
+        <Route path="/login/" component={SignIn} updateUser={updateUser} />
+        <Route path="/logout" component={SignIn} updateUser={updateUser} logout="logout" />
+        <Route path="/activity/:categoryID/:activityID" user={user} component={Details} day={user.day} />
+        <NotFoundPage default />
+      </Router>
+    </Fragment>
   );
 };
 

@@ -1,14 +1,19 @@
-import { IconCompass, IconGlobe, IconLock, IconLogin, IconLogout, IconMenu, IconPaperclip, IconUser } from '@tabler/icons';
+import { IconBulb, IconChevronsLeft, IconCompass, IconHeart, IconLock, IconLogin, IconLogout, IconTools, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { route } from 'preact-router';
 
 import { getUser } from '../../data/auth';
 import Item from '../item';
 import Overlay from '../overlay';
 import style from './style.module.css';
 
-const Menu: FunctionalComponent = () => {
+interface MenuProps {
+  email?: string;
+}
+
+const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
   const [user, setUser] = useState<{
     email: string,
     displayName: string,
@@ -18,19 +23,20 @@ const Menu: FunctionalComponent = () => {
 
   const routes: { title: string; link: string; icon: any }[] = [
     { title: 'Für mich', link: '/', icon: <IconCompass /> },
-    { title: 'Entdecken', link: '/explore', icon: <IconGlobe /> },
+    { title: 'Listen', link: '/lists', icon: <IconHeart /> },
+    { title: 'Entdecken', link: '/explore', icon: <IconBulb /> },
   ];
 
   const userRoutes: { title: string; link: string; icon: any }[] = [
     // { title: 'Listen', link: '/lists', icon: <Bookmark /> },
     // { title: 'Einstellungen', link: '/settings', icon: <Settings /> },
     { title: 'Profile', link: '/profile', icon: <IconUser /> },
-    { title: 'Verwaltung', link: '/company', icon: <IconPaperclip /> },
+    { title: 'Erlebnisse verwalten', link: '/company', icon: <IconTools /> },
   ];
 
   const checkUserState = async (): Promise<void> => {
-    const { displayName, email } = await getUser();
-    if (displayName && email) setUser(displayName && email ? { displayName, email } : undefined);
+    const { displayName, email: serverMail } = await getUser();
+    if (displayName && serverMail) setUser(displayName && serverMail ? { displayName, email: serverMail } : undefined);
   };
 
   const getElement = () => {
@@ -44,9 +50,25 @@ const Menu: FunctionalComponent = () => {
 
   return (
     <Fragment>
-      <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
-        <IconMenu color="var(--white)" size="24" />
-      </button>
+      <div class={style.button}>
+        <button onClick={() => route('/')} type="button" aria-label="Menü">
+          <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
+        </button>
+
+        <button onClick={() => route('/lists')} type="button" aria-label="Menü">
+          <IconHeart />
+        </button>
+        <button onClick={() => route('/explore')} type="button" aria-label="Menü">
+          <IconBulb />
+        </button>
+        <button onClick={toggleModal} class={style.openMenu} type="button" aria-label="Menü">
+          <IconChevronsLeft />
+        </button>
+
+      </div>
+      {/* <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
+        <IconUserCircle color="var(--white)" size="24" />
+      </button> */}
 
       {show && container.current && createPortal(
         (
@@ -60,7 +82,7 @@ const Menu: FunctionalComponent = () => {
                   <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                 ))}
 
-                {user?.email ? (
+                {email && user?.email ? (
                   <Fragment>
                     <h4>Account</h4>
                     {userRoutes.map((item: { title: string; link: string; icon: any }) => (

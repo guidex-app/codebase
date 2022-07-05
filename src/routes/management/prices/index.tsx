@@ -1,5 +1,4 @@
-/* eslint-disable no-nested-ternary */
-import { IconArrowLeftCircle, IconBrandDribbble, IconCurrencyDollar, IconHome, IconUser } from '@tabler/icons';
+import { IconBrandDribbble, IconCurrencyDollar, IconHome, IconPlus, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -16,7 +15,6 @@ import useCompany from '../../../hooks/useCompany';
 import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
-import ChangeStructure from './changeStructure';
 import EditPrices from './prices';
 import StructureQuestions from './structureQuestions';
 
@@ -27,15 +25,14 @@ interface ActivityProp {
 
 const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconCurrencyDollar color="#fea00a" />}
-        title="Preise"
-        text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconCurrencyDollar color="#fea00a" />}
+      title="Preise"
+      text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
+    />
+  );
+  if (!data) return header;
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
     entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
@@ -44,8 +41,8 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   const [show, setShow] = useState<'prices' | 'structure' | 'belongs'>('structure');
   const [selected, setSelected] = useState<{ service?: ServiceInfo, structure?: Structure } | undefined>();
 
-  const { serviceList, updateServiceList } = useServiceList(activityID);
-  const [structureList, setStructureList] = useState<Structure[]>([]);
+  const { serviceList } = useServiceList(activityID);
+  const [structureList, setStructureList] = useState<Structure[] | undefined>(undefined);
   const [serviceFields, setServiceFields] = useState<ServiceField[] | false | undefined>(false);
 
   /** Lade alle services von der activity ID */
@@ -57,7 +54,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   useEffect(() => { getServiceStructures(); }, []); // load servicelist
 
   const selectService = (service: ServiceInfo) => {
-    const structure: Structure | undefined = structureList.find((s) => s.id === service.structureID);
+    const structure: Structure | undefined = structureList?.find((s) => s.id === service.structureID);
     setSelected({ service, structure });
     setShow(service && structure ? 'prices' : 'belongs');
   };
@@ -117,16 +114,16 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       return fireDocument(`activities/${data.title.form}/structures/${structureID}`, initialField, 'set');
     }
 
-    console.log('specs', specs);
     setSelected({ ...selected, structure: { id: structureID, ...specs } });
     fireDocument(`activities/${data.title.form}/structures/${structureID}`, specs, 'update');
   };
 
   const saveQuestions = (newField: ServiceField) => {
     if (selected && selected.service?.id && selected.service?.serviceName) {
-      const isInit = !serviceFields;
+      const isInit = !serviceFields || !serviceFields?.[0];
+
       const getStructureID: number = isInit ? +Date.now() : selected.structure?.id || selected.service.structureID;
-      console.log('newField', newField);
+
       fireDocument(`activities/${data.title.form}/structures/${getStructureID}/fields/${newField.name}`, newField, 'set').then(() => {
         updateStructure(newField, getStructureID, isInit);
         updateServiceFields(newField);
@@ -146,33 +143,28 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
     setServiceFields(fields);
   };
 
-  const selectPriceStructure = (structureID?: number) => {
-    if (structureID === undefined) return selectStructure(undefined, 'structure'); // neu anlegen
-    if (selected && selected.service?.id && structureID !== undefined) {
-      fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, { structureID }, 'update').then(() => {
-        if (selected.service?.structureID !== structureID && selected.service?.serviceName) {
-          fireArray(`activities/${data.title.form}/structures/${structureID}`, 'services', selected.service.serviceName, 'add');
-          fireArray(`activities/${data.title.form}/structures/${selected.service.structureID}`, 'services', selected.service.serviceName, 'remove');
-        }
+  // const loadPriceStructure = (structureID?: number) => {
+  //   if (structureID === undefined) return selectStructure(undefined, 'structure'); // neu anlegen
+  //   if (selected && selected.service?.id && structureID !== undefined) {
+  //     fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, { structureID }, 'update').then(() => {
+  //       if (selected.service?.structureID !== structureID && selected.service?.serviceName) {
+  //         fireArray(`activities/${data.title.form}/structures/${structureID}`, 'services', selected.service.serviceName, 'add');
+  //         fireArray(`activities/${data.title.form}/structures/${selected.service.structureID}`, 'services', selected.service.serviceName, 'remove');
+  //       }
 
-        const findStructure = structureList.find((x) => x.id === structureID);
-        setSelected({ ...selected, structure: findStructure }); // update current selection
+  //       const findStructure = structureList.find((x) => x.id === structureID);
+  //       setSelected({ ...selected, structure: findStructure }); // update current selection
 
-        updateServiceList({ ...selected.service, structureID });
-        setShow('prices'); // show prices after select
-      });
-    }
-  };
+  //       updateServiceList({ ...selected.service, structureID });
+  //     });
+  //   }
+  // };
 
   const navigateToServices = () => route(`/company/services/${activityID}`);
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconCurrencyDollar color="#fea00a" />}
-        title="Preise"
-        text="Im folgenden stellen wir ihnen 6 Fragen, anhand der wir ihre individuelle Tabelle zur Preisangabe generieren."
-      />
+      {header}
 
       <BackButton url={`/company/dashboard/${activityID}`} />
 
@@ -181,7 +173,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
           {serviceList ? (
             serviceList.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
           ) : (
-            <Item icon={<IconArrowLeftCircle />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
+            <Item icon={<IconPlus />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
           )}
         </section>
       ) : <Spinner />}
@@ -189,9 +181,9 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       <FormButton action={() => route(`/company/availabilities/${data.title.form}`)} label="Mit den Verfügbarkeiten fortfahren" />
 
       {selected && (
-        <Modal title={`(${selected?.service?.serviceName})`} close={() => closeModal()} type="large">
+        <Modal title={`(${selected?.service?.serviceName})`} close={() => closeModal()} type="large" background={show === 'structure' ? '#46244C' : undefined}>
 
-          {show === 'belongs' && selected?.service?.serviceName && <ChangeStructure select={selectPriceStructure} />}
+          {/* {show === 'belongs' && selected?.service?.serviceName && <ChangeStructure select={selectPriceStructure} />} */}
 
           {show === 'structure' && serviceFields !== false && (
             <QuestForm
@@ -204,8 +196,8 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
             />
           )}
 
-          {show === 'prices' && selected && selected.service?.id && selected.structure && (
-            <EditPrices structure={selected.structure} serviceID={selected.service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} />
+          {(show === 'prices' || show === 'belongs') && selected && selected.service?.id && (
+            <EditPrices structure={selected.structure} serviceID={selected.service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} openingDays={['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].filter((x, index) => !!data.openings[index])} />
           )}
         </Modal>
       )}

@@ -3,15 +3,15 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 
 import AddRemove from '../../../components/form/addRemove';
 import FormButton from '../../../components/form/basicButton';
-import BasicInput from '../../../components/form/basicInput';
 import ImgInput from '../../../components/form/imgInput';
-import SelectInput from '../../../components/form/selectInput';
+import NormalInput from '../../../components/form/Inputs/basic';
+import SelectInput from '../../../components/form/Inputs/select';
+import TextInput from '../../../components/form/Inputs/textArea';
 import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import { replaceSpecialCharacters } from '../../../helper/string';
 import useForm from '../../../hooks/useForm';
-import { FormInit } from '../../../interfaces/form';
 
 interface EditProps {
     data: any;
@@ -22,39 +22,38 @@ interface EditProps {
 const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) => {
   const topicTypes: string[] = ['seopage', 'seotext', 'topicpage', 'topictext', 'notlisted', 'quickfilter'];
 
-  const form: FormInit = {
-    title: { value: data !== 'new' && data?.title.name, type: 'string', required: true },
-    type: { value: data !== 'new' && data?.type ? data.type : 'seopage', type: 'string', required: true },
-    description: { value: data !== 'new' && data?.description ? data.description : '', type: 'string', required: false },
-    partitions: { value: data !== 'new' && data?.partitions ? data.partitions : [''], type: 'string[]', required: false },
-    filter: { value: data !== 'new' && data?.filter ? data.filter : [], type: 'string[]', required: false },
-    belongsTo: { value: (data !== 'new' && data?.belongsTo) || '', type: 'string', required: false },
-    state: { value: data !== 'new' && data?.state ? data.state : [], type: 'string[]', required: false },
-  };
-  const { formState, fields, isValid, changeField } = useForm(form);
+  const { form, isValid, changeForm } = useForm({
+    title: data !== 'new' && data?.title.name,
+    type: data !== 'new' && data?.type ? data.type : 'seopage',
+    description: data !== 'new' && data?.description ? data.description : '',
+    partitions: data !== 'new' && data?.partitions ? data.partitions : [''],
+    filter: data !== 'new' && data?.filter ? data.filter : [],
+    belongsTo: (data !== 'new' && data?.belongsTo) || '',
+    state: data !== 'new' && data?.state ? data.state : [],
+  });
 
   const getCorrectFields = () => ({
-    ...(data === undefined ? { title: { name: fields.title, form: replaceSpecialCharacters(fields.title) } } : { title: data.title }),
-    filter: fields.filter,
-    description: fields.description,
-    state: fields.state,
+    ...(data === undefined ? { title: { name: form.title, form: replaceSpecialCharacters(form.title) } } : { title: data.title }),
+    filter: form.filter,
+    description: form.description,
+    state: form.state,
     ...(type === 'topics' ? {
-      partitions: fields.partitions?.filter((x: string) => x !== '') || undefined,
-      type: fields.type,
+      partitions: form.partitions?.filter((x: string) => x !== '') || undefined,
+      type: form.type,
     } : {
-      belongsTo: fields.belongsTo,
+      belongsTo: form.belongsTo,
     }),
   });
 
   const changePartition = (value: any, key: string) => {
     const correctKey: number = parseInt(key, 10);
-    const newPartition = fields.partitions || [''];
+    const newPartition = form.partitions || [''];
     newPartition.splice(correctKey, 1, value);
-    changeField([...(newPartition)] || [''], 'partitions');
+    changeForm([...(newPartition)] || [''], 'partitions');
   };
 
   const addPartition = (typ: 'add' | 'remove') => {
-    const getPartition: string[] = fields.partitions;
+    const getPartition: string[] = form.partitions;
     if (getPartition) {
       if (typ === 'add') {
         getPartition.push('');
@@ -63,16 +62,16 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         getPartition.splice(getLastIndex, 1);
       }
     }
-    changeField(getPartition, 'partitions');
+    changeForm(getPartition, 'partitions');
   };
 
   const changeImage = (name: string) => {
-    const newState = mergeUnique([name], fields.state);
-    changeField(newState, 'state');
+    const newState = mergeUnique([name], form.state);
+    changeForm(newState, 'state');
   };
 
   const validation = async () => {
-    if (isValid()) {
+    if (isValid) {
       const newFields = getCorrectFields();
       fireDocument(`${type}/${newFields.title.form}`, newFields, data === undefined ? 'set' : 'update').then(() => {
         close(getCorrectFields());
@@ -87,27 +86,26 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
   return (
     <Fragment>
 
-      <BasicInput
+      <NormalInput
                 //   icon={listOutline}
-        type="text"
+        type="string"
         label="Name:"
         name="title"
-        value={fields.title}
+        value={form.title}
         disabled={data !== undefined}
         placeholder="Name der Unternehmung"
-        error={formState.title}
         required
-        change={changeField}
+        change={changeForm}
       />
 
       {type === 'catInfos' && (
-      <BasicInput
-        type="text"
+      <NormalInput
+        type="string"
         label="Gibt es eine Überkategorie?"
         name="belongsTo"
-        value={fields.belongsTo}
+        value={form.belongsTo}
         placeholder="Gebe den exakten Namen / ID an"
-        change={changeField}
+        change={changeForm}
       />
       )}
 
@@ -116,19 +114,16 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
         // size={data === 'new' ? '6' : '12'}
         label="Type:"
         name="type"
-        value={fields.type}
+        value={form.type}
         options={topicTypes}
-        // placeholder="Wähle eine Kategorie"
-        error={formState.type}
-        // errorMessage="Bitte wähle eine Kategorie"
         required
-        change={changeField}
+        change={changeForm}
       />
       )}
 
-      {fields.type !== 'notlisted' && fields.title && (
+      {form.type !== 'notlisted' && form.title && (
       <ImgInput
-        fileName={fields.title}
+        fileName={form.title}
         folderPath={type === 'topics' ? 'topics' : 'categories'}
         name="image"
         label="Thumbnail hochladen/anpassen"
@@ -138,27 +133,22 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
       />
       )}
 
-      {(!fields.type || (fields.type && ['quickfilter', 'topicpage', 'seopage'].indexOf(fields.type) !== -1)) && (
-        <Item icon={<IconFilter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={fields.filter?.join(' | ') || ''} />
+      {(!form.type || (form.type && ['quickfilter', 'topicpage', 'seopage'].indexOf(form.type) !== -1)) && (
+        <Item icon={<IconFilter color="var(--orange)" />} type="info" action={openFilter} label="Filter bearbeiten" text={form.filter?.join(' | ') || ''} />
       )}
 
-      <BasicInput
-            // size="12"
+      <TextInput
         label="Zusammenfassung"
-            // icon={listOutline}
-        type="textarea"
         name="description"
-        value={fields.description}
+        value={form.description}
         placeholder="Zusammenfassung"
-        error={formState.description}
-            // errorMessage="Bitte gebe Text ein"
         required
-        change={changeField}
+        change={changeForm}
       />
 
       <p style={{ color: 'var(--fifth)' }}>Die Zusammenfassung erlaubt keine &lt;HTML Tags&gt;. Und wird als Kurzbeschreibung angesehen. Achte darauf das, diese nicht zu lang ist.</p>
 
-      {type !== 'catInfos' && fields.partitions && (
+      {type !== 'catInfos' && form.partitions && (
       <Fragment>
         <code>
           <span>&lt;h1&gt;Überschrift&lt;/h1&gt;</span>
@@ -169,22 +159,17 @@ const Edit: FunctionalComponent<EditProps> = ({ data, type, close }: EditProps) 
           <span>&lt;blockquote&gt;Zitat&lt;/blockquote&gt;</span>
         </code>
 
-        {fields.partitions.map((partition: string, partIndex: number) => (
-          <BasicInput
-                // size="12"
+        {form.partitions.map((partition: string, partIndex: number) => (
+          <TextInput
             label={`Abschnitt ${partIndex + 1}`}
-                // icon={listOutline}
-            type="textarea"
             name={partIndex.toString()}
             value={partition}
             placeholder="Dein Text..."
-            error="valid"
-                // errorMessage=""
             change={changePartition}
           />
         ))}
 
-        <AddRemove action={addPartition} name="add" isFirst={!(fields.partitions?.[1])} />
+        <AddRemove action={addPartition} name="add" isFirst={!(form.partitions?.[1])} />
       </Fragment>
       )}
 

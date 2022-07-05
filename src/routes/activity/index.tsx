@@ -18,7 +18,7 @@ import style from './style.module.css';
 
 interface ActivitiesProps {
     categoryID: string;
-    day?: number;
+    day?: string;
     matches?: { l?: 'o' | 'i'; }
 }
 
@@ -31,11 +31,10 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
 
   // const closeModal = () => setOpenModal(false);
 
-  const getActivityList = () => {
+  const getActivityList = async () => {
     if (categoryID) {
-      getFireCollection('activities', false, [['category.form', '==', categoryID], ['state', 'array-contains', 'online']]).then((listData: Activity[]) => {
-        setList(listData?.[0] ? listData : undefined);
-      });
+      const listData = await getFireCollection('activities', false, [['category.form', '==', categoryID], ['state', 'array-contains', 'online']]);
+      setList(listData);
     }
   };
 
@@ -72,6 +71,7 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
       <TextHeader
         image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/categories%2F${categoryID}%2F${categoryID}_250x200`}
         title={category?.title.name || ''}
+        shorten
         text={category?.description || ''}
       />
       {/* <Item type="large" title={category?.title.name || ''}

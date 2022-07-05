@@ -9,13 +9,14 @@ interface ItemProps {
     action?: () => void;
     link?: string;
     icon?: any;
-    editIcon?: any;
+    editLabel?: string;
     image?: string;
     type?: 'grey' | 'large' | 'info' | 'clean' | 'warning' | 'success';
+    background?: string;
 }
 
-const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editIcon, type = 'clean', action, link, text }: ItemProps) => (
-  <Link class={`${style.item} ${style[type] || ''}`} href={link} activeClassName={link ? style.current : undefined} onClick={action}>
+const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editLabel, background, type = 'clean', action, link, text }: ItemProps) => (
+  <Link class={`${style.item} ${style[type] || ''}`} href={link} activeClassName={link ? style.current : undefined} style={background ? { backgroundColor: background } : undefined} onClick={action}>
     {image ? (
       <picture class={style.image}>
         <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
@@ -24,8 +25,8 @@ const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editIcon, ty
     ) : (
       icon && icon
     )}
-    <p>{label}&nbsp; {text && <small>{text}</small>}</p>
-    {editIcon && editIcon}
+    <p style={!text ? { paddingTop: '16px' } : undefined}>{label}&nbsp; {text && <small>{text}</small>}</p>
+    {editLabel && <div class={style.editLabel}>{editLabel}</div>}
   </Link>
 );
 

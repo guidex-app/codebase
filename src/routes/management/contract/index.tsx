@@ -19,15 +19,14 @@ interface ActivityProp {
 
 const Contract: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconHome color="#ff5613" />}
-        title="Vertrag & Rechtliches"
-        text="Geben Sie den Nutzern kontaktinfos"
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconHome color="#ff5613" />}
+      title="Vertrag & Rechtliches"
+      text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
+    />
+  );
+  if (!data) return header;
 
   const [termsAccepted, setTermsAccepted] = useState(data.termsAccepted || false);
 
@@ -42,11 +41,7 @@ const Contract: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconHome color="#ff5613" />}
-        title="Vertrag & Rechtliches"
-        text="Hier definieren sie alles, was für die Kontaktaufnahme wichtig ist."
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 

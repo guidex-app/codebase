@@ -46,7 +46,6 @@ const OptionInput: FunctionalComponent<OptionInputProps> = ({ label, icon, name,
 
   useEffect(() => {
     if (values.option) change(values?.value, name, values?.option);
-    console.log(values);
   }, [values]);
 
   return (

@@ -1,10 +1,8 @@
 import { Cat } from '../interfaces/categorie';
 import { Weather } from '../interfaces/user';
 
-const filterCats = (list: any[], filter?: string[], weather?: Weather): any[] => {
-  if (!list?.[0] || !weather) return list;
-
-  console.log(weather);
+const filterCats = (list: Cat[], filter?: string[], weather?: Weather): Cat[] | undefined => {
+  if (!list?.[0] || !weather) return undefined;
 
   const { temp: t, shortName: w } = weather;
 
@@ -57,15 +55,13 @@ const filterCats = (list: any[], filter?: string[], weather?: Weather): any[] =>
   const currentOrder: number = new Date().getDay();
   const newList: Cat[] = [];
 
-  console.log('prefixList', prefixList);
+  console.log('Filter-Tags', prefixList);
 
   for (let i = 0; i < list.length; i += 1) {
     const checkTags = Object.entries(prefixList).every(([currentPrefix, prefixValues]: [string, string[]]) => {
       if (currentPrefix === 'te') {
         if (isRainy || (list[i].filter.includes('lo_indoor') && list[i].filter.includes('lo_outdoor'))) return true;
       }
-
-      console.log('check', { prefixList, filter: list[i].filter });
       return prefixValues.findIndex((tag: string) => list[i].filter.includes(tag)) > -1;
     });
 

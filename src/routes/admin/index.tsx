@@ -6,6 +6,7 @@ import BackButton from '../../components/backButton';
 import FilterList from '../../components/filter';
 import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
+import Spinner from '../../components/spinner';
 import Modal from '../../container/modal';
 import catFilter from '../../data/catFilter';
 import { getFireCollection } from '../../data/fire';
@@ -55,9 +56,9 @@ const Admin: FunctionalComponent = () => {
         <Item icon={<IconToggleLeft />} label={`${type === 'catInfos' ? 'Topics' : 'Kategorien'} anzeigen`} type="grey" action={() => setType(type === 'catInfos' ? 'topics' : 'catInfos')} />
         <Item icon={<IconPlus color="var(--orange)" />} label={`${type === 'catInfos' ? 'Kategorie' : 'Topic'} Hinzufügen`} type="info" action={() => setItem(undefined)} />
 
-        {list.map((x) => (
+        {list[0] ? list.map((x) => (
           <Item key={x.title.form} label={x.title.name} image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type === 'topics' ? 'topics' : 'categories'}%2F${x.title.form}%2F${x.title.form}_250x200`} action={() => setItem(x)} />
-        ))}
+        )) : <Spinner />}
 
         {item !== false && openFilter && <Modal title={item?.title?.name || ''} close={() => setOpenFilter(false)}><FilterList data={catFilter} values={item.filter} change={updateFilter} close={() => setOpenFilter(false)} /></Modal>}
         {item !== false && !openFilter && <Modal title={item?.title?.name || ''} close={() => setItem(false)}><Edit data={item} type={type} close={updateData} /></Modal>}

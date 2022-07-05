@@ -1,7 +1,7 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 
 import useTimeLine, { calculateTime } from '../../../../hooks/useTimeLine';
-import { Available, Capacity, Reserved } from '../../../../interfaces/reservation';
+import { Available, Capacity, ReservationSlot } from '../../../../interfaces/reservation';
 import style from './style.module.css';
 
 interface SlotsProps {
@@ -14,7 +14,7 @@ interface SlotsProps {
   openings: (string | false)[];
 
   capacitys?: Capacity[];
-  reservations?: Reserved[];
+  reservations?: ReservationSlot[];
   chooseTime: (time: string) => void;
 }
 
@@ -28,7 +28,7 @@ const Slots: FunctionalComponent<SlotsProps> = ({ capacitys, available, serviceT
    * Die defaultCapacity - die schon reservierten plätze rechnen.
    */
   const getFreePlaces = (time: string, capacity: number): number => {
-    const reservationsSlots: number = reservations?.find((x) => x.time === time)?.amountReserved || 0;
+    const reservationsSlots: number = reservations?.find((x) => x.startTime === time)?.personAmount || 0;
     return capacity - reservationsSlots;
   };
 

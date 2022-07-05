@@ -15,6 +15,7 @@
     background-color: var(--second);
     transition: max-width 0.3s ease-in-out;
     overscroll-behavior-y: contain;
+    will-change: transform;
   }
   
   .content {
@@ -34,14 +35,28 @@
         width: calc(100% - 30px);
         padding-bottom: 40px;
 
-        max-width: 500px;
+        max-width: 568px;
         max-height: 700px;
         min-height: 80%;
 
-        border-radius: 10px;
+        border-radius: 12px;
+
+        /* animation: scaleUp .3s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards; */
+
     }
 
     .modal.large {
       max-width: 1024px;
     }
   }
+
+  /* @keyframes scaleUp {
+    0% {
+      transform: translate(-50%, calc(-50% + 50px)) scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+  } */

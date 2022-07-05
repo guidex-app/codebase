@@ -9,7 +9,7 @@ const getKey = (key: string) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getStorageKeys = async (keys: ['displayName', 'email', 'location', 'uid']): Promise<User> => {
+export const getStorageKeys = async (keys: Array<'displayName' | 'email' | 'location' | 'weather' | 'day' | 'uid'>): Promise<User> => {
   const getKeys: any[] = await Promise.all(keys.map(async (key) => getKey(key)));
   const formatKeys: User = {};
 
@@ -23,10 +23,10 @@ export const getStorageKeys = async (keys: ['displayName', 'email', 'location', 
   return formatKeys;
 };
 
-export const setStorageKeys = async (data: { [key: string]: string }): Promise<boolean> => {
+export const setStorageKeys = async (data: User): Promise<boolean> => {
   const keys = Object.entries(data);
   await keys.forEach(([key, value]: [string, string]) => {
-    localStorage.setItem(key, value);
+    localStorage.setItem(key, key === 'location' ? JSON.stringify(value) : value);
   });
   return true;
 };

@@ -6,85 +6,90 @@ import FabButton from '../../components/fabButton';
 import FilterList from '../../components/filter';
 import FilterBar from '../../components/filterBar';
 import LocationList from '../../components/locationList';
-import Masonry from '../../components/masonry';
+import BasicMasonry from '../../components/masonry/basicMasonry';
 import Teaser from '../../components/teaser';
 import WeatherList from '../../components/weatherList';
 import Modal from '../../container/modal';
 import catFilter from '../../data/catFilter';
 import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
+import getWeather from '../../data/weather';
+import { smallerThanDays } from '../../helper/date';
+import useTitle from '../../hooks/seo/useTitle';
 import { Cat } from '../../interfaces/categorie';
-import { Location } from '../../interfaces/user';
+import { Location, User, Weather } from '../../interfaces/user';
 import style from './style.css';
 
 interface CatsProps {
   location?: Location;
-  interests?: string[];
-  getNewLocation: (dayNr: number) => void;
+  weather?: Weather;
+  day?: string;
+  updateUser: (data: User) => void;
 }
 
-const Cats: FunctionalComponent<CatsProps> = ({ location, getNewLocation, interests }: CatsProps) => {
-  const [filter, setFilter] = useState<string[]>([]);
-  const [filteredCats, setFilteredCats] = useState<any[]>([]);
-  const [catList, setCatList] = useState<any[]>([]);
+const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day, updateUser }: CatsProps) => {
+  useTitle('Guidex | Dein Unternehmungs-Ratgeber für jede Wetterlage');
 
-  const [openModal, setOpenModal] = useState<undefined | 'Filtern' | 'Tag' | 'Wetter' | 'Standort'>(undefined);
+  const [filter, setFilter] = useState<string[]>([]);
+  const [filteredCats, setFilteredCats] = useState<Cat[] | undefined | false>(false);
+  const [weatherList, setWeatherList] = useState<Weather[] | false>(false);
+  const [catList, setCatList] = useState<Cat[] | false>(false);
+
+  const [openModal, setOpenModal] = useState<undefined | 'Filter' | 'Tag' | 'Wetter' | 'Standort'>(undefined);
 
   const closeModal = () => setOpenModal(undefined);
 
-  // const getNewLocation = async () => {
-  //   const location: Location = await getGeoLocation();
-  //   const weather: Weather = await getWeather('today', location.lat, location.lng);
-
-  //   setStorageKeys({ weather: JSON.stringify(weather), location: JSON.stringify(location) });
-  //   updateUser({ weather, location });
-  // };
-  const getFilteredCats = (cats: Cat[]) => {
-    if (cats[0]) {
-      console.time('filterCats');
-      console.log('filter', filter);
-      const newCats = filterCats(cats, filter, location?.weather);
-      console.timeEnd('filterCats');
-      return setFilteredCats(newCats);
-    }
+  const getFilteredCats = () => {
+    if (catList === false || weatherList === false) return;
+    const newCats = filterCats(catList, filter, weatherList[0]);
+    return setFilteredCats(newCats);
   };
 
-  const fetchCategories = async () => {
-    console.log('fetch cats', catList);
+  const fetchCats = (): any => getFireCollection(`geo/${location?.geoHash}/categories`, 'sortCount', undefined, 200);
 
-    // const alg: any = [
-    //   ...(interests?.[0] ? ['filter', 'array-contains-any', interests] : []),
-    // ];
-    console.log('interests', interests);
+  const getWeatherData = async (): Promise<Weather[]> => {
+    if (!location) return [];
 
-    const cats: any = await getFireCollection(`geo/${location?.geoHash}/categories`, 'sortCount', undefined, 200);
-    console.log(cats);
+    const updated = weather?.lastUpdated;
+    if (updated && smallerThanDays(new Date(updated), 1)) return [weather];
+    return getWeather(location.lat, location.lng);
+  };
+
+  const getData = async () => {
+    const [weatherData, cats] = await Promise.all([getWeatherData(), fetchCats()]);
+
+    setWeatherList(weatherData);
     setCatList(cats);
-    getFilteredCats(cats);
   };
 
-  const updateFilter = (newFilter: string[]) => { setFilter(newFilter); };
-
-  const changeDay = (dayNr: number) => {
-    getNewLocation(dayNr);
+  const changeDay = (dayString: string) => {
+    updateUser({ day: dayString });
     closeModal();
   };
 
-  useEffect(() => { if (location) fetchCategories(); }, [location]);
-  useEffect(() => { if (catList) getFilteredCats(catList); }, [filter]);
+  const changeLocation = (newLocation: Location) => {
+    updateUser({ location: newLocation });
+    closeModal();
+  };
+
+  // update cats
+  useEffect(() => { getFilteredCats(); }, [filter, catList, weatherList]);
+
+  // start daten
+  useEffect(() => { getData(); }, [location]);
 
   return (
     <div class={style.cats}>
-      <Teaser openModal={setOpenModal} location={location} />
+      <Teaser openModal={setOpenModal} day={day || 'Heute'} weather={weatherList !== false ? weatherList[0] : undefined} location={location} />
       <FilterBar />
-      <Masonry list={filteredCats} />
-      <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filtern')} />
+      <BasicMasonry list={filteredCats} />
+      <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filter')} />
       {!!openModal && (
-      <Modal title={openModal} close={closeModal}>
-        {openModal === 'Filtern' && <FilterList data={catFilter} values={filter} change={updateFilter} close={closeModal} />}
-        {openModal === 'Standort' && <LocationList />}
-        {openModal === 'Tag' && <WeatherList changeDay={changeDay} />}
-      </Modal>
+        <Modal title={`${openModal} auswählen`} close={closeModal}>
+          {openModal === 'Filter' && <FilterList data={catFilter} values={filter} change={setFilter} close={closeModal} />}
+          {openModal === 'Standort' && <LocationList changeLocation={changeLocation} />}
+          {openModal === 'Tag' && <WeatherList changeDay={changeDay} />}
+        </Modal>
       )}
     </div>
   );

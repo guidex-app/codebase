@@ -8,8 +8,8 @@ const formatPos = async (lat: number, lng: number): Promise<Location> => {
   return {
     lat,
     lng,
+    city: 'test',
     geoHash,
-    date: new Date().getTime(),
   };
 };
 
@@ -24,15 +24,7 @@ const getGeoLocation = async (): Promise<Location> => (
   getPosition().then((pos: any) => {
     console.log(pos);
     return formatPos(pos.coords.latitude, pos.coords.longitude);
-  }).catch(() => (
-    {
-      lat: 53.5510846,
-      lng: 9.9936818,
-      city: 'Hamburg',
-      geoHash: 'u1x0',
-      date: new Date().getTime(),
-    }
-  ))
+  })
 );
 
 export default getGeoLocation;

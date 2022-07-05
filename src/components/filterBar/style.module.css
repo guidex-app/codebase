@@ -1,6 +1,6 @@
 .filterBar {
     height: 30px;
-    background-color: var(--first);
+    background-color: #181122;
     border-radius: 30px 30px 0 0;
     transform: translateY(-30px);
     margin-bottom: -40px;

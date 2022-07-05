@@ -2,13 +2,12 @@ import { FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 
 import FormButton from '../../components/form/basicButton';
-import BasicInput from '../../components/form/basicInput';
+import NormalInput from '../../components/form/Inputs/basic';
 import PickInput from '../../components/form/pickInput';
 import { updateUserProfil } from '../../data/auth';
 import { fireDocument } from '../../data/fire';
 import { setStorageKeys } from '../../data/localStorage';
 import useForm from '../../hooks/useForm';
-import { FormInit } from '../../interfaces/form';
 import { User } from '../../interfaces/user';
 import style from './style.module.css';
 
@@ -17,16 +16,15 @@ interface ProfileProps {
 }
 
 const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps) => {
-  const form: FormInit = {
-    firstName: { type: 'string', required: true },
-    lastName: { type: 'string', required: true },
-    title: { value: 'Herr', type: 'string', required: true },
-    plz: { type: 'plz', required: true },
-    interests: { value: [], type: 'string[]', required: true },
-    phone: { type: 'phone', required: true },
-    birthday: { type: 'string', required: true },
-  };
-  const { fields, formState, changeField, isValid } = useForm(form);
+  const { form, changeForm, isValid } = useForm({
+    firstName: undefined,
+    lastName: undefined,
+    title: undefined,
+    plz: undefined,
+    interests: [],
+    phone: undefined,
+    birthday: undefined,
+  });
 
   const updateUserKeys = (newStorageData: any) => {
     updateUserProfil({
@@ -55,20 +53,20 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
   ];
 
   const updateProfile = () => {
-    if (isValid()) {
-      const displayName = `${fields.firstName} ${fields.lastName.charAt(0)}.`;
+    if (isValid) {
+      const displayName = `${form.firstName} ${form.lastName.charAt(0)}.`;
       updateUserProfil({ displayName }).then((userData: any) => {
         const uid = userData?.user?.uid;
         if (uid) {
           const newUser = {
-            firstName: fields.firstName,
-            lastName: fields.lastName,
+            firstName: form.firstName,
+            lastName: form.lastName,
             displayName,
-            title: fields.title,
-            plz: fields.plz,
-            interests: fields.interests,
-            phone: fields.phone,
-            birthday: fields.birthday,
+            title: form.title,
+            plz: form.plz,
+            interests: form.interests,
+            phone: form.phone,
+            birthday: form.birthday,
             uid,
           };
 
@@ -76,7 +74,7 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
 
           updateUserKeys({ displayName, interests: newUser.interests });
         } else {
-          changeField('', 'password');
+          changeForm('', 'password');
         }
       });
     }
@@ -92,98 +90,91 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
         <section class="group form">
           <h3>Für Deine Vorschläge</h3>
 
-          <BasicInput
+          <NormalInput
             type="number"
             label="Postleitzahl:"
             name="plz"
-            value={fields.plz}
+            value={form.plz}
             placeholder="Deine Postleitzahl"
-            error={formState.plz}
             autocomplete="postal-code"
             // errorMessage="Bitte gebe eine Postleitzahl an"
             required
-            change={changeField}
+            change={changeForm}
           />
 
-          <BasicInput
+          <NormalInput
             type="date"
             label="Geburtstag:"
             name="birthday"
-            value={fields.birthday}
+            value={form.birthday}
             placeholder="Dein Geburtstag"
-            error={formState.birthday}
             autocomplete="bday"
             // errorMessage="Bitte gebe Dein Geburtsdatum an"
             required
-            change={changeField}
+            change={changeForm}
           />
 
           <PickInput
             label="Titel"
             name="title"
             options={['Herr', 'Frau']}
-            value={fields.title}
-            error={formState.title}
+            value={form.title}
             // errorMessage="Bitte wähle Deinen Titel"
             required
-            change={changeField}
+            change={changeForm}
           />
 
           <PickInput
             label="Wähle Deine Interessen"
             name="interests"
             options={interests.map((x) => x.name)}
-            value={fields.interests}
-            error={formState.interests}
+            value={form.interests}
             // errorMessage="Bitte wähle Deine Interessen"
             required
-            change={changeField}
+            change={changeForm}
           />
         </section>
 
         <section class="group form">
           <h3>Für die Reservierungen</h3>
-          <BasicInput
-            type="text"
+          <NormalInput
+            type="string"
             label="Vorname:"
             name="firstName"
             autocomplete="given-name"
-            value={fields.firstName}
+            value={form.firstName}
             placeholder="Deinen Vornamen"
-            error={formState.firstName}
             // errorMessage="Bitte gebe ein Vornamen an"
             required
-            change={changeField}
+            change={changeForm}
           />
 
-          <BasicInput
-            type="text"
+          <NormalInput
+            type="string"
             label="Nachname:"
             name="lastName"
             autocomplete="family-name"
-            value={fields.lastName}
+            value={form.lastName}
             placeholder="Deinen Nachnamen"
-            error={formState.lastName}
             // errorMessage="Bitte gebe ein Nachnamen an"
             required
-            change={changeField}
+            change={changeForm}
           />
 
-          <BasicInput
-            type="tel"
+          <NormalInput
+            type="phone"
             label="Telefon:"
             name="phone"
-            value={fields.phone}
+            value={form.phone}
             placeholder="Deine Telefon-Nr."
-            error={formState.phone}
             autocomplete="tel"
             // errorMessage="Bitte gebe eine Telefon-Nr. an"
             required
-            change={changeField}
+            change={changeForm}
           />
         </section>
 
-        <FormButton action={updateProfile} label="Profil aktuallisieren" />
+        <FormButton action={updateProfile} disabled={!isValid} label="Profil aktuallisieren" />
 
       </form>
 

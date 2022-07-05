@@ -19,15 +19,14 @@ interface ActivityProp {
 
 const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconCreditCard color="#ff375e" />}
-        title="Dokumente"
-        text="Bitte lade alle nötigen Dokumente hoch"
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconCreditCard color="#ff375e" />}
+      title="Dokumente"
+      text="Lade Dokumente hoch"
+    />
+  );
+  if (!data) return header;
 
   const [state, setState] = useState<string[] | undefined>(data?.state);
 
@@ -43,11 +42,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconCreditCard color="#ff375e" />}
-        title="Dokumente"
-        text="Lade Dokumente hoch"
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 
@@ -65,7 +60,7 @@ const Documents: FunctionalComponent<ActivityProp> = ({ activity, activityID }: 
             />
             <ImgInput
               fileName="image2"
-              label="Wiederrufsbelehrung"
+              label="Widerrufsbelehrung"
               name="wb"
               folderPath={`activities/${data.title.form}`}
               size={[1200, 900]}

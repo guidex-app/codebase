@@ -4,14 +4,15 @@
     left: 50%;
     transform: translate(-50%, 0) scale(1);
     border: none;
-    height: 65px;
-    width: 65px;
-    border-radius: 20px;
+    height: 85px;
+    width: 85px;
+    border: 10px solid var(--first);
+    border-radius: 30px;
     background: linear-gradient(270deg,#f5af19,#f12711);
     opacity: 1;
     cursor: pointer;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
-    will-change: transform, opacity;
+    transition: opacity 0.3s ease-in, border 0.3s ease-out;
+    will-change: border, opacity;
     z-index: 65;
 }
 
@@ -21,7 +22,7 @@
 }
 
 .fabButton:hover {
-    transform: translate(-50%, 0) scale(1.04);
+    border: 7px solid var(--first);
 }
 
 .fabButton svg {

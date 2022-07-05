@@ -1,8 +1,7 @@
 .checkbox {
     position: relative;
-    display: block;
+    display: flex;
     font-size: 17px;
-    color: var(--white);
     text-decoration: none;
     cursor: pointer;
     border-radius: 10px;
@@ -28,19 +27,19 @@
 .checkbox:hover { opacity: 0.8; }
 
 .checkbox label {
-    display: inline-block;
     color: var(--white);
     cursor: pointer;
     position: relative;
     padding: 13.5px 10px 13.5px 45px;
     pointer-events: none;
-    width: calc(100% - 40px);
+    flex-grow: 1;
     transition: border 0.3s ease-in-out;
     min-height: 20px;
 }
 
 .list label {
     border-bottom: 1px solid #373349;
+    flex-shrink: 1;
 }
 
 .checkbox:hover label { border-color: transparent; }
@@ -76,14 +75,14 @@
     top: 12px;
     left: 8px;
     transition: width 50ms ease 50ms;
-  }
+}
 
-  .checkbox span:after {
+.checkbox span:after {
     transform: rotate(305deg);
     top: 16px;
     left: 9px;
     transition: width 50ms ease;
-  }
+}
 
 .checkbox:hover span::before { width: 5px; transition: width 100ms ease; }
 .checkbox:hover span::after { width: 10px; transition: width 150ms ease 100ms; }

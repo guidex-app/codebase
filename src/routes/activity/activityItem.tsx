@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router';
 
-import { shortDay } from '../../helper/date';
+import { getCurrentShortname, shortDay } from '../../helper/date';
 import { Activity } from '../../interfaces/activity';
 import style from './style.module.css';
 
@@ -12,9 +12,9 @@ interface ActivityItemProps {
 
 const ActivityItem: FunctionalComponent<ActivityItemProps> = ({ activity, dayNr }: ActivityItemProps) => {
   const getOpenings = (): string => {
-    const dayNumber = dayNr || new Date().getDay();
-    const getTime = activity.openings?.[dayNumber];
-    if (getTime) return `${shortDay[dayNumber]}, Bis ${getTime.split('-')[1]} geöffnet`;
+    const currentDay = getCurrentShortname(dayNr || undefined);
+    const getTime = activity.openings?.[shortDay.indexOf(currentDay)];
+    if (getTime) return `${currentDay}, Bis ${getTime.split('-')[1]} geöffnet`;
     return 'geschlossen';
   };
   return (

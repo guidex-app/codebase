@@ -58,7 +58,7 @@ export interface AnsInfo {
   label: string,
   name: string,
   icon: any,
-  inputType: ('text' | 'dayPicker' | 'number' | 'time' | 'textarea' | 'image'),
+  inputType: ('string' | 'dayPicker' | 'number' | 'time' | 'textarea' | 'image'),
   info: string,
   onDay: boolean,
   isMultiField: boolean,

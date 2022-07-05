@@ -10,8 +10,8 @@ interface AddRemoveProps {
 
 const AddRemove: FunctionalComponent<AddRemoveProps> = ({ action, isFirst, name }: AddRemoveProps) => (
   <div style={{ textAlign: 'center' }}>
-    <Chip label="Feld hinzufügen" action={() => action('add', name)} type="active" small />
-    {!isFirst && <Chip label="Feld löschen" action={() => action('remove', name)} small />}
+    <Chip label="Feld hinzufügen" action={() => action('add', name)} type="active" size="small" />
+    {!isFirst && <Chip label="Feld löschen" action={() => action('remove', name)} size="small" />}
   </div>
 );
 

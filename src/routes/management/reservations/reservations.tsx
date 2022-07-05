@@ -1,93 +1,53 @@
+import { IconAlarm, IconArchive, IconBox, IconCalendar, IconClock, IconHourglass, IconUserPlus } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import BasicInput from '../../../components/form/basicInput';
-import { fireDocument, getFireCollection } from '../../../data/fire';
+import FormButton from '../../../components/form/basicButton';
+import Item from '../../../components/item';
+import Spinner from '../../../components/spinner';
+import { getFireDocument } from '../../../data/fire';
 import { getSimpleDateString } from '../../../helper/date';
-import useTimeLine from '../../../hooks/useTimeLine';
-import useWeekList from '../../../hooks/useWeekList';
-import style from './style.module.css';
+import { Reservation } from '../../../interfaces/reservation';
 
 interface CapacityProps {
-    collection: string;
-    openings: (string | false)[];
+    document: string;
+    activityId: string;
 }
 
-interface ReservationItem {
-    time: string;
-    date: string;
-    value: number;
-}
+const Reservations: FunctionalComponent<CapacityProps> = ({ document, activityId }: CapacityProps) => {
+  const [resDoc, setResDoc] = useState<Reservation | undefined | false>(false);
 
-const Reservations: FunctionalComponent<CapacityProps> = ({ collection, openings }: CapacityProps) => {
-  const [timeRange, setTimeRange] = useState<string>(getSimpleDateString(new Date()));
-  const { weekList, getWeekList } = useWeekList();
-  const timeLine = useTimeLine(30, openings);
-  const [rows, setRows] = useState<number[][]>([]); // cell array in a row array
-
-  const updateTimeRange = (value: string) => {
-    setTimeRange(value);
+  const loadReservation = async () => {
+    console.log(document);
+    const getDoc = await getFireDocument(document);
+    setResDoc(getDoc || undefined);
   };
 
-  const generateRows = (list?: ReservationItem[]) => {
-    const getRows: number[][] = timeLine.map((timeRow: string) => (
-      weekList.map((day: string) => (
-        list?.find((d) => d.date === day && timeRow === d.time)?.value || 0
-      ))
-    ));
-    setRows(getRows);
-    console.log(getRows);
+  const storno = () => {
+    console.log('storno', activityId);
+    // reservStorno(`activities/${activityId}/services/${resDoc.ser}/`);
   };
 
-  const loadCapacity = async () => {
-    console.log('gestartet');
-    const getCapacity: ReservationItem[] = await getFireCollection(collection, false);
-    generateRows(getCapacity || undefined);
-  };
+  useEffect(() => { loadReservation(); }, []);
 
-  const saveCapacity = (e: any) => {
-    const { value, id } = e.target;
-    const [date, time] = id.split('_');
-    const newItem: ReservationItem = { time, date, value };
-    fireDocument(`${collection}/${id}`, newItem, 'set').then(() => console.log('gespeichert'));
-  };
-
-  useEffect(() => { loadCapacity(); }, [weekList]);
-  useEffect(() => { getWeekList(new Date(timeRange)); }, []);
+  if (resDoc === false) return <Spinner />;
+  if (resDoc === undefined) return <Item type="warning" label="Nicht gefunden" />;
 
   return (
     <div style={{ padding: '10px' }}>
-      <BasicInput
-        label="Bereich (5 Tage ab)"
-        name="timeRange"
-        error={timeRange ? 'valid' : 'invalid'}
-        change={updateTimeRange}
-        value={timeRange}
-        type="date"
-      />
-      <p style={{ color: 'var(--fifth)' }}>Definiere die Anzahl für die entsprechenden Tage / Uhrzeiten. Wenn die Anzahl von den standartwerten abweicht, fülle das feld aus.</p>
-      {rows?.[0] ? (
-        <table class={style.table}>
-          <thead>
-            <tr>
-              <th>Zeit</th>
-              {weekList?.map((cell: string) => <th>{cell}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((times: number[], rowIndex: number) => (
-              <tr>
-                <td>{timeLine[rowIndex]}</td>
-                {times?.map((time: number, cellIndex: number) => (
-                  <td><input id={`${weekList[cellIndex]}_${timeLine[rowIndex]}`} value={time} type="number" onChange={saveCapacity} min={0} placeholder="-" /></td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p class="red">Wähle einen Bereich, um die Kapazitäten anzupassen.</p>
-      )}
+
+      <section class="group form">
+        <Item icon={<IconArchive />} label="Leistung" text={resDoc.serviceName} />
+        <Item icon={<IconUserPlus />} label={`${resDoc.personAmount} Pers.`} text={`${resDoc.rooms}`} />
+        {resDoc.rooms && resDoc.rooms > 1 && <Item icon={<IconBox />} label={`${resDoc.rooms} Räume`} />}
+        <Item icon={<IconCalendar />} label="Datum" text={getSimpleDateString(new Date(resDoc.date[0]))} />
+        <Item icon={<IconClock />} label="Uhrzeit" text={`${resDoc.startTime} Uhr`} />
+        {resDoc.rounds && <Item icon={<IconAlarm />} label="Runden" text={`${resDoc.rounds} Runden`} />}
+        <Item icon={<IconHourglass />} label="Dauer" text={`${resDoc.duration}`} />
+      </section>
+
+      <FormButton label="Stornieren" action={storno} />
+
     </div>
   );
 };

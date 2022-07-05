@@ -20,15 +20,14 @@ interface ActivityProp {
 
 const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: ActivityProp) => {
   const data: Activity | undefined = useCompany(activityID, activity);
-  if (!data) {
-    return (
-      <TextHeader
-        icon={<IconPhoto color="#ff375e" />}
-        title="Bilder"
-        text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconPhoto color="#ff375e" />}
+      title="Fotos"
+      text="Lassen sie ihr Erlebnis mit hochwertigen Fotos erstrahlen."
+    />
+  );
+  if (!data) return header;
 
   const [state, setState] = useState<string[] | undefined>(data?.state);
 
@@ -38,6 +37,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   };
 
   const validateForm = async () => {
+    console.log(state);
     await fireDocument(`activities/${data.title.form}`, { state }, 'update');
 
     route(`/company/documents/${data.title.form}`);
@@ -45,11 +45,7 @@ const Images: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconPhoto color="#ff375e" />}
-        title="Bilder"
-        text="Bitte fügen sie Bilder ihrer Unternehmung/Location hinzu"
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={`/company/dashboard/${activityID}`} />
 

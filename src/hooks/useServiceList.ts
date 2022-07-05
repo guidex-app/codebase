@@ -24,7 +24,7 @@ const useServiceList = (activityID: string): { serviceList: ServiceInfo[] | unde
   const loadList = async () => {
     try {
       const serviceListData = await getFireCollection(`activities/${activityID}/services/`, false);
-      if (serviceListData[0]) return setServiceList(serviceListData);
+      if (serviceListData) return setServiceList(serviceListData);
       return setServiceList(undefined);
     } catch (error) {
       setServiceList(undefined);

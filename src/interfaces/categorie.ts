@@ -50,7 +50,8 @@ export interface Cat {
 
     geohash: string,
     allowed: string[],
-    count: number;
+    count: { indoor: number, outdoor: number };
+    sortCount: number;
   }
 
 export interface ListCat {

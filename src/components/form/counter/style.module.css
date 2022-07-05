@@ -1,9 +1,13 @@
 .counter {
+    display: flex;
     position: relative;
     margin-bottom: 15px;
     border-radius: 10px;
     overflow: hidden;;
     line-height: 22px;
+    min-height: 60px;
+    align-items: center;
+    padding: 0 10px;
 
     background-color: var(--fourth);
 }
@@ -11,31 +15,33 @@
 .counter > svg {
     width: 40px;
     display: inline-block;
-    height: auto;
-    padding-left: 15px;
     padding-right: 5px;
     color: var(--fifth);
     vertical-align: middle;
 }
 
-.counter label {
-    display: block;
-    padding: 15px 10px;
-    margin: 0;
+.counter > div svg {
+    height: 20px;
+    width: 22px;
 }
 
-.counter > svg + label {
-    display: inline-block;
-    width: calc(100% - 40px);
-    vertical-align: middle;
+.counter label {
+	line-height: 22px;
+    font-size: 16px;
+    padding: 5px 0;
+    margin: 0;
+    flex-grow: 1;
 }
+
+.counter label small { display: block; color: var(--fifth); font-size: 0.86em; }
 
 .counter > div {
-    position: absolute;
-    right: 20px;
-    top: 50%;
     display: flex;
-    transform: translateY(-50%);
+    width: 117px;
+}
+
+.counter:last-child {
+    margin-bottom: 0;
 }
 
 .counter input {
@@ -43,7 +49,7 @@
     font-size: 20px;
     color: var(--white);
     border: none;
-    min-width: 70px;
+    width: 45px;
     text-align: center;
     -webkit-appearance: none;
 }
@@ -55,17 +61,20 @@
 }
 
 .counter button {
-    display: block;
+    display: flex;
+    place-items: center;
     height: 35px;
-    line-height: 35px;
     width: 35px;
     border-radius: 20px;
-    text-align: center;
-    color: var(--white);
-    background-color: var(--red);
-    border: none;
+    color: var(--red);
+    background-color: transparent;
     outline: none;
     box-shadow: 0 0 30px rgb(0, 0, 0, 0.27);
+    border: 2px solid var(--red);
+
+    cursor: pointer;
+    font-weight: 700;
+
     transform: scale(1);
     transition: 0.3s ease-out transform;
     will-change: tranform;
@@ -75,12 +84,24 @@
     transform: scale(1.05);
 }
 
-.counter svg {
-    height: 35px;
+.group {
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 0;
+}
+.group + .group { 
+    border-radius: 0;
+    border-top: none;
 }
 
-.counter button {
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
+.group + .counter:not(.group) {
+    border-radius: 0 0 10px 10px;
+}
+
+.group + a {
+    border-radius: 0 0 10px 10px;
+}
+
+.group:last-child {
+    border-radius: 10px;
 }

@@ -6,12 +6,14 @@ export interface PriceItem {
     price?: number;
 
     duration: number;
-    persons: number;
 
     day: string;
-    rounds?: number | false;
     discount: string | false; // age & normale rabatte
     time: string | false;
+
+    // rabatte
+    persons: string;
+    roundDiscount: string | false;
   }
 
 /**
@@ -25,10 +27,10 @@ export interface Capacity {
   }
 
 export interface ContainsList {
-    day: string[];
     discount: string[]; // age und normale rabatte
+    roundDiscount: string[];
     time: string[];
-    persons: number[];
+    persons: string[];
   }
 
 // export interface ReserveItem {
@@ -51,15 +53,17 @@ export interface Available {
 /**
    * amountReserved: Bei Räumen gibt es die schon reservierten Räume zurück und bei Eintritt die schon reservierten Personen.
    */
-export interface Reserved {
-    date: string;
-    time: string;
-    amountReserved: number;
+export interface ReservationSlot {
+  date: string;
+  startTime: string;
+  personAmount: any;
+  rooms?: number;
   }
 
 export interface ReservationStatus {
+    state: 'active' | 'isCanceled' | 'userCanceled';
     dateCreated: Date;
-    dateUpdated?: string;
+    dateUpdated?: Date;
 
     emailSend: boolean;
     emailReceived: boolean;
@@ -67,15 +71,16 @@ export interface ReservationStatus {
 
 export interface Reservation {
     reservationId: string;
-    userId: string;
+    uid: string;
 
-    startDate: string;
-    endDate: string;
+    date: [Date, Date]; // von datum, bis datum
 
-    startTime: number;
+    startTime: string;
 
     personAmount: number;
     rooms?: number;
+    rounds: number;
+    duration: number;
 
     serviceName: string;
     reservationStatus?: ReservationStatus;

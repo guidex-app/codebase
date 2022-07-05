@@ -86,9 +86,9 @@ const StructureQuestions: Questions[] = [
     },
     answers: [
       // { icon: <IconCalendar />, label: 'Nein, wir haben feste Zeiten (Dauer)', name: 'fixed', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Minuten, 90 etc. ', onDay: false, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
-      { icon: <IconCalendar />, label: 'Ja, wir haben feste Zeiten oder Runden', name: 'round', options: ['Rundenpreis', 'feste Dauer'], inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: false, isMultiField: false, placeholder: 'Die Runde dauert z.B.: 60 Min.' },
+      { icon: <IconCalendar />, label: 'Ja, wir haben feste Zeiten oder Runden', name: 'round', options: ['Dauer pro Runde', 'feste Dauer'], inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: false, isMultiField: false, placeholder: 'Die Runde dauert z.B.: 60 Min.' },
       // { icon: <IconCalendar />, label: 'An folgenden Tagen gibt es feste Zeiten', name: 'onDayDurationTime', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Minuten, 90 etc.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
-      { icon: <IconCalendar />, label: 'Tagesabhängig feste Zeiten oder Runden', options: ['Rundenpreis', 'feste Dauer'], name: 'onDayDuration', inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
+      { icon: <IconCalendar />, label: 'Tagesabhängig feste Zeiten oder Runden', options: ['Dauer pro Runde', 'feste Dauer'], name: 'onDayDuration', inputType: 'number', info: 'Geben deinen Runden eine durchschnittliche Rundenzeit an.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     //   { icon: IconCalendar, label: 'Es gibt verschiedene Dauern oder Rundendauern.', name: 'dauer', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Min.', onDay: false, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     //   { icon: IconCalendar, label: 'Die Dauern oder Runden sind Tagesabhängig', name: 'dauerGroup', inputType: 'number', info: 'Bitte geben Sie die reservierbaren Dauern ein z.B. 60 Min.', onDay: true, isMultiField: false, placeholder: 'z.B.: 60 Min.' },
     ],
@@ -106,8 +106,8 @@ const StructureQuestions: Questions[] = [
       availableText: 'Nein, der Preis ist unabhängig von der Rundenanzahl (pro Runde)',
     },
     answers: [
-      { icon: <IconCalendar />, label: 'Ja, ab folgender Rundenanzahl verändert sich der Preis', name: 'roundDiscount', inputType: 'number', info: 'Hier definieren Sie die unterschiedlichen reservierbaren Rundenanzahlen.', onDay: false, isMultiField: false, placeholder: 'z.B.: 3 Runden an' },
-      { icon: <IconCalendar />, label: 'Ja, aber nur an bestimmten Tagen. verändert sich der Preis pro Runde', name: 'onDayRoundDiscount', inputType: 'number', info: 'Bitte geben Sie die Rundenanzahlen an, bei denen es einen veränderten Preis gibt.', onDay: true, isMultiField: false, placeholder: 'z.B.: 3 Runden' },
+      { icon: <IconCalendar />, label: 'Ja, ab folgender Rundenanzahl verändert sich der Preis', options: ['Für', 'Ab'], name: 'roundDiscount', inputType: 'number', info: 'Hier definieren Sie die unterschiedlichen reservierbaren Rundenanzahlen.', onDay: false, isMultiField: false, placeholder: 'z.B.: 3 Runden an' },
+      { icon: <IconCalendar />, label: 'Ja, aber nur an bestimmten Tagen. verändert sich der Preis pro Runde', options: ['Für', 'Ab'], name: 'onDayRoundDiscount', inputType: 'number', info: 'Bitte geben Sie die Rundenanzahlen an, bei denen es einen veränderten Preis gibt.', onDay: true, isMultiField: false, placeholder: 'z.B.: 3 Runden' },
     ],
   },
   {
@@ -142,8 +142,8 @@ const StructureQuestions: Questions[] = [
       availableText: 'Nein, wir bieten keine derartigen Rabatte.',
     },
     answers: [
-      { icon: <IconCalendar />, label: 'Ja, veränderte Preise gibt es für ...', name: 'discount', inputType: 'text', info: 'Bitte definieren sie für wen es Rabatte gibt. Für jede Gruppe muss ein weiterer Rabatt hinzugefügt werden. Es sei denn die Höhe des Rabattes ist gleich', onDay: false, isMultiField: false, placeholder: 'z.B.: Studenten' },
-      { icon: <IconCalendar />, label: 'Ja, aber nur an folgenden Tagen gelten Rabatte', name: 'onDayDiscount', inputType: 'text', info: 'Bitte definieren sie an welchen Tages es für wen Rabatte gibt. Für jede Gruppe muss ein weiterer Rabatt hinzugefügt werden. Es sei denn die Höhe des Rabattes ist gleich', onDay: true, isMultiField: false, placeholder: 'z.B.: Studenten' },
+      { icon: <IconCalendar />, label: 'Ja, veränderte Preise gibt es für ...', name: 'discount', inputType: 'string', info: 'Bitte definieren sie für wen es Rabatte gibt. Für jede Gruppe muss ein weiterer Rabatt hinzugefügt werden. Es sei denn die Höhe des Rabattes ist gleich', onDay: false, isMultiField: false, placeholder: 'z.B.: Studenten' },
+      { icon: <IconCalendar />, label: 'Ja, aber nur an folgenden Tagen gelten Rabatte', name: 'onDayDiscount', inputType: 'string', info: 'Bitte definieren sie an welchen Tages es für wen Rabatte gibt. Für jede Gruppe muss ein weiterer Rabatt hinzugefügt werden. Es sei denn die Höhe des Rabattes ist gleich', onDay: true, isMultiField: false, placeholder: 'z.B.: Studenten' },
     ],
   },
 ];

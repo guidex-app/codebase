@@ -1,7 +1,10 @@
+import { IconInfoCircle } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import BasicInput from '../../../components/form/basicInput';
+import NormalInput from '../../../components/form/Inputs/basic';
+import Item from '../../../components/item';
+import Spinner from '../../../components/spinner';
 import { fireDocument, getFireCollection } from '../../../data/fire';
 import { getSimpleDateString } from '../../../helper/date';
 import useTimeLine from '../../../hooks/useTimeLine';
@@ -13,6 +16,7 @@ interface CapacityProps {
     serviceID: string;
     openings: (string | false)[];
     defaultValue: number;
+    serviceType: 'entry' | 'object' | 'section';
 }
 
 interface CapacityItem {
@@ -21,11 +25,11 @@ interface CapacityItem {
     value: number;
 }
 
-const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, openings, defaultValue }: CapacityProps) => {
+const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, serviceType, openings, defaultValue }: CapacityProps) => {
   const [timeRange, setTimeRange] = useState<string>(getSimpleDateString(new Date()));
   const { weekList, getWeekList } = useWeekList();
   const timeLine = useTimeLine(30, openings);
-  const [rows, setRows] = useState<number[][]>([]); // cell array in a row array
+  const [rows, setRows] = useState<number[][] | false>(false); // cell array in a row array
 
   const updateTimeRange = (value: string) => {
     setTimeRange(value);
@@ -41,9 +45,8 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
   };
 
   const loadCapacity = async () => {
-    console.log('gestartet');
-    const getCapacity: CapacityItem[] = await getFireCollection(`activities/${activityID}/available/${serviceID}/capacity`, false);
-    generateRows(getCapacity || undefined);
+    const getCapacity: CapacityItem[] | undefined = await getFireCollection(`activities/${activityID}/available/${serviceID}/capacity`, false);
+    generateRows(getCapacity);
   };
 
   const saveCapacity = (e: any) => {
@@ -56,22 +59,26 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
   useEffect(() => { loadCapacity(); }, [weekList]);
   useEffect(() => { getWeekList(new Date(timeRange)); }, []);
 
+  const capacityInfo = { entry: 'Wie viele Personen (Tickets) wollen sie an den jeweiligen Tagen anbieten?', object: 'Wie viele Verleihobjekte wollen sie an den jeweiligen Tagen anbieten?', section: 'Wie viele Räume/Bahnen wollen sie an den jeweiligen Tagen anbieten?' };
+
   return (
     <div style={{ padding: '10px' }}>
-      <BasicInput
+      <NormalInput
         label="Bereich (5 Tage ab)"
         name="timeRange"
-        error={timeRange ? 'valid' : 'invalid'}
         change={updateTimeRange}
         value={timeRange}
         type="date"
       />
 
-      <p style={{ color: 'var(--fifth)' }}>Definiere die Anzahl für die entsprechenden Tage / Uhrzeiten. Wenn die Anzahl von den standartwerten abweicht, fülle das feld aus.</p>
-      {rows?.[0] ? (
+      <Item icon={<IconInfoCircle color="var(--orange)" />} type="info" label={capacityInfo[serviceType]} text="Definiere die Anzahl für die entsprechenden Tage / Uhrzeiten. Wenn die Anzahl von den standartwerten abweicht, fülle das feld aus." />
+
+      {rows === false || !rows?.[0] ? (
+        <Spinner />
+      ) : (
         <table class={style.table}>
           <thead>
-            <tr>
+            <tr class={style.heading}>
               <th>Uhrzeit</th>
               {weekList?.map((cell: string) => <th>{cell}</th>)}
             </tr>
@@ -79,16 +86,14 @@ const Capacity: FunctionalComponent<CapacityProps> = ({ activityID, serviceID, o
           <tbody>
             {rows.map((times: number[], rowIndex: number) => (
               <tr>
-                <td>{timeLine[rowIndex]} Uhr</td>
+                <td class={style.heading}>{timeLine[rowIndex]} Uhr</td>
                 {times?.map((time: number, cellIndex: number) => (
-                  <td class={time !== defaultValue ? 'green' : ''}><input id={`${weekList[cellIndex]}_${timeLine[rowIndex]}`} value={time} type="number" onChange={saveCapacity} step={1} min={0} placeholder="-" /></td>
+                  <td class={`${time !== defaultValue ? 'green' : ''} ${style.input}`}><input id={`${weekList[cellIndex]}_${timeLine[rowIndex]}`} value={time} type="number" onChange={saveCapacity} step={1} min={0} placeholder="-" /></td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
-      ) : (
-        <p class="red">Wähle einen Bereich, um die Kapazitäten anzupassen.</p>
       )}
     </div>
   );

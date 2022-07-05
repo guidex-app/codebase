@@ -12,18 +12,18 @@ import ReserveInfo from './info/info';
 interface ReservationProps {
     activityID: string;
     openings: (string | false)[];
-    day?: number;
+    uid?: string;
+    day?: string;
 }
 
-const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openings, day }: ReservationProps) => {
+const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openings, uid, day }: ReservationProps) => {
   const [selectedService, setSelectedService] = useState<ServiceInfo>();
   const [serviceList, setServiceList] = useState<ServiceInfo[] | false | undefined>(false);
   const [modalState, setModalState] = useState<'info' | 'available' | 'finished' | undefined>(undefined);
 
-  const loadServiceList = () => {
-    getFireCollection(`activities/${activityID}/services/`, false, [['structureID', '!=', false]]).then((d) => {
-      setServiceList(d[0] ? d : undefined);
-    });
+  const loadServiceList = async () => {
+    const data = await getFireCollection(`activities/${activityID}/services/`, false, [['structureID', '!=', false]]);
+    setServiceList(data);
   };
 
   useEffect(() => { loadServiceList(); }, [activityID]);
@@ -46,7 +46,7 @@ const Reservation: FunctionalComponent<ReservationProps> = ({ activityID, openin
       {modalState && openings && serviceList && (
         <Modal title={modalState === 'available' ? `Verfügbarkeiten für ${selectedService?.serviceName || ''}` : ''} close={closeReserve} type={modalState === 'available' ? 'large' : undefined}>
           {modalState === 'info' && <ReserveInfo activityID={activityID} serviceList={serviceList} selectService={selectService} />}
-          {modalState === 'available' && selectedService?.serviceName && <ReserveAvailable service={selectedService} activityID={activityID} openings={openings} changeState={setModalState} day={day} />}
+          {modalState === 'available' && selectedService?.serviceName && <ReserveAvailable service={selectedService} uid={uid} activityID={activityID} openings={openings} changeState={setModalState} day={day} />}
         </Modal>
       )}
       <FabButton icon={<IconCalendarTime color="black" />} action={() => setModalState('info')} />

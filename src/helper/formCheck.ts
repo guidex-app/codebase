@@ -17,10 +17,18 @@ export const isURL = (str: string) => {
 
 export const isEmail = (email?: string) => {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return email && re.test(String(email).toLowerCase());
+  return email && re.test(email.toLowerCase());
 };
 
 export const isPhone = (phone: string) => {
   const re = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s./0-9]{8,14}$/g;
-  return phone && re.test(String(phone).toLowerCase());
+  return phone && re.test(phone.toLowerCase());
 };
+
+export const isStreetWithNr = (street: string) => {
+  const re = /\d/;
+  return street && re.test(street.toLocaleLowerCase());
+};
+
+export const noSpecialCharacters = (text: string) => !!text;
+// wenn buchstaben vorhanden muss auch text vorhanden sein nicht einzelnt

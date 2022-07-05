@@ -1,3 +1,10 @@
+.header h2 {
+    background: #46244C;
+    margin: -15px -15px 15px -15px;
+    padding: 30px 15px;
+    border-radius: 0 0 20px 20px;
+}
+
 .header h2 + p {
     margin-top: 3px;
 }

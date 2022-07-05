@@ -1,8 +1,10 @@
 import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, increment, limit, orderBy, query, runTransaction, setDoc, startAt, updateDoc, where, writeBatch } from 'firebase/firestore/lite';
 
 import { randomNumber } from '../helper/array';
+import { generateDateString } from '../helper/date';
 import { Activity } from '../interfaces/activity';
 import { CatInfo } from '../interfaces/categorie';
+import { Reservation, ReservationSlot } from '../interfaces/reservation';
 import fireConfig from './fireConfig';
 
 const db = getFirestore(fireConfig);
@@ -27,15 +29,16 @@ const getQuery = (item: { path:string, order: string | false, w?: [string, 'arra
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getFireCollection = async (path:string, order: string | false, whereField?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | '>' | 'in' | '>=' | 'not-in' | '<=', any][], limited?: number, start?: (string | number)[]): Promise<any[]> => {
+export const getFireCollection = async (path:string, order: string | false, whereField?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | '>' | 'in' | '>=' | 'not-in' | '<=', any][], limited?: number, start?: (string | number)[]): Promise<any[] | undefined> => {
   const snapshot = await getDocs(getQuery({ path, order, w: whereField, limited, start }));
+  if (!snapshot.docs[0]) return undefined;
   return snapshot.docs.map((snap: any) => snap.data());
 };
 
 export const getFireDocument = async (path: string): Promise<any> => {
   const docRef = doc(db, path);
   const document = await getDoc(docRef);
-  if (document.exists()) return document.data();
+  return document.exists() ? document.data() : undefined;
 };
 
 export const getFireMultiCollection = async (items: { path:string, isDocument?: true, where?: [string, 'array-contains' | '==' | 'in' | '>=' | '<=', any][] }[]): Promise<any> => (
@@ -193,72 +196,50 @@ export const setActivityOnline = (activityId: string, location: ('lo_indoor' | '
   });
 };
 
-// export const partitions = () => {
-//   getFireCollection('topics', false).then((data: any) => {
-//     const batch: any = writeBatch(db);
-//     console.log(data);
+export const reserve = (servicePath?: string, data?: Reservation) => {
+  if (servicePath && data && data.totalPrice && data.startTime && data.uid) {
+    const reservationPath = doc(db, `${servicePath}/reservations/${data.reservationId}`);
+    const slotPath = doc(db, `${servicePath}/reserved/${data.startTime}_${data.date[0]}`);
 
-//     data.slice(51, 200).map((topic: any) => {
-//       const nycRef = doc(db, `topics/${topic.title.form}`);
+    const dateString = generateDateString(data.date[0]);
+    const slot: ReservationSlot = { date: dateString, startTime: data.startTime, personAmount: increment(data.personAmount) };
 
-//       if (topic.partitions?.[0]?.indexOf('</br></br>') !== -1 && !topic.partitions?.[1]) {
-//         const newPartitions: string[] = topic.partitions?.[0]?.split('</br></br>');
-//         const newData = { partitions: newPartitions };
-//         return batch.update(nycRef, newData);
-//       }
+    return runTransaction(db, async (transaction: any) => {
+      const sfDoc = await transaction.get(slotPath);
 
-//       return undefined;
-//     });
+      transaction.set(reservationPath, data);
 
-//     batch.commit().then(() => {
-//       console.log('fertig');
-//     });
-//   });
-// };
+      if (sfDoc.exists()) {
+        transaction.update(slotPath, slot);
+      } else {
+        transaction.set(slotPath, {
+          date: dateString,
+          startTime: data.startTime,
+          personAmount: data.personAmount,
+          rooms: data.rooms,
+        });
+      }
 
-// export const addSortNumber = () => {
-//   getFireCollection('catInfos', false).then((data: any) => {
-//     const batch: any = writeBatch(db);
-//     console.log(data);
+      return Promise.resolve('reserviert');
+    });
+  }
+};
 
-//     data.slice(0, 50).map((catInfo: any) => {
-//       const nycRef = doc(db, `catInfos/${catInfo.title.form}`);
+export const reservStorno = (servicePath?: string, reservationId?: string, slotId?: string, personAmount?: number) => {
+  if (servicePath && reservationId && slotId && personAmount) {
+    const reservationPath = doc(db, `${servicePath}/reservations/${reservationId}`);
+    const slotPath = doc(db, `${servicePath}/reserved/${slotId}`);
 
-//       const newData = { sortCount: randomNumber(1, 7) };
-//       return batch.update(nycRef, newData);
-//     });
+    return runTransaction(db, async (transaction: any) => {
+      const sfDoc = await transaction.get(slotPath);
 
-//     batch.commit().then(() => {
-//       console.log('fertig');
-//     });
-//   });
-// };
+      transaction.delete(reservationPath);
 
-// export const saveGeohashes = () => {
-//   // const allowed = ['u1x1', 'u1x3', 'u1x2', 'u1rr', 'u1rp', 'u1qz', 'u1wb', 'u1wc', 'u1x0'];
-//   getFireCollection('catInfos', false).then((data: any) => {
-//     const batch: any = writeBatch(db);
-//     console.log(data);
+      if (sfDoc.exists()) {
+        transaction.update(slotPath, { personAmount: increment(-personAmount) });
+      }
 
-//     const hashPath = doc(db, 'geo/u1x0');
-//     batch.set(hashPath, { weather: ['Leichtes nieseln', new Date()], cityName: 'Hamburg', count: 51 });
-
-//     data.slice(0, 51).map((catInfo: any) => {
-//       ['u1x0'].map((hash: string) => {
-//         const nycRef = doc(db, `geo/${hash}/categories/${catInfo.title.form}`);
-
-//         const newData = {
-//           ...catInfo,
-//           count: Math.floor(Math.random() * (20 - 1 + 1)) + 1,
-//         };
-//         return batch.set(nycRef, newData);
-//       });
-
-//       return true;
-//     });
-
-//     batch.commit().then(() => {
-//       console.log('fertig');
-//     });
-//   });
-// };
+      return Promise.resolve('reserviert');
+    });
+  }
+};

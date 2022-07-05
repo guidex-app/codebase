@@ -9,10 +9,11 @@ interface ModalProps {
     title: string;
     close: () => void;
     type?: 'large' | 'small';
+    background?: string;
     children: ComponentChildren;
 }
 
-const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, type }) => {
+const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, background, type }) => {
   const container: any = document?.getElementById('modals');
 
   return container && createPortal(
@@ -20,7 +21,7 @@ const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, type }
       <Fragment>
         <Overlay action={close} />
         <div class={`${style.modal} ${type ? style[type] : ''}`}>
-          <Header title={title} action={close} />
+          <Header title={title} action={close} background={background} />
           <div class={style.content}>{children}</div>
         </div>
       </Fragment>

@@ -1,4 +1,4 @@
-import { IconAlertCircle, IconClock, IconColumns, IconCurrencyDollar, IconDeviceDesktopAnalytics, IconHome, IconInfoCircle, IconPhoto, IconWriting } from '@tabler/icons';
+import { IconAlertCircle, IconClock, IconColumns, IconCurrencyDollar, IconDeviceDesktopAnalytics, IconGlobe, IconHome, IconInfoCircle, IconPhoto, IconWriting } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -8,6 +8,7 @@ import Item from '../../../../components/item';
 import Modal from '../../../../container/modal';
 import { setActivityOnline } from '../../../../data/fire';
 import { Activity } from '../../../../interfaces/activity';
+import ActivityItem from '../../../activity/activityItem';
 
 interface CheckProp {
     activity: Activity;
@@ -37,8 +38,8 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
     { percent: 10, title: 'Definiere die Preise', description: 'Welche Preise haben eure Leistungen', color: 'danger', icon: <IconCurrencyDollar color="#fea00a" />, link: 'prices', check: !activity.state?.includes('prices') },
 
     { percent: 10, title: 'Bis zu 4 Bilder hinzufügen', description: 'Wie sieht eure Aktivität aus', color: 'warning', icon: <IconPhoto color="#ff375e" />, link: 'images', check: !activity?.state?.includes('image4'), required: true },
-    { percent: 10, title: 'Gebe Kontaktinfos an.', description: 'Wie können Nutzer euch erreichen', color: 'warning', icon: <IconHome color="#ff5613" />, link: 'contact', check: (!activity.customerContact?.website || !activity.guidexContact?.name), required: true },
-    { percent: 10, title: 'Vertragsbedingungen zustimmn', description: 'Damit unsere Partnerschaft beginnen kann, stimmen sie bitte den Vertragsbedingungen zu', color: 'warning', icon: <IconWriting color="#ff375e" />, link: 'contract', check: !activity?.termsAccepted, required: true },
+    { percent: 10, title: 'Gebe Kontaktinfos an.', description: 'Wie können Nutzer euch erreichen', color: 'warning', icon: <IconHome color="#ff5613" />, link: 'contact', check: (!activity.customerContact?.website || !activity.guidexContact?.name), required: false },
+    { percent: 10, title: 'Vertragsbedingungen zustimmen', description: 'Damit unsere Partnerschaft beginnen kann, stimmen sie bitte den Vertragsbedingungen zu', color: 'warning', icon: <IconWriting color="#ff375e" />, link: 'contract', check: !activity?.termsAccepted, required: true },
   ];
 
   const generatePercent = () => {
@@ -104,19 +105,20 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
   return (
     <Fragment>
       {checkData.isOnline ? (
-        <Item type="success" label="Ihre Unternehmung ist online" action={() => setOpenModal(true)} />
+        <Item type="success" icon={<IconGlobe />} label="Ihr Erlebnis ist online" text="Vorschau ansehen / Offline stellen" action={() => setOpenModal(true)} />
       ) : (
-        <Item type="success" label={`${checkData.percent}% ${checkData.isReady ? 'Erledigt - Online stellen' : 'abgeschlossen - Die letzten Schritte ansehen'}`} action={() => setOpenModal(true)} />
+        <Item type="success" label={`${checkData.percent}% ${checkData.isReady ? 'Erledigt - Online stellen' : 'abgeschlossen - Die nächsten Schritte ansehen'}`} action={() => setOpenModal(true)} />
       )}
 
       {openModal && (
         <Modal title="" close={() => setOpenModal(false)}>
           {checkData.isOnline ? (
             <Fragment>
-              <h2 style={{ marginTop: '0' }}>Ihre Unternehmung ist online</h2>
-              <p style={{ marginTop: '0', padding: '10px 0', color: 'var(--fifth)' }}>Ihre Unternehmung ist bei uns gelistet und für alle Nutzer verfügbar.</p>
-              <FormButton disabled={checkData.percent < 100} label="Unternehmung offline stellen" action={toggleActivityState} />
-              <Item icon={<IconAlertCircle color="var(--orange)" />} type="info" label="Info" text="Wenn sie Ihre Unternehmung offline stellen, können sie nicht mehr auf unserer Seite gefunden werden. Jedoch, bleiben ihre Daten bestehen und können im Mitgliederbereich bearbeitet werden." />
+              <h2 style={{ margin: '0 0 15px 0' }}>Ihr Erlebnis ist online</h2>
+              <Item icon={<IconAlertCircle color="var(--orange)" />} type="info" label="Ihr Erlebnis ist bei uns gelistet und für alle Nutzer verfügbar." text="Wenn sie ihr Erlebnis offline stellen, können sie nicht mehr auf unserer Seite gefunden werden. Jedoch, bleiben ihre Daten bestehen und können im Mitgliederbereich bearbeitet werden." />
+              <ActivityItem activity={activity} />
+              <br /><br />
+              <FormButton disabled={checkData.percent < 100} label="Erlebnis offline stellen" action={toggleActivityState} />
             </Fragment>
           ) : (
             <Fragment>
@@ -129,8 +131,8 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
                 <Fragment>
                   <h2 style={{ marginTop: '0' }}>Es ist geschafft</h2>
                   <p style={{ marginTop: '0', padding: '10px 0', color: 'var(--fifth)' }}>
-                    Ihre Unternehmung ist jetzt bereit online gestellt zu werden.
-                    Der erste Eindruck zählt, daher empfiehlt es sich die Unternehmung in der Vorschau zu überprüfen.
+                    Ihr Erlebnis ist jetzt bereit online gestellt zu werden.
+                    Der erste Eindruck zählt, daher empfiehlt es sich das Erlebnis in der Vorschau zu überprüfen.
                   </p>
                   <Item icon={<IconDeviceDesktopAnalytics color="var(--blue)" />} type="info" label="Jetzt Vorschau ansehen" text="Siehe Dir die Vorschau und Verbesserungsvorschläge an" />
                 </Fragment>
@@ -142,7 +144,7 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
                 ))}
               </section>
               )}
-              <FormButton disabled={checkData.percent < 100} label="Unternehmung online stellen" action={toggleActivityState} />
+              <FormButton disabled={checkData.percent < 100} label="Erlebnis online stellen" action={toggleActivityState} />
             </Fragment>
           )}
 

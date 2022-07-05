@@ -42,9 +42,9 @@ const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }
   }, [offset]);
 
   const visibleChildren = useMemo(() => new Array(VISIBLE_ITEMS).fill(null).map((_, index) => (
-    <div key={`${index.toString()}_${scrolling.startAt}`} class={`${style.chunk} ${(index + scrolling.startAt) % 2 === 0 ? 'even' : 'odd'}`}>
-      <MasonryItem chunks={chunks[index + scrolling.startAt] || []} type={type} />
-    </div>
+
+    <MasonryItem chunks={chunks[index + scrolling.startAt] || []} type={type} index={index} />
+
   )), [scrolling.startAt, chunks]);
 
   return (

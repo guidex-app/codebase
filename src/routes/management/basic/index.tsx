@@ -1,12 +1,13 @@
-import { IconBlockquote, IconCheck, IconInfoCircle } from '@tabler/icons';
+import { IconBlockquote, IconForms, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
 
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
-import BasicInput from '../../../components/form/basicInput';
 import ImgInput from '../../../components/form/imgInput';
+import NormalInput from '../../../components/form/Inputs/basic';
+import TextInput from '../../../components/form/Inputs/textArea';
 import PickInput from '../../../components/form/pickInput';
 import TextHeader from '../../../components/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
@@ -16,115 +17,107 @@ import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';
 import { Activity } from '../../../interfaces/activity';
 import { CatInfo } from '../../../interfaces/categorie';
-import { FormInit } from '../../../interfaces/form';
 import ChooseCat from './chooseCat';
 
 interface ActivityProps {
     activityID: string;
     activity: Activity;
+    updateActivity: (act: any) => void;
     uid: string;
 }
 
-const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }: ActivityProps) => {
+const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, updateActivity, uid }: ActivityProps) => {
   const data: Activity | undefined = useCompany(activityID, activity);
 
-  if (!data && activityID !== 'new') {
-    return (
-      <TextHeader
-        icon={<IconInfoCircle color="#63e6e1" />}
-        title="Unternehmungs-Informationen"
-        text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
-        Der Name Ihrer Unternehmung ist ihr öffentliches Label"
-      />
-    );
-  }
+  const header = (
+    <TextHeader
+      icon={<IconInfoCircle color="var(--orange)" />}
+      title={activityID === 'new' ? 'Erlebnis anlegen' : 'Erlebnis bearbeiten'}
+      text="Es wird Zeit sich unseren Nutzern vorzustellen. Welche Art von Erlebnis möchtest du anbieten?"
+    />
+  );
 
-  const formInit: FormInit = {
-    title: { value: data?.title?.name, type: 'string', required: true },
-    category: { value: data?.category?.name, type: 'string', required: true },
-    filter: { value: data?.filter || ['Indoor'], type: 'string[]', required: true },
-    description: { value: data?.description, type: 'string', required: false },
-    state: { value: data?.state, type: 'string[]', required: false },
-  };
+  if (!data && activityID !== 'new') return header;
 
-  const { fields, formState, changeField, isValid } = useForm(formInit);
+  const { form, changeForm, isValid } = useForm({
+    title: data?.title?.name,
+    category: data?.category?.name,
+    filter: data?.filter,
+    state: data?.state,
+    description: data?.description,
+  }, ['title', 'category']);
 
   const [isIndoorAndOutdoor, setIsIndoorAndOutdoor] = useState<boolean>(false);
 
   const updateImage = (name: string) => {
-    const newState = mergeUnique([name], fields.state || []);
-    changeField(newState, 'state');
+    const newState = mergeUnique([name], form.state || []);
+    changeForm(newState, 'state');
   };
 
   const validateForm = () => {
-    if (isValid()) {
+    if (isValid && form.title && form.category) {
       const basic = {
         ...(activityID === 'new' && { member: [uid] }),
-        title: data?.title || { name: fields.title, form: replaceSpecialCharacters(fields.title) },
-        category: { name: fields.category, form: replaceSpecialCharacters(fields.category) },
-        filter: fields.filter,
-        ...(fields.state?.[0] && { state: fields.state }),
-        ...(fields.description && { description: fields.description }),
+        title: data?.title || { name: form.title, form: replaceSpecialCharacters(form.title) },
+        category: { name: form.category, form: replaceSpecialCharacters(form.category) },
+        filter: form.filter,
+        ...(form.state?.[0] && { state: form.state }),
+        ...(form.description && { description: form.description }),
       };
 
       fireDocument(`activities/${basic.title.form}`, basic, activityID === 'new' ? 'set' : 'update').then(() => {
+        updateActivity(basic);
         setTimeout(() => {
-          route(`/company/contact/${replaceSpecialCharacters(fields.title)}`);
+          route(`/company/contact/${basic.title.form}`);
         }, activityID === 'new' ? 500 : 0);
       });
     }
   };
 
   const changeCat = async (cat?: CatInfo) => {
-    if (!cat) return changeField(undefined, 'category');
+    if (!cat) return changeForm(undefined, 'category');
 
     const ind: boolean = cat.filter.includes('lo_indoor');
     const out: boolean = cat.filter.includes('lo_outdoor');
 
     setIsIndoorAndOutdoor(ind && out);
 
-    if (ind && !out) changeField(['Indoor'], 'filter');
-    if (out && !ind) changeField(['Outdoor'], 'filter');
-    changeField(cat.title.name, 'category');
+    if (ind && !out) changeForm(['Indoor'], 'filter');
+    if (out && !ind) changeForm(['Outdoor'], 'filter');
+    changeForm(cat.title.name, 'category');
   };
 
   return (
     <Fragment>
-      <TextHeader
-        icon={<IconInfoCircle color="#63e6e1" />}
-        title={activityID === 'new' ? 'Unternehmung anlegen' : 'Unternehmungs-Informationen'}
-        text="Es ist Zeit sich unseren Nutzern vorzustellen."
-      />
+      {header}
       <main class="small_size_holder">
         <BackButton url={activityID !== 'new' ? `/company/dashboard/${activityID}` : '/company'} />
 
         <form>
           <section class="group form">
-            <BasicInput
-              icon={<IconCheck color="#fea00a" />}
-              type="text"
-              label="Name Ihrer Unternehmung"
+            <NormalInput
+              icon={<IconForms color="#fea00a" />}
+              type="string"
+              label="Wie soll ihr Erlebnis heißen?"
               name="title"
-              value={fields.title}
-              placeholder="Wie lautet der Titel ihrer Unternehmung"
-              error={formState.title}
-              disabled={activityID !== 'new' || fields.state?.[0]}
+              value={form?.title}
+              placeholder="Wie heißt ihr Erlebnis"
+              disabled={activityID !== 'new' || !!form.state?.[0]}
               required
-              change={changeField}
+              change={changeForm}
             />
 
-            <ChooseCat currentCat={data?.category?.name} changeCat={changeCat} disabled={!!data?.state?.includes('online')} />
+            <ChooseCat currentCat={form?.category} changeCat={changeCat} disabled={!!data?.state?.includes('online')} />
 
-            {fields.category && isIndoorAndOutdoor && (
+            {form.category && isIndoorAndOutdoor && (
             <PickInput
               label="Wo seid Ihr verfügbar?"
               name="filter"
               options={['Indoor', 'Outdoor']}
-              value={fields.filter}
-              error={formState.filter}
+              value={form.filter}
                 // errorMessage="Bitte wähle Deine Location"
               required
-              change={changeField}
+              change={changeForm}
             />
             )}
 
@@ -135,7 +128,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
             <ImgInput
               label={data?.state?.includes('thumbnail') ? 'Anzeigebild aktualisieren' : 'Anzeigebild hochladen'}
               text="Das anzeige Bild ist als erstes für die Nutzer sichtbar"
-              fileName={fields.title}
+              fileName={form.title}
               folderPath="activities"
               name="thumbnail"
               size={[900, 900]}
@@ -143,24 +136,28 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, uid }
               change={updateImage}
             />
 
-            <BasicInput
+            {/* <small style={{ color: 'var(--fifth)' }}>Lassen sie ihr Erlebnis mit einem hochwertigen Foto erstrahlen.</small> */}
+
+          </section>
+
+          <section class="group form">
+
+            <TextInput
             //   icon={textOutline}
             // type="textarea"
-              icon={<IconBlockquote />}
-              label="Was sollten Nutzer über sie wissen?"
+              icon={<IconBlockquote color="var(--orange)" />}
+              label="Beschreibung"
               name="description"
-              type="textarea"
-              value={fields.description}
+              value={form.description}
               placeholder="Die Beschreibung gibt einen kurzen Überblick über die Unternehmung. Probieren sie eine kurze aber genaue Beschreibung aller wichtigen
               Merkmale zu definieren."
-              error={formState.description}
             // errorMessage="Bitte geben Sie eine Beschreibung an"
-              change={changeField}
+              change={changeForm}
             />
 
           </section>
 
-          <FormButton action={validateForm} label={!activity?.title?.form ? 'Unternehmung anlegen' : 'Speichern'} />
+          <FormButton action={validateForm} disabled={!isValid} label={!activity?.title?.form ? 'Erlebnis anlegen' : 'Erlebnis Speichern'} />
 
         </form>
 

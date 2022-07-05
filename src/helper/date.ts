@@ -1,15 +1,18 @@
-export const shortDay: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-export const dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+export const shortDay: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+export const dayNames: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
-/** gibt true zurück wenn heute größer als der angegebene Tag ist  */
-export const isDayGreater = (date: number, days: number): boolean => {
-  const today = new Date(); // heute
-  const toCompare = new Date(date);
+export const getCurrentShortname = (dayNr?: number): 'Mo' | 'Di' | 'Mi' | 'Do' | 'Fr' | 'Sa' | 'So' => {
+  const currentDayNr: number = dayNr !== undefined ? dayNr : new Date().getDay();
+  console.log(currentDayNr);
+  return shortDay[currentDayNr === 0 ? 6 : currentDayNr - 1];
+};
+
+/**
+ * True, wenn heute + angegebene tage kleiner als der zu vergleichende Tag ist.
+ */
+export const smallerThanDays = (dayToCompare: Date, days: number): boolean => {
   const time = days * 60 * 60 * 24 * 1000;
-  if ((toCompare.getTime() - today.getTime()) < time) {
-    return false;
-  }
-  return true;
+  return dayToCompare.getTime() < (new Date().getTime() + time);
 };
 
 export const generateDateString = (from: Date): string => {

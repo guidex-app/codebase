@@ -24,12 +24,14 @@ interface ManagementProps {
 
 const Management: FunctionalComponent<ManagementProps> = ({ uid }: ManagementProps) => {
   const [activity, setActivity] = useState<Activity | undefined>(undefined);
+  const updateActivity = (newFields: any) => setActivity({ ...activity, ...newFields });
+
   if (!uid) route('/login/');
   return (
     <Router>
-      <Route path="/company/" component={List} setActivity={setActivity} />
+      <Route path="/company/" component={List} setActivity={setActivity} uid={uid} />
       <Route path="/company/dashboard/:activityID" component={Dashboard} activity={activity} />
-      <Route path="/company/basic/:activityID" component={Basic} activity={activity} uid={uid} />
+      <Route path="/company/basic/:activityID" component={Basic} activity={activity} updateActivity={updateActivity} uid={uid} />
       <Route path="/company/contact/:activityID" component={Contact} activity={activity} />
       <Route path="/company/contract/:activityID" component={Contract} activity={activity} />
       <Route path="/company/openings/:activityID" component={Openings} activity={activity} />

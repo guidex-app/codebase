@@ -28,7 +28,7 @@ const DayValue: FunctionalComponent<DayValueProps> = ({ valueIndex, values, opti
   return (
     <div>
       {options.map((dayName: string) => (!disabled || (values?.includes(dayName))) && (
-        <Chip small label={`${dayName}.`} type={values && values.indexOf(dayName) > -1 ? 'active' : 'inactive'} key={dayName} action={() => updateValue(dayName)} />
+        <Chip label={`${dayName}.`} type={values && values.indexOf(dayName) > -1 ? 'active' : 'inactive'} key={dayName} action={() => updateValue(dayName)} />
       ))}
     </div>
   );

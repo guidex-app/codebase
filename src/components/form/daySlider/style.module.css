@@ -1,0 +1,78 @@
+.daySlider {
+    white-space: nowrap;
+
+    scroll-snap-type: x mandatory;
+    -webkit-box-orient: horizontal;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 0;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.daySlider::-webkit-scrollbar { height: 0; }
+
+.daySlider button {
+    display: inline-block;
+    margin: 6px 2.5px; padding: 0;
+    scroll-snap-align: start;
+    height: 70px;
+    width: calc((100% - 40px) / 8);
+    min-width: 100px;
+    border: none;
+    font-size: 21px;
+    font-weight: 100;
+    cursor: pointer;
+    background-color: #2b303d;
+    color: var(--orange);
+    border-radius: 10px;
+    line-height: 24px;
+    opacity: 1;
+    will-change: opacity;
+    transition: 0.3s opacity;
+}
+
+.daySlider button:disabled {
+    background: repeating-linear-gradient(-55deg,#222,#222 5px,#262c3d 5px,#262c3d 10px);
+    color: var(--fifth);
+}
+
+.daySlider button:hover {
+    opacity: 0.95;
+}
+
+.daySlider button svg {
+    display: inline-block;
+    margin: 0;
+    height: 22px;
+}
+
+.daySlider button strong {
+    display: block;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+button.today {
+    position: relative;
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+button.today::after {
+    position: absolute;
+    content: "";
+    bottom: 0;left: 50%;
+    transform: translate(-50%, 6px);
+    width: 0; 
+    height: 0; 
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    
+    border-top: 7px solid var(--orange);
+}
