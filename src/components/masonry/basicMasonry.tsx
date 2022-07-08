@@ -25,7 +25,7 @@ const BasicMasonry: FunctionalComponent<BasicMasonryProps> = ({ list, type }: Ba
   if (list === false || chunks === false) return <Loading />;
   return (
     <div class={style.masonryList}>
-      {chunks?.map((item, index) => <MasonryItem chunks={chunks[index] || []} type={type} index={index} />)}
+      {chunks?.map((item, index) => <MasonryItem chunks={item} type={type} index={index} />)}
     </div>
   );
 };

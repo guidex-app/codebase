@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
-import { Link } from 'preact-router/match';
+import { route } from 'preact-router';
 
 import style from './style.module.css';
 
@@ -15,19 +15,26 @@ interface ItemProps {
     background?: string;
 }
 
-const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editLabel, background, type = 'clean', action, link, text }: ItemProps) => (
-  <Link class={`${style.item} ${style[type] || ''}`} href={link} activeClassName={link ? style.current : undefined} style={background ? { backgroundColor: background } : undefined} onClick={action}>
-    {image ? (
-      <picture class={style.image}>
-        <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
-        <img loading="lazy" src={`${image}.jpeg?alt=media`} alt={label} />
-      </picture>
-    ) : (
-      icon && icon
-    )}
-    <p style={!text ? { paddingTop: '16px' } : undefined}>{label}&nbsp; {text && <small>{text}</small>}</p>
-    {editLabel && <div class={style.editLabel}>{editLabel}</div>}
-  </Link>
-);
+const Item: FunctionalComponent<ItemProps> = ({ label, image, icon, editLabel, background, type = 'clean', action, link, text }: ItemProps) => {
+  const clickFunc = async () => {
+    if (link) route(link);
+    if (action) action();
+  };
+
+  return (
+    <div class={`${style.item} ${style[type] || ''}`} style={background ? { backgroundColor: background } : undefined} onClick={clickFunc} role="button" tabIndex={0}>
+      {image ? (
+        <picture class={style.image}>
+          <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
+          <img loading="lazy" src={`${image}.jpeg?alt=media`} alt={label} />
+        </picture>
+      ) : (
+        icon && icon
+      )}
+      <p style={!text ? { paddingTop: '16px' } : undefined}>{label}&nbsp; {text && <small>{text}</small>}</p>
+      {editLabel && <div class={style.editLabel}>{editLabel}</div>}
+    </div>
+  );
+};
 
 export default Item;

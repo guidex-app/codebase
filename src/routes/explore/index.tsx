@@ -1,4 +1,4 @@
-import { IconAdjustmentsHorizontal, IconCompass } from '@tabler/icons';
+import { IconAdjustmentsHorizontal, IconUserSearch } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -23,7 +23,7 @@ const Explore: FunctionalComponent = () => {
   return (
     <Fragment>
       <TextHeader
-        icon={<IconCompass color="#fea00a" />}
+        icon={<IconUserSearch color="#fea00a" />}
         title="Entdecken"
         text="Entdecke neue Unternehmungen. Durstöbere unsere Kategorien nach neuen Unternehmungen"
       />

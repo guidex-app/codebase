@@ -19,7 +19,7 @@ const MasonryItem: FunctionalComponent<MasonryItemProps> = ({ chunks, type, inde
           <Link href={`/${type !== 'Topic' ? 'activity' : 'explore'}/${item.title?.form}?l=o`}>
             <picture>
               <source srcSet={`${getPath(item.title?.form)}.webp?alt=media`} type="image/webp" />
-              <img loading="lazy" src={`${getPath(item.title?.form)}.jpeg?alt=media`} alt={item.title?.name} />
+              <img loading={index !== 0 ? 'lazy' : 'eager'} src={`${getPath(item.title?.form)}.jpeg?alt=media`} alt={item.title?.name} />
             </picture>
           </Link>
           <strong>{item.title?.name} {item.count ? `(${item.count.indoor + item.count.outdoor})` : ''}</strong>

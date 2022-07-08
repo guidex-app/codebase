@@ -8,12 +8,12 @@ import Item from '../../../components/item';
 import TopButton from '../../../components/topButton';
 import { fireDocument, getFireCollection } from '../../../data/fire';
 import getQuestFormList from '../../../helper/priceStructure';
-import { ServiceField, Structure } from '../../../interfaces/company';
+import { ServiceField } from '../../../interfaces/company';
 import { PriceItem } from '../../../interfaces/reservation';
 import style from '../../../style/table.module.css';
 
 interface EditPricesProps {
-    structure?: Structure;
+    structure?: ServiceField[];
     activityID: string;
     serviceID: string;
     questionLength: number;
@@ -44,7 +44,6 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
   const [columns, setColumns] = useState<[string, string][]>([]);
   const [rows, setRows] = useState<PriceRows[]>([]); // cell array in a row array
   const [priceList, setPriceList] = useState<PriceItem[] | false | undefined>(false); // cell array in a row array
-  const [structureFields, setStructureFields] = useState<ServiceField[] | false | undefined>(false);
   const colorMap = ['#46244C', '#712B75', '#C74B50', '#D49B54', '#A05344', '#734046', '#321F28'];
 
   // farben
@@ -61,11 +60,11 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
   };
 
   const generateRowNames = () => {
-    if (!structureFields) return [];
+    if (!structure) return [];
 
-    const { list: discountList } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'discounts')?.selected, ['']);
-    const { list: ageList } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'age')?.selected, []);
-    const { list: timeList } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'time')?.selected, ['']);
+    const { list: discountList } = getQuestFormList(status.day, structure?.find((x) => x.name === 'discounts')?.selected, ['']);
+    const { list: ageList } = getQuestFormList(status.day, structure?.find((x) => x.name === 'age')?.selected, []);
+    const { list: timeList } = getQuestFormList(status.day, structure?.find((x) => x.name === 'time')?.selected, ['']);
 
     const rowList: (string | false)[][] = [];
     const specs = [...discountList, ...ageList];
@@ -98,13 +97,13 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
   };
 
   const generateColumns = () => {
-    if (!status.day || structureFields === false) return;
+    if (!status.day) return;
 
     const newColumns: [string, string][] = [];
 
-    const { list: personList } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'persons')?.selected, ['Ab 1']);
-    // const generatePersonGroups = structureFields?.find((x) => x.name === 'persons')?.selected?.values.
-    const { list: foundation } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'foundation')?.selected, ['person'], true);
+    const { list: personList } = getQuestFormList(status.day, structure?.find((x) => x.name === 'persons')?.selected, ['Ab 1']);
+    // const generatePersonGroups = structure?.find((x) => x.name === 'persons')?.selected?.values.
+    const { list: foundation } = getQuestFormList(status.day, structure?.find((x) => x.name === 'foundation')?.selected, ['person'], true);
 
     personList.forEach((person: string) => [...(status.isRound ? roundDiscount : durationList)].forEach((roundDuration: string) => {
       newColumns.push([person, roundDuration]);
@@ -115,11 +114,9 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
   };
 
   const checkDuration = () => {
-    if (structureFields === false) return;
-
-    const { list: newDurationList, isRound = false } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'duration')?.selected);
+    const { list: newDurationList, isRound = false } = getQuestFormList(status.day, structure?.find((x) => x.name === 'duration')?.selected);
     if (isRound) {
-      const { list: roundDiscountList } = getQuestFormList(status.day, structureFields?.find((x) => x.name === 'roundDiscount')?.selected);
+      const { list: roundDiscountList } = getQuestFormList(status.day, structure?.find((x) => x.name === 'roundDiscount')?.selected);
 
       setRoundDiscount(['ab 1', ...roundDiscountList]);
     }
@@ -153,12 +150,12 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     }
   };
 
-  const generateDayGroups = (fields: ServiceField[]): string[] => {
+  const generateDayGroups = () => {
     const allGroups: string[][] = []; // Hier sind alle Gruppen die existieren drinne
     const unUsedDays: string[] = openingDays; // Unbenutzte Tage (Anhand der Öffnungszeiten)
     const einzelneTage: string[] = []; // Hier werden bereits einzelne Tage gespeichert
 
-    fields.forEach((x: ServiceField) => {
+    structure?.forEach((x: ServiceField) => {
       if (x.selected?.values) {
         x.selected.values.forEach((element) => {
           if (element.onDays && !allGroups.some((v) => v.toString() === element.onDays?.toString())) { // hier werden noch doppelte gruppen hinzugefügt
@@ -206,22 +203,9 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
     if (unUsedDays[0]) uniqeGroups.push(unUsedDays);
 
     const newGroups: string[] = uniqeGroups.map((x) => x.join(', '));
-    setDayGroups([...newGroups, ...einzelneTage]);
-    return newGroups;
-  };
 
-  const loadStructureFields = async () => {
-    if (!structure) return setStructureFields([]);
-    try {
-      const serviceFieldData = await getFireCollection(`activities/${activityID}/structures/${structure.id}/fields`, false);
-      if (serviceFieldData) {
-        const days = generateDayGroups(serviceFieldData);
-        setStatus({ ...status, day: days?.[1] ? undefined : days?.[0] || 'nothing' });
-        setStructureFields(serviceFieldData || []);
-      }
-    } catch {
-      setStructureFields([]);
-    }
+    setDayGroups([...newGroups, ...einzelneTage]);
+    return setStatus({ ...status, day: newGroups?.[1] ? undefined : newGroups?.[0] || 'nothing' });
   };
 
   const daySelect = async () => {
@@ -231,13 +215,13 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
 
   useEffect(() => { generateColumns(); }, [durationList]);
   useEffect(() => { if (priceList !== false) generateRows(); }, [priceList]);
-  useEffect(() => { loadStructureFields(); }, []); // initial load
+  useEffect(() => { generateDayGroups(); }, [structure]); // initial load
   useEffect(() => { if (status.day) daySelect(); }, [status.day]);
 
   const handleFocus = (e: any) => e.target.select();
 
   const editCurrentFields = () => {
-    if (structureFields !== false) editStructure(structureFields, 'structure');
+    editStructure(structure, 'structure');
   };
 
   // if (structureFields === false) {
@@ -254,13 +238,13 @@ const EditPrices: FunctionalComponent<EditPricesProps> = ({ structure, activityI
 
       {!status.day && (
         <section class="group form">
-          {questionLength === ((structureFields && structureFields.length) || 0) ? (
+          {questionLength === ((structure && structure.length) || 0) ? (
             <Item icon={<IconEditCircle />} type="grey" label="Tabelle bearbeiten (7 Schritte)" text="Die Gruppen werden anhand der angegebenen Werte automatisch von Guidex generiert. Bei Änderungen werden schon angegbene Preise evtl. verworfen." action={editCurrentFields} />
           ) : (
             <Item icon={<IconEditCircle />} type="grey" label="Tabelle abschließen (7 Schritte)" text="Sie müssen die Vorlage abschließen um fortzufahren" action={editCurrentFields} />
           )}
 
-          {questionLength === ((structureFields && structureFields.length) || 0) && dayGroups.map((x) => <Item type="clean" icon={<IconCalendar color="#bf5bf3" />} editLabel="Mit Preiseingabe beginnen" label={x} action={() => changeDay(x)} />)}
+          {questionLength === ((structure && structure.length) || 0) && dayGroups.map((x) => <Item type="clean" icon={<IconCalendar color="#bf5bf3" />} editLabel="Mit Preiseingabe beginnen" label={x} action={() => changeDay(x)} />)}
 
           {/* <Item type="warning" label="Verwendete Tabelle entfernen" action={() => editStructure(undefined, 'belongs')} /> */}
 

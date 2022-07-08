@@ -9,6 +9,7 @@ import Admin from '../routes/admin';
 import Cats from '../routes/cats';
 import Details from '../routes/details';
 import Explore from '../routes/explore';
+import ListDetails from '../routes/listDetails';
 import Lists from '../routes/lists';
 import Management from '../routes/management';
 import NotFoundPage from '../routes/notfound';
@@ -28,7 +29,7 @@ const AppRoutes: FunctionalComponent = () => {
    * 3. Alten oder ggf. neue Daten einstellen.
    */
   const firstData = async () => {
-    const store: User = await getStorageKeys(['location', 'day', 'weather']);
+    const store: User = await getStorageKeys(['location', 'day', 'weather', 'uid']);
     const DEFAULT_LOCATION: Location = { lat: 53.5510846, lng: 9.9936818, city: 'Hamburg', geoHash: 'u1x0' };
     updateUser(store.location ? store : { ...store, location: DEFAULT_LOCATION });
   };
@@ -61,7 +62,7 @@ const AppRoutes: FunctionalComponent = () => {
         <Route path="/admin/" component={Admin} />
 
         <Route path="/lists" component={Lists} uid={user.uid} />
-        {/* <Route path="/lists/:id" component={ListPage} uid={user.uid} /> */}
+        <Route path="/lists/:listID" component={ListDetails} uid={user.uid} />
 
         <Route path="/company/:rest*" component={Management} uid={user.uid} />
         <Route path="/activity/:categoryID" component={ActivityList} day={user.day} />

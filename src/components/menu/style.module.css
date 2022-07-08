@@ -67,6 +67,7 @@
     background-color: transparent;
     opacity: 0.85;
     color: var(--white);
+    text-align: center;
 }
 
 .button .openMenu {
@@ -74,13 +75,13 @@
     color: var(--red);
 }
 
-.button button:nth-child(2) {
-    margin: 1px 0;
-}
-
 .button img {
     display: inline-block;
     width: 24px;
+}
+
+.button svg {
+    display: inline-block;
 }
 
 .button button:hover {
@@ -91,14 +92,8 @@
 }
 
 @keyframes slideInFromLeft {
-	0% {
-	  transform: translateX(100%);
-	  opacity: 0.5;
-	}
-	100% {
-	  transform: translateX(0);
-	  opacity: 1;
-	}
+	0% { transform: translateX(250px); }
+	100% { transform: translateX(0); }
 }
 
 @media (min-width: 693px) {

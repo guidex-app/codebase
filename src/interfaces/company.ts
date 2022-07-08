@@ -18,15 +18,6 @@ export interface ServiceInfo {
   structureID: number;
 }
 
-export interface Structure {
-  id?: number;
-  services?: string[];
-  description?: string;
-
-  foundation?: 'object' | 'person';
-  duration?: 'round' | 'fixed';
-}
-
 /**
  * Answers sind den Fields untergeordnete antworten
  */

@@ -1,4 +1,4 @@
-import { IconAlertCircle, IconClock, IconColumns, IconCurrencyDollar, IconDeviceDesktopAnalytics, IconGlobe, IconHome, IconInfoCircle, IconPhoto, IconWriting } from '@tabler/icons';
+import { IconAlertCircle, IconClock, IconColumns, IconCurrencyDollar, IconDeviceDesktopAnalytics, IconEyeCheck, IconHome, IconInfoCircle, IconPhoto, IconWriting } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -105,7 +105,7 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
   return (
     <Fragment>
       {checkData.isOnline ? (
-        <Item type="success" icon={<IconGlobe />} label="Ihr Erlebnis ist online" text="Vorschau ansehen / Offline stellen" action={() => setOpenModal(true)} />
+        <Item type="success" icon={<IconEyeCheck />} label="Ihr Erlebnis ist online" text="Vorschau ansehen / Offline stellen" action={() => setOpenModal(true)} />
       ) : (
         <Item type="success" label={`${checkData.percent}% ${checkData.isReady ? 'Erledigt - Online stellen' : 'abgeschlossen - Die nächsten Schritte ansehen'}`} action={() => setOpenModal(true)} />
       )}

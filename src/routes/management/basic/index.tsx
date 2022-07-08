@@ -157,7 +157,7 @@ const Basic: FunctionalComponent<ActivityProps> = ({ activity, activityID, updat
 
           </section>
 
-          <FormButton action={validateForm} disabled={!isValid} label={!activity?.title?.form ? 'Erlebnis anlegen' : 'Erlebnis Speichern'} />
+          <FormButton action={validateForm} disabled={!isValid} label={!data?.title?.form ? 'Erlebnis anlegen' : 'Erlebnis Speichern'} />
 
         </form>
 

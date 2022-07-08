@@ -8,13 +8,12 @@
     border-spacing: 0;
     width: 100%;
     border: none;
-    color: var(--white);
-    background: black;
+    color: #581e0d;
+    background: linear-gradient(to right,#f5af19,#f12711);
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
     border-collapse: collapse;
-    border: 5px solid black;
 }
 
 .table span {
@@ -28,7 +27,7 @@
 }
 
 .table tr {
-    border-bottom: 0px solid black;
+    border-bottom: 0px solid white;
     border-collapse: collapse;
 }
 
@@ -102,10 +101,11 @@
 .heading th {
     margin: 0;
     padding: 0.5rem;
-    background-color: black;
+    background-color: #f12711;
+    color: white;
     font-size: 14px;
     min-width: 100px;
-    border-right: 1px solid #1a1a1a;
+    border-right: 2px solid rgba(255,255,255,0.3);
 }
 
 .heading small {
@@ -134,7 +134,7 @@
 }
 
 .footer {
-    background-color: black;
+    background-color: white;
     margin-top: -10px;
     margin-bottom: 20px;
     padding: 10px 20px;

@@ -3,7 +3,7 @@ import { IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { AnsInfo, Questions, Selected, ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
+import { AnsInfo, Questions, Selected, ServiceField, ServiceInfo } from '../../../interfaces/company';
 import Chip from '../../chip';
 import Item from '../../item';
 import TopButton from '../../topButton';
@@ -26,11 +26,11 @@ interface QuestFormProps {
     service?: ServiceInfo; // Serviceinfo oder noch nicht definiert
     folderPath?: string; // folderpath für image uploads
     openingDays?: string[];
-    structure?: Structure;
+    // structure?: any;
     save: (data: ServiceField) => void; // Speicherfunktion
 }
 
-const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, openingDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'], serviceFields, folderPath, structure, save }: QuestFormProps) => {
+const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, openingDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'], serviceFields, folderPath, save }: QuestFormProps) => {
   const [question, setQuestion] = useState<Questions | undefined>();
   const [field, setField] = useState<ServiceField | undefined>();
   const [validation, setValidation] = useState<'valid' | 'notValid'>('notValid');
@@ -190,12 +190,12 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
     setField({ name: question.info.title.form, selected: newSelected });
   };
 
-  const skipAnswerCheck = (form: string): boolean => {
-    // const noDays = form.startsWith('onDay'); // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
-    const foundation = ['round', 'onDayDuration'].includes(form) && structure?.foundation === 'person'; // Wenn pro Person
-    const duration = ['roundDiscount', 'onDayRoundDiscount'].includes(form) && structure?.duration === 'fixed';
-    return foundation || duration;
-  };
+  // const skipAnswerCheck = (form: string): boolean => {
+  //   // const noDays = form.startsWith('onDay'); // wenn eine frage Tageabhängig ist, aber keine tage definiert sind
+  //   const foundation = ['round', 'onDayDuration'].includes(form) && structure?.foundation === 'person'; // Wenn pro Person
+  //   const duration = ['roundDiscount', 'onDayRoundDiscount'].includes(form) && structure?.duration === 'fixed';
+  //   return foundation || duration;
+  // };
 
   const getInput = (answer: AnsInfo, valueIndex: number, values: any) => {
     if (answer.inputType === 'textarea') return <TextInput icon={answer.icon} value={values?.[valueIndex]?.value} label={answer.label} name={`${answer.name}+${valueIndex}`} placeholder={answer.placeholder} required change={setNewValue} />;
@@ -216,7 +216,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
       <main style={{ paddingBottom: '5px' }}>
         {question.info.type === 'onService' && !service?.serviceName?.[0] && <p class="red">Definiere mindestens eine Leistung.</p>}
         {question.answers.map((answer: AnsInfo) => {
-          if (skipAnswerCheck(answer.name)) return;
+          // if (skipAnswerCheck(answer.name)) return;
 
           const { type } = question.info;
           const amountOfFields: string[] = field?.selected?.amountOfFields?.split(',') || ['1'];

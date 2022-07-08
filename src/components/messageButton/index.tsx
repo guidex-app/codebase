@@ -21,7 +21,7 @@ const MessageButton: FunctionalComponent<MessageButtonProps> = ({ title, text, s
   };
 
   return (
-    <div className="small_size_holder" style={{ maxWidth: '350px' }}>
+    <div className="small_size_holder" style={{ maxWidth: '350px', marginTop: '60px', textAlign: 'center' }}>
       {imageUrl && <img src={imageUrl} style={{ maxWidth: '100px', display: 'inline-block', marginBottom: '20px' }} alt={title} />}
 
       <h2>{title}</h2>

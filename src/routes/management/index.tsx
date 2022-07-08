@@ -11,6 +11,7 @@ import Contract from './contract';
 import Dashboard from './dashboard';
 import Documents from './documents';
 import Images from './images';
+import Influencer from './influencer';
 import List from './list';
 import Openings from './openings';
 import Prices from './prices';
@@ -41,6 +42,7 @@ const Management: FunctionalComponent<ManagementProps> = ({ uid }: ManagementPro
       <Route path="/company/documents/:activityID" component={Documents} activity={activity} />
       <Route path="/company/services/:activityID" component={Services} activity={activity} />
       <Route path="/company/prices/:activityID" component={Prices} activity={activity} />
+      <Route path="/company/influencer/:activityID" component={Influencer} activity={activity} />
       <Route path="/company/reservations/:activityID" component={Reservations} activity={activity} />
       <NotFoundPage default />
     </Router>

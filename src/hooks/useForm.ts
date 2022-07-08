@@ -10,17 +10,20 @@ const useForm = (data?: { [key: string]: any }, required?: string[]): {
 
   const validate = () => {
     if (!required) return setIsValid(true);
-    const checkFields: boolean = !!required?.some((key: string) => !form?.[key]);
+    const checkFields: boolean = required?.every((key: string) => {
+      console.log(form?.[key]);
+      return !!form?.[key];
+    });
+
+    console.log(checkFields ? 'valid' : 'invalid', form);
     return setIsValid(checkFields);
   };
 
   const changeForm = (value: any, key: string) => {
     setForm({ [key]: value });
-    if (required?.includes(key) && ((!value && form?.[key]) || (value && !form?.[key]))) validate();
-    console.log({ ...form, [key]: value });
   };
 
-  useEffect(() => { validate(); }, []); // init
+  useEffect(() => { validate(); }, [form]);
 
   return { form, changeForm, isValid };
 };

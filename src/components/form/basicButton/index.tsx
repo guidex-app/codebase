@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
+import Spinner from '../../spinner';
 import style from './style.module.css';
 
 interface FormButtonProps {
@@ -16,15 +17,16 @@ const FormButton: FunctionalComponent<FormButtonProps> = ({ isLoading = false, a
 
   const clickFunction = () => {
     setClicked(true);
+    if (action) action();
+
     setTimeout(() => {
-      if (action) action();
       setClicked(false);
-    }, 400);
+    }, 600);
   };
 
   return (
     <button class={`${type && type === 'outline' ? style.outline : style.solid} mini_size_holder ${clicked ? style.clicked : ''}`} disabled={disabled} type="button" aria-label={label} onClick={clickFunction}>
-      {isLoading ? 'lädt' : label}
+      {isLoading || clicked ? <Spinner gap={0} /> : label}
     </button>
   );
 };

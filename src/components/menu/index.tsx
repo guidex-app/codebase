@@ -1,4 +1,4 @@
-import { IconBulb, IconChevronsLeft, IconCompass, IconHeart, IconLock, IconLogin, IconLogout, IconTools, IconUser } from '@tabler/icons';
+import { IconCompass, IconHeart, IconIndentDecrease, IconLock, IconLogin, IconLogout, IconTools, IconUser, IconUserSearch } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -24,7 +24,7 @@ const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
   const routes: { title: string; link: string; icon: any }[] = [
     { title: 'Für mich', link: '/', icon: <IconCompass /> },
     { title: 'Listen', link: '/lists', icon: <IconHeart /> },
-    { title: 'Entdecken', link: '/explore', icon: <IconBulb /> },
+    { title: 'Entdecken', link: '/explore', icon: <IconUserSearch /> },
   ];
 
   const userRoutes: { title: string; link: string; icon: any }[] = [
@@ -59,16 +59,12 @@ const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
           <IconHeart />
         </button>
         <button onClick={() => route('/explore')} type="button" aria-label="Menü">
-          <IconBulb />
+          <IconUserSearch />
         </button>
         <button onClick={toggleModal} class={style.openMenu} type="button" aria-label="Menü">
-          <IconChevronsLeft />
+          <IconIndentDecrease />
         </button>
-
       </div>
-      {/* <button class={style.button} onClick={toggleModal} type="button" aria-label="Menü">
-        <IconUserCircle color="var(--white)" size="24" />
-      </button> */}
 
       {show && container.current && createPortal(
         (

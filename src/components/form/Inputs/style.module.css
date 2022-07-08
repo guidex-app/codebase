@@ -8,7 +8,6 @@
 
     display: flex;
     align-items: center;
-    gap: 15px;
 
     padding: 7px 0 5px 15px;
 
@@ -44,6 +43,7 @@
     width: 22px;
     color: var(--fifth);
     flex-shrink: 0;
+    margin-right: 15px;
 }
 
 .container label {
@@ -102,7 +102,6 @@
     color: var(--white);
     
     cursor: pointer;
-    outline: none;
 }
 
 .container button::before {
@@ -133,17 +132,17 @@
 
 .hasFocus:not(.hasValue) { border-color: #50739b; }
 
-.hasFocus ::-webkit-input-placeholder { color: #a7a9be; }
-.hasFocus :-ms-input-placeholder { color: #a7a9be; }
-.hasFocus ::placeholder { color: #a7a9be; }
+.hasFocus ::-webkit-input-placeholder { color: #8184a1d1; }
+.hasFocus :-ms-input-placeholder { color: #8184a1d1; }
+.hasFocus ::placeholder { color: #8184a1d1; }
 
 .container input::-webkit-input-placeholder { color: transparent }
 .container input:-ms-input-placeholder { color: transparent }
 .container input::placeholder { color: transparent }
 
-.multi input::-webkit-input-placeholder { color: #a7a9be; }
-.multi input:-ms-input-placeholder { color: #a7a9be; }
-.multi input::placeholder { color: #a7a9be; }
+.multi input::-webkit-input-placeholder { color: #8184a1d1; }
+.multi input:-ms-input-placeholder { color: #8184a1d1; }
+.multi input::placeholder { color: #8184a1d1; }
 
 .container textarea {
     padding: 0;

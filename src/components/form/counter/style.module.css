@@ -68,7 +68,6 @@
     border-radius: 20px;
     color: var(--red);
     background-color: transparent;
-    outline: none;
     box-shadow: 0 0 30px rgb(0, 0, 0, 0.27);
     border: 2px solid var(--red);
 

@@ -1,6 +1,6 @@
 import { IconBrandDribbble, IconCurrencyDollar, IconHome, IconPlus, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
 
 import BackButton from '../../../components/backButton';
@@ -14,7 +14,7 @@ import { fireArray, fireDocument, getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useServiceList from '../../../hooks/useServiceList';
 import { Activity } from '../../../interfaces/activity';
-import { ServiceField, ServiceInfo, Structure } from '../../../interfaces/company';
+import { ServiceField, ServiceInfo } from '../../../interfaces/company';
 import EditPrices from './prices';
 import StructureQuestions from './structureQuestions';
 
@@ -38,100 +38,75 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
     entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
   };
 
-  const [show, setShow] = useState<'prices' | 'structure' | 'belongs'>('structure');
-  const [selected, setSelected] = useState<{ service?: ServiceInfo, structure?: Structure } | undefined>();
+  const [show, setShow] = useState<'prices' | 'structure' | 'belongs' | false>(false);
+  const [selected, setSelected] = useState<{ service: ServiceInfo, structure?: ServiceField[] } | false>(false);
 
   const { serviceList } = useServiceList(activityID);
-  const [structureList, setStructureList] = useState<Structure[] | undefined>(undefined);
-  const [serviceFields, setServiceFields] = useState<ServiceField[] | false | undefined>(false);
 
-  /** Lade alle services von der activity ID */
-  const getServiceStructures = async () => {
-    const serviceFieldData = await getFireCollection(`activities/${activityID}/structures`, false);
-    setStructureList(serviceFieldData);
-  };
+  const selectService = async (service: ServiceInfo) => {
+    const structure: ServiceField[] | undefined = await getFireCollection(`activities/${activityID}/services/${service.id}/structure`, false);
 
-  useEffect(() => { getServiceStructures(); }, []); // load servicelist
-
-  const selectService = (service: ServiceInfo) => {
-    const structure: Structure | undefined = structureList?.find((s) => s.id === service.structureID);
+    setShow(structure && structure.length === StructureQuestions.length ? 'belongs' : 'structure');
     setSelected({ service, structure });
-    setShow(service && structure ? 'prices' : 'belongs');
   };
 
-  const updateServiceFields = (newField: ServiceField) => {
-    if (!serviceFields) return setServiceFields([newField]);
-    const getSpecs: any = serviceFields.findIndex((s) => s.name === newField.name);
+  const updateStructureField = (newField: ServiceField) => {
+    if (selected === false) return;
+    if (!selected.structure) return setSelected({ ...selected, structure: [newField] });
+
+    const getSpecs: any = selected.structure.findIndex((s) => s.name === newField.name);
     if (getSpecs?.currentIndex && getSpecs.currentIndex !== -1) {
-      const newList = serviceFields;
+      const newList = selected.structure;
       newList.splice(getSpecs.currentIndex, 1, newField);
-      return setServiceFields([...newList]);
+      return setSelected({ ...selected, structure: [...newList] });
     }
-    return setServiceFields([...serviceFields, newField]);
+    return setSelected({ ...selected, structure: [...selected.structure, newField] });
   };
 
   const closeModal = () => {
     if (show === 'structure' && selected && selected.structure) return setShow('prices');
-
-    setServiceFields(false);
-    setSelected(undefined);
+    setSelected(false);
   };
 
-  const getSpecs = (newField: ServiceField): any => {
-    const fields: ServiceField[] = (serviceFields && serviceFields?.filter((x) => x.name !== newField.name)) || [];
+  const generateDescription = (newField: ServiceField): any => {
+    const fields: ServiceField[] = (selected && selected.structure?.filter((x) => x.name !== newField.name)) || [];
     fields.push(newField);
 
     const description: string[] = [];
-    const newSpecs: any = {};
+    // const newSpecs: any = {};
     const suffixList: { [key: string]: string } = { persons: 'Pers.', time: 'Uhr', age: 'Jahre', discount: 'Rabatt', duration: 'Min.', roundDiscount: 'Runden' };
-    const specFieldIds = ['persons', 'days'];
+    // const specFieldIds = ['persons', 'days'];
 
     fields?.forEach((element: ServiceField) => {
       if ((!!element.selected || element.name === 'days') && element.name) {
         const values = element.selected?.values?.map((x) => (x.value ? x.value : '')).join(' & ');
         if (values) description.push(`(${values} ${suffixList[element.name] || ''})`);
 
-        if (specFieldIds.includes(element.name)) {
-          if (element.name !== 'days') newSpecs[element.name] = element.selected?.name;
-          if (element.name === 'days') newSpecs.days = !element.selected ? [] : element.selected?.values;
-        }
+        // if (specFieldIds.includes(element.name)) {
+        //   if (element.name !== 'days') newSpecs[element.name] = element.selected?.name;
+        //   if (element.name === 'days') newSpecs.days = !element.selected ? [] : element.selected?.values;
+        // }
       }
     });
 
-    return {
-      description: description.toString() ? description.join(', ') : 'Nichts definiert',
-      ...newSpecs,
-    };
+    return description.toString() ? description.join(', ') : 'Nichts definiert';
   };
 
-  const updateStructure = (newField: ServiceField, structureID: number, isInit: boolean) => {
-    const specs: any = getSpecs(newField);
+  const updateStructure = (newField: ServiceField, isInit: boolean) => {
+    if (!selected) return;
+    const description: string = generateDescription(newField);
 
-    if (isInit) {
-      setSelected({ ...selected, structure: { id: structureID } });
-      const initialField = { id: structureID, services: [selected?.service?.serviceName], description: specs.description };
-      fireArray(`activities/${activityID}`, 'state', 'prices', 'add');
-      return fireDocument(`activities/${data.title.form}/structures/${structureID}`, initialField, 'set');
-    }
-
-    setSelected({ ...selected, structure: { id: structureID, ...specs } });
-    fireDocument(`activities/${data.title.form}/structures/${structureID}`, specs, 'update');
+    if (isInit) fireArray(`activities/${activityID}`, 'state', 'prices', 'add');
+    return fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, { description }, 'update');
   };
 
   const saveQuestions = (newField: ServiceField) => {
-    if (selected && selected.service?.id && selected.service?.serviceName) {
-      const isInit = !serviceFields || !serviceFields?.[0];
+    if (selected) {
+      const isInit = !selected.structure;
 
-      const getStructureID: number = isInit ? +Date.now() : selected.structure?.id || selected.service.structureID;
-
-      fireDocument(`activities/${data.title.form}/structures/${getStructureID}/fields/${newField.name}`, newField, 'set').then(() => {
-        updateStructure(newField, getStructureID, isInit);
-        updateServiceFields(newField);
-
-        if (isInit) {
-          fireDocument(`activities/${data.title.form}/services/${selected.service?.id}`, { structureID: getStructureID }, 'update');
-          if (selected.service?.structureID && selected.service?.serviceName) fireArray(`activities/${data.title.form}/structures/${selected.service?.structureID}`, 'services', selected.service?.serviceName, 'remove');
-        }
+      fireDocument(`activities/${data.title.form}/services/${selected.service.id}/structure/${newField.name}`, newField, 'set').then(() => {
+        updateStructure(newField, isInit);
+        updateStructureField(newField);
 
         if (newField.name === 'discounts') return setShow('prices');
       });
@@ -140,25 +115,8 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
 
   const selectStructure = (fields: ServiceField[] | undefined, showType: 'structure' | 'belongs') => {
     setShow(showType);
-    setServiceFields(fields);
+    // setServiceFields(fields);
   };
-
-  // const loadPriceStructure = (structureID?: number) => {
-  //   if (structureID === undefined) return selectStructure(undefined, 'structure'); // neu anlegen
-  //   if (selected && selected.service?.id && structureID !== undefined) {
-  //     fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, { structureID }, 'update').then(() => {
-  //       if (selected.service?.structureID !== structureID && selected.service?.serviceName) {
-  //         fireArray(`activities/${data.title.form}/structures/${structureID}`, 'services', selected.service.serviceName, 'add');
-  //         fireArray(`activities/${data.title.form}/structures/${selected.service.structureID}`, 'services', selected.service.serviceName, 'remove');
-  //       }
-
-  //       const findStructure = structureList.find((x) => x.id === structureID);
-  //       setSelected({ ...selected, structure: findStructure }); // update current selection
-
-  //       updateServiceList({ ...selected.service, structureID });
-  //     });
-  //   }
-  // };
 
   const navigateToServices = () => route(`/company/services/${activityID}`);
 
@@ -181,22 +139,20 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       <FormButton action={() => route(`/company/availabilities/${data.title.form}`)} label="Mit den Verfügbarkeiten fortfahren" />
 
       {selected && (
-        <Modal title={`(${selected?.service?.serviceName})`} close={() => closeModal()} type="large" background={show === 'structure' ? '#46244C' : undefined}>
+        <Modal title={`(${selected.service.serviceName})`} close={() => closeModal()} type="large" background={show === 'structure' ? '#46244C' : undefined}>
 
-          {/* {show === 'belongs' && selected?.service?.serviceName && <ChangeStructure select={selectPriceStructure} />} */}
-
-          {show === 'structure' && serviceFields !== false && (
+          {show === 'structure' && selected && (
             <QuestForm
               questions={StructureQuestions}
-              service={selected?.service}
-              serviceFields={serviceFields}
+              service={selected.service}
+              serviceFields={selected.structure}
               openingDays={['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].filter((x, index) => !!data.openings[index])}
-              structure={selected.structure}
+              // structure={selected.structure}
               save={saveQuestions}
             />
           )}
 
-          {(show === 'prices' || show === 'belongs') && selected && selected.service?.id && (
+          {show !== 'structure' && selected && selected.service.id && (
             <EditPrices structure={selected.structure} serviceID={selected.service.id} editStructure={selectStructure} activityID={activityID} questionLength={StructureQuestions.length} openingDays={['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].filter((x, index) => !!data.openings[index])} />
           )}
         </Modal>

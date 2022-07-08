@@ -34,7 +34,7 @@ body {
 	color: var(--white);
 }
 
-button { touch-action: manipulation; } /* prevents double tap zooming */
+button { touch-action: manipulation; text-align: center; } /* prevents double tap zooming */
 button:empty { display: none; }
 
 a, button, input, div[role=button], textarea {
