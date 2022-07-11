@@ -9,7 +9,7 @@ import ImgInput from '../../../components/form/imgInput';
 import NormalInput from '../../../components/form/Inputs/basic';
 import TextInput from '../../../components/form/Inputs/textArea';
 import PickInput from '../../../components/form/pickInput';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';
 import { replaceSpecialCharacters } from '../../../helper/string';

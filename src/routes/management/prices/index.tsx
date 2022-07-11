@@ -6,7 +6,7 @@ import { route } from 'preact-router';
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import QuestForm from '../../../components/form/questForm';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import Spinner from '../../../components/spinner';
 import Modal from '../../../container/modal';

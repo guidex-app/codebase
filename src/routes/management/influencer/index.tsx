@@ -7,7 +7,7 @@ import FormButton from '../../../components/form/basicButton';
 import CheckInput from '../../../components/form/checkInput';
 import NormalInput from '../../../components/form/Inputs/basic';
 import PickInput from '../../../components/form/pickInput';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';

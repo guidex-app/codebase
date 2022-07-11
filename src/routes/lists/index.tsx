@@ -3,10 +3,10 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
 
-import TextHeader from '../../components/iconTextHeader';
+import TextHeader from '../../components/infos/iconTextHeader';
+import MessageButton from '../../components/infos/messageButton';
 import Item from '../../components/item';
 import Loading from '../../components/masonry/loading';
-import MessageButton from '../../components/messageButton';
 import Modal from '../../container/modal';
 import { getFireCollection } from '../../data/fire';
 import CreateList from './createList';

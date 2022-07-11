@@ -4,7 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
 import FilterList from '../../components/filter';
-import TextHeader from '../../components/iconTextHeader';
+import TextHeader from '../../components/infos/iconTextHeader';
 import Item from '../../components/item';
 import Spinner from '../../components/spinner';
 import Modal from '../../container/modal';

@@ -1,20 +1,19 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router';
 
-import { getCurrentShortname, shortDay } from '../../helper/date';
+import { shortDay } from '../../helper/date';
 import { Activity } from '../../interfaces/activity';
 import style from './style.module.css';
 
 interface ActivityItemProps {
     activity: Activity,
-    dayNr?: number,
+    currentShortDay: 'Mo' | 'Di' | 'Mi' | 'Do' | 'Fr' | 'Sa' | 'So',
 }
 
-const ActivityItem: FunctionalComponent<ActivityItemProps> = ({ activity, dayNr }: ActivityItemProps) => {
+const ActivityItem: FunctionalComponent<ActivityItemProps> = ({ activity, currentShortDay }: ActivityItemProps) => {
   const getOpenings = (): string => {
-    const currentDay = getCurrentShortname(dayNr || undefined);
-    const getTime = activity.openings?.[shortDay.indexOf(currentDay)];
-    if (getTime) return `${currentDay}, Bis ${getTime.split('-')[1]} geöffnet`;
+    const getTime = activity.openings?.[shortDay.indexOf(currentShortDay)];
+    if (getTime) return `${currentShortDay}, Bis ${getTime.split('-')[1]} geöffnet`;
     return 'geschlossen';
   };
   return (

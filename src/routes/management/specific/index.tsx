@@ -6,7 +6,7 @@ import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import TextInput from '../../../components/form/Inputs/textArea';
 import PickInput from '../../../components/form/pickInput';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import { fireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useForm from '../../../hooks/useForm';

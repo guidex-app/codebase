@@ -7,7 +7,7 @@ import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import Counter from '../../../components/form/counter';
 import PickInput from '../../../components/form/pickInput';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import Spinner from '../../../components/spinner';
 import Modal from '../../../container/modal';

@@ -6,7 +6,7 @@ import { route } from 'preact-router';
 import BackButton from '../../../components/backButton';
 import FormButton from '../../../components/form/basicButton';
 import ImgInput from '../../../components/form/imgInput';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { mergeUnique } from '../../../helper/array';

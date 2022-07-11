@@ -8,7 +8,7 @@ import Chip from '../../../components/chip';
 import FormButton from '../../../components/form/basicButton';
 import CheckInput from '../../../components/form/checkInput';
 import MultiInput from '../../../components/form/Inputs/multi';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import { fireDocument } from '../../../data/fire';
 import { dayNames } from '../../../helper/date';

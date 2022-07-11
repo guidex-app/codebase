@@ -1,0 +1,22 @@
+.messageButton {
+    max-width: 350px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.messageButton img {
+    max-width: 100px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.messageButton h2 {
+    font-weight: 800;
+}
+
+.messageButton small {
+    display: block;
+    padding-top: 0.5em;
+    font-weight: 500;
+    font-style: italic;
+}

@@ -2,9 +2,9 @@ import { Cat } from '../interfaces/categorie';
 import { Weather } from '../interfaces/user';
 
 const filterCats = (list: Cat[], filter?: string[], weather?: Weather): Cat[] | undefined => {
-  if (!list?.[0] || !weather) return undefined;
+  if (!list?.[0]) return undefined;
 
-  const { temp: t, shortName: w } = weather;
+  const { temp: t, shortName: w } = weather || { temp: 12, shortName: 'Clear' };
 
   const prefixList: { [key: string]: string[] } = {};
   let isRainy: boolean = false; // wenn regen ist

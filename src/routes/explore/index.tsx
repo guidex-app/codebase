@@ -4,7 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
-import TextHeader from '../../components/iconTextHeader';
+import TextHeader from '../../components/infos/iconTextHeader';
 import BasicMasonry from '../../components/masonry/basicMasonry';
 import { getFireCollection } from '../../data/fire';
 import useTitle from '../../hooks/seo/useTitle';

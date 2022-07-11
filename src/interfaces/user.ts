@@ -2,7 +2,7 @@ export interface Weather {
     lastUpdated?: string;
     temp: number,
     shortName: 'Thunderstorm' | 'Drizzle' | 'Rain' | 'Snow' | 'Mist' | 'Smoke' | 'Haze' | 'Fog' | 'Sand' | 'Dust' | 'Ash' | 'Squall' | 'Tornado' | 'Clear' | 'Clouds',
-    description: string,
+    description?: string,
 }
 
 export interface Location {

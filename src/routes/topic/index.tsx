@@ -23,9 +23,11 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, location }: Topic
 
   const loadTopicList = async () => {
     if (!data?.title) return;
-    const cats: any = await getFireCollection(`geo/${location.geoHash}/categories`, false, undefined, 100);
+    console.log(location);
+    // const cats: any = await getFireCollection(`geo/${location.geoHash}/categories`, false, undefined, 100);
+    const cats: any = await getFireCollection('catInfos', false, undefined, 100);
 
-    const filteredCats = await filterCats(cats, data.filter); // weather hinzufügen
+    const filteredCats = await filterCats(cats, data.filter, undefined); // weather hinzufügen
 
     return setList(filteredCats);
   };

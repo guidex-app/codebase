@@ -5,7 +5,7 @@ import { Link, route } from 'preact-router';
 import BackButton from '../../../components/backButton';
 import Chip from '../../../components/chip';
 import FormButton from '../../../components/form/basicButton';
-import TextHeader from '../../../components/iconTextHeader';
+import TextHeader from '../../../components/infos/iconTextHeader';
 import Popup from '../../../container/popup';
 import { deleteFireDocument } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';

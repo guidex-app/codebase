@@ -54,18 +54,6 @@ export interface Cat {
     sortCount: number;
   }
 
-export interface ListCat {
-    title: { name:string, form:string },
-    vote: number,
-    filter: {
-      tags: any,
-      age: string,
-      price: string,
-      person: string,
-      time: string,
-    }
-  }
-
 export interface CatFilter {
     filterData: string[],
     weather?: string[],

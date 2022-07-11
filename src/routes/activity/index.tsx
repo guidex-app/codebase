@@ -1,32 +1,34 @@
-import { IconAdjustmentsHorizontal, IconInfoCircle } from '@tabler/icons';
+import { IconAdjustmentsHorizontal, IconInfoCircle, IconPlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
 import FilterList from '../../components/filter';
-import InfoBox from '../../components/form/infoBox/infoBox';
-import TextHeader from '../../components/iconTextHeader';
+import TextHeader from '../../components/infos/iconTextHeader';
 import Item from '../../components/item';
 import Modal from '../../container/modal';
 import activityFilter from '../../data/activityFilter';
 import { getFireCollection, getFireDocument } from '../../data/fire';
+import { getCurrentShortname } from '../../helper/date';
 import { Activity } from '../../interfaces/activity';
 import { Cat } from '../../interfaces/categorie';
 import ActivityItem from './activityItem';
+import AddToList from './addToList';
 import style from './style.module.css';
 
 interface ActivitiesProps {
     categoryID: string;
     day?: string;
     matches?: { l?: 'o' | 'i'; }
+    uid?: string;
 }
 
-const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, matches }: ActivitiesProps) => {
+const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, matches, uid }: ActivitiesProps) => {
   const [category, setCategory] = useState<Cat | undefined>();
   const [list, setList] = useState<Activity[] | undefined | false>(false);
   const [filter, setFilter] = useState<string[]>([]);
-  const [openModal, setOpenModal] = useState<'Filtern' | 'addToList' | false>(false);
+  const [openModal, setOpenModal] = useState<'Filtern' | 'Listen' | false>(false);
   const [parameter, setParameter] = useState<{ l?: 'o' | 'i', dayNr: number } | undefined>();
 
   const getActivityList = async () => {
@@ -74,14 +76,15 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
       />
 
       <div class="small_size_holder">
-        {list === undefined && <Item icon={<InfoBox />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
-        {parameter?.l && <Item type="warning" text={`Der Filter ist aufgrund des Wetters auf ${parameter.l === 'o' ? '"Draußen"' : '"Drinnen"'} gestellt.`} icon={<IconInfoCircle />} label="Guidex empfiehlt" action={openFilter} />}
+        <Item type="grey" icon={<IconPlus />} label="Einer Liste hinzufügen" action={() => setOpenModal('Listen')} />
+        {list === undefined && <Item icon={<IconInfoCircle />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
+        {list !== undefined && parameter?.l && <Item type="warning" text={`Der Filter ist aufgrund des Wetters auf ${parameter.l === 'o' ? '"Draußen"' : '"Drinnen"'} gestellt.`} icon={<IconInfoCircle />} label="Guidex empfiehlt" action={openFilter} />}
       </div>
 
       <main style={{ padding: '40px 10px' }} class="size_holder">
 
         <div class={style.list}>
-          {list && list?.map((x: Activity) => <ActivityItem activity={x} dayNr={parameter?.dayNr} />)}
+          {list && list?.map((x: Activity) => <ActivityItem activity={x} currentShortDay={getCurrentShortname(parameter?.dayNr || undefined)} />)}
         </div>
 
       </main>
@@ -89,6 +92,7 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
       <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={openFilter} />
       {!!openModal && (
       <Modal title={openModal} close={closeModal}>
+        {openModal === 'Listen' && category?.title?.form && <AddToList uid={uid} cat={category.title} close={closeModal} />}
         {openModal === 'Filtern' && <FilterList data={activityFilter} values={filter} change={updateFilter} close={closeModal} />}
       </Modal>
       )}

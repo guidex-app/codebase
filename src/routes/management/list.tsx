@@ -3,7 +3,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
-import TextHeader from '../../components/iconTextHeader';
+import TextHeader from '../../components/infos/iconTextHeader';
 import Item from '../../components/item';
 import Spinner from '../../components/spinner';
 import { getFireCollection } from '../../data/fire';

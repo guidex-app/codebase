@@ -1,14 +1,14 @@
 import { FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 
-import FormButton from '../form/basicButton';
+import FormButton from '../../form/basicButton';
+import style from './style.module.css';
 
 interface MessageButtonProps {
   title: string;
   text: string;
   subTitle?: string;
   buttonText?: string;
-//   icon?: string;
   imageUrl?: string;
   link?: string;
   action?: () => void;
@@ -21,19 +21,17 @@ const MessageButton: FunctionalComponent<MessageButtonProps> = ({ title, text, s
   };
 
   return (
-    <div className="small_size_holder" style={{ maxWidth: '350px', marginTop: '60px', textAlign: 'center' }}>
-      {imageUrl && <img src={imageUrl} style={{ maxWidth: '100px', display: 'inline-block', marginBottom: '20px' }} alt={title} />}
+    <div class={`small_size_holder ${style.messageButton}`}>
+      {imageUrl && <img src={imageUrl} alt={title} />}
 
       <h2>{title}</h2>
       <small>
         {subTitle && <strong>{subTitle}<br /></strong>}
         {text}
       </small>
-      <br /><br />
+      <br />
 
-      {(link || action) && (
-      <FormButton label={buttonText} action={buttonClick} />
-      )}
+      {(link || action) && <FormButton label={buttonText} action={buttonClick} />}
     </div>
   );
 };
