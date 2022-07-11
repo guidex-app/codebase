@@ -1,4 +1,4 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import style from './style.module.css';
@@ -12,7 +12,7 @@ interface TextHeaderProps {
 }
 
 const TextHeader: FunctionalComponent<TextHeaderProps> = ({ title, text, shorten, image, icon }: TextHeaderProps) => {
-  const [showAll, setShowAll] = useState(!shorten);
+  const [hideText, setHideText] = useState(!!shorten);
 
   return (
     <header class={`${style.textHeader} small_size_holder`}>
@@ -24,16 +24,11 @@ const TextHeader: FunctionalComponent<TextHeaderProps> = ({ title, text, shorten
       ) : (
         icon && icon
       )}
-      <div onClick={() => shorten && setShowAll(!showAll)} role="button" tabIndex={0}>
+      <div onClick={() => shorten && setHideText(!hideText)} class={shorten && hideText ? style.hideText : ''} role="button" tabIndex={0}>
         <h1>{title}&nbsp;</h1>
-        <p>{shorten ? text.substring(0, 200) : text}
-          {shorten && !showAll && (
-          <Fragment>
-            ... <span class={style.showMore}>Mehr erfahren</span>
-          </Fragment>
-          )}
-          {shorten && <span>{text.substring(200)}</span>}
-        </p>
+        {text ? <p>{text}</p> : (
+          <p style={{ backgroundColor: 'var(--fourth)', opacity: 0.5 }}>&nbsp;&nbsp;<br />&nbsp;</p>
+        )}
       </div>
     </header>
   );

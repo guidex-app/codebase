@@ -8,10 +8,10 @@ import VirtualScroll from './virtualScroll';
 
 interface MasonryProps {
     list: Cat[] | false | undefined;
-    type?: 'Voting' | 'Topic' | 'Geteilt' | 'Privat';
+    link?: 'explore' | 'activity';
 }
 
-const Masonry: FunctionalComponent<MasonryProps> = ({ list, type }: MasonryProps) => {
+const Masonry: FunctionalComponent<MasonryProps> = ({ list, link }: MasonryProps) => {
   const [chunks, setChunks] = useState<any[][]>([]);
 
   const loading = <Loading />;
@@ -29,7 +29,7 @@ const Masonry: FunctionalComponent<MasonryProps> = ({ list, type }: MasonryProps
   useEffect(() => { generateChunks(); }, [list]);
 
   if (list === undefined) return <Item type="info" label="Es wurde nichts gefunden" />;
-  return <VirtualScroll chunks={chunks} type={type} />;
+  return <VirtualScroll chunks={chunks} link={link} />;
 };
 
 export default Masonry;

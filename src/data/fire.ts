@@ -52,14 +52,16 @@ export const getFireMultiCollection = async (items: { path:string, isDocument?: 
   })
 );
 
-export const fireDocument = async (path: string, fields: any, type: 'set' | 'update' | 'merge'): Promise<void> => {
+export const fireDocument = async (path: string, fields: any, type: 'set' | 'update' | 'merge'): Promise<boolean> => {
   const docRef = doc(db, path);
   try {
     if (type === 'set') setDoc(docRef, fields);
     else updateDoc(docRef, fields);
+    return true;
   } catch (e) {
     console.log('Fehler:', path);
     console.error(`Error ${type} documument`, e);
+    return false;
   }
 };
 

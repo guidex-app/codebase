@@ -139,7 +139,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       <FormButton action={() => route(`/company/availabilities/${data.title.form}`)} label="Mit den Verfügbarkeiten fortfahren" />
 
       {selected && (
-        <Modal title={`(${selected.service.serviceName})`} close={() => closeModal()} type="large" background={show === 'structure' ? '#46244C' : undefined}>
+        <Modal title={`(${selected.service.serviceName})`} close={() => closeModal()} type="large" invert={show === 'structure' ? true : undefined}>
 
           {show === 'structure' && selected && (
             <QuestForm

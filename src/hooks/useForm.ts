@@ -10,12 +10,8 @@ const useForm = (data?: { [key: string]: any }, required?: string[]): {
 
   const validate = () => {
     if (!required) return setIsValid(true);
-    const checkFields: boolean = required?.every((key: string) => {
-      console.log(form?.[key]);
-      return !!form?.[key];
-    });
+    const checkFields: boolean = required?.every((key: string) => !!form?.[key]);
 
-    console.log(checkFields ? 'valid' : 'invalid', form);
     return setIsValid(checkFields);
   };
 

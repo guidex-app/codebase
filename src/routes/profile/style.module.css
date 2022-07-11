@@ -1,12 +1,7 @@
-.profile {
-	padding: 20px 10px;
-	padding-top: calc((100vh - 600px) / 2);
-	width: 100%;
-}
-
 .logo {
 	width: 100px;
 	height: 100px;
 	display: block;
     margin: 30px auto;
+	margin-top: max(50vh - 245px, 80px);
 }

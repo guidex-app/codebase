@@ -126,7 +126,7 @@ const Services: FunctionalComponent<ActivityProp> = ({ activity, activityID }: A
       <FormButton action={() => route(`/company/prices/${data.title.form}`)} label="Speichern und weiter" />
 
       {service !== false && serviceFields !== false && (
-      <Modal title="" close={() => closeService()} type="large" background="#46244C">
+      <Modal title="" close={() => closeService()} type="large" invert>
         <QuestForm
           questions={ServiceQuestions}
           service={service}

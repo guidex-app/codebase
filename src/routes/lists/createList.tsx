@@ -24,14 +24,14 @@ const CreateList: FunctionalComponent<CreateListProps> = ({ data, uid, close }: 
 
   const validation = async () => {
     if (isValid && uid) {
-      const newFields = {
+      const listFields = {
         ...form,
         title: { name: form.title, form: replaceSpecialCharacters(form.title) },
+        images: [false, false, false],
         uid,
       };
-      await fireDocument(`lists/${newFields.title.form}_${uid}`, newFields, !data?.title?.form ? 'set' : 'update');
-
-      close(newFields);
+      await fireDocument(`lists/${listFields.title.form}_${uid}`, listFields, !data?.title?.form ? 'set' : 'update');
+      close(listFields);
     }
   };
 

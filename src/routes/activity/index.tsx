@@ -1,4 +1,4 @@
-import { IconAdjustmentsHorizontal } from '@tabler/icons';
+import { IconAdjustmentsHorizontal, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -28,8 +28,6 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
   const [filter, setFilter] = useState<string[]>([]);
   const [openModal, setOpenModal] = useState<'Filtern' | 'addToList' | false>(false);
   const [parameter, setParameter] = useState<{ l?: 'o' | 'i', dayNr: number } | undefined>();
-
-  // const closeModal = () => setOpenModal(false);
 
   const getActivityList = async () => {
     if (categoryID) {
@@ -74,14 +72,13 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
         shorten
         text={category?.description || ''}
       />
-      {/* <Item type="large" title={category?.title.name || ''}
-        text="Bitte geben Sie hier den Namen Ihrer Unternehmung an z.B. „Lasertag Licht und mehr“.
-        Der Name Ihrer Unternehmung ist ihr öffentliches Label" /> */}
 
-      <main style={{ padding: '20px 10px' }} class="size_holder">
-
+      <div class="small_size_holder">
         {list === undefined && <Item icon={<InfoBox />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
-        {parameter?.l && <Item type="warning" icon={<IconAdjustmentsHorizontal />} label={`Aufgrund des Wetters werden ${parameter.l === 'o' ? 'Draußen' : 'Drinnen'} Aktivitäten rausgefiltert`} action={openFilter} />}
+        {parameter?.l && <Item type="warning" text={`Der Filter ist aufgrund des Wetters auf ${parameter.l === 'o' ? '"Draußen"' : '"Drinnen"'} gestellt.`} icon={<IconInfoCircle />} label="Guidex empfiehlt" action={openFilter} />}
+      </div>
+
+      <main style={{ padding: '40px 10px' }} class="size_holder">
 
         <div class={style.list}>
           {list && list?.map((x: Activity) => <ActivityItem activity={x} dayNr={parameter?.dayNr} />)}

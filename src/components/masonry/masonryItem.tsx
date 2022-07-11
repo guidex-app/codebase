@@ -5,18 +5,18 @@ import style from './style.module.css';
 
 interface MasonryItemProps {
   chunks: any[];
-  type?: 'Voting' | 'Topic' | 'Geteilt' | 'Privat';
+  link?: 'explore' | 'activity';
   index: number;
 }
 
-const MasonryItem: FunctionalComponent<MasonryItemProps> = ({ chunks, type, index }: MasonryItemProps) => {
-  const getPath = (form: string) => `https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${type !== 'Topic' ? 'categories' : 'topics'}%2F${form}%2F${form}_600x450`;
-  if (!chunks) return null;
+const MasonryItem: FunctionalComponent<MasonryItemProps> = ({ chunks, link = 'activity', index }: MasonryItemProps) => {
+  const getPath = (form: string) => `https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/${link !== 'explore' ? 'categories' : 'topics'}%2F${form}%2F${form}_600x450`;
+
   return (
     <div key={`${index.toString()}`} class={`${style.chunk}`}>
       {chunks.map((item: any, itemIndex: number) => (
         <div class={style[`item_${itemIndex}`]}>
-          <Link href={`/${type !== 'Topic' ? 'activity' : 'explore'}/${item.title?.form}?l=o`}>
+          <Link href={`/${link}/${item.title?.form}?l=o`}>
             <picture>
               <source srcSet={`${getPath(item.title?.form)}.webp?alt=media`} type="image/webp" />
               <img loading={index !== 0 ? 'lazy' : 'eager'} src={`${getPath(item.title?.form)}.jpeg?alt=media`} alt={item.title?.name} />

@@ -5,12 +5,12 @@ import style from './style.module.css';
 
 interface HeaderProps {
     title?: string;
-    background?: string;
+    invert?: true;
     action?: () => void;
 }
 
-const Header: FunctionalComponent<HeaderProps> = ({ title, background, action }: HeaderProps) => (
-  <header class={style.header} style={background ? { color: 'var(--white)', backgroundColor: background } : undefined}>
+const Header: FunctionalComponent<HeaderProps> = ({ title, invert, action }: HeaderProps) => (
+  <header class={`${style.header} ${invert ? style.invert : ''}`}>
     <div class={style.title}><h1>{title}</h1></div>
     <div class={style.menu}>
       <button onClick={action} type="button" aria-label="Menü">

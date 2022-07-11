@@ -1,11 +1,10 @@
-import { IconAdjustmentsHorizontal, IconHeart } from '@tabler/icons';
+import { IconAdjustmentsHorizontal, IconHeart, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
 import FabButton from '../../components/fabButton';
 import FilterList from '../../components/filter';
-import InfoBox from '../../components/form/infoBox/infoBox';
 import TextHeader from '../../components/iconTextHeader';
 import Item from '../../components/item';
 import BasicMasonry from '../../components/masonry/basicMasonry';
@@ -54,7 +53,7 @@ const ListDetails: FunctionalComponent<ActivitiesProps> = ({ listID, uid }: Acti
       <BackButton url="/lists" title="Zurück" />
 
       <TextHeader
-        icon={<IconHeart color="red" />}
+        icon={<IconHeart />}
         title={list?.title.name || ''}
         text={list?.description || ''}
       />
@@ -64,7 +63,7 @@ const ListDetails: FunctionalComponent<ActivitiesProps> = ({ listID, uid }: Acti
 
       <main style={{ padding: '20px 10px' }} class="size_holder">
 
-        {cats === undefined && <Item icon={<InfoBox />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
+        {cats === undefined && <Item icon={<IconInfoCircle />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
 
         <BasicMasonry list={cats} />
 

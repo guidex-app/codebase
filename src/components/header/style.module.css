@@ -64,3 +64,5 @@
 }
 
 .menu button:hover { background: var(--white); transform: scale(1.1) }
+
+.invert .button { background-color: rgba(255,255,255,0.5); }

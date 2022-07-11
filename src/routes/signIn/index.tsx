@@ -1,5 +1,5 @@
 import { IconKey, IconLockOpenOff, IconLogin, IconMailbox } from '@tabler/icons';
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 
@@ -52,11 +52,11 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
   if (logout === 'logout') return <div />;
 
   return (
-    <div class={`${style.signIn} mini_size_holder`}>
+    <Fragment>
 
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
 
-      <form>
+      <form class="mini_size_holder">
         <NormalInput
           icon={<IconMailbox />}
           label="E-Mail"
@@ -89,7 +89,7 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
 
       </form>
 
-    </div>
+    </Fragment>
   );
 };
 

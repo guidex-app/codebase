@@ -23,12 +23,12 @@ const Explore: FunctionalComponent = () => {
   return (
     <Fragment>
       <TextHeader
-        icon={<IconUserSearch color="#fea00a" />}
+        icon={<IconUserSearch />}
         title="Entdecken"
         text="Entdecke neue Unternehmungen. Durstöbere unsere Kategorien nach neuen Unternehmungen"
       />
       <BackButton url="/" />
-      <BasicMasonry list={topicList} type="Topic" />
+      <BasicMasonry list={topicList} link="explore" />
       <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} action={() => console.log('klick')} />
     </Fragment>
   );

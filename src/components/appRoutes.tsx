@@ -52,7 +52,7 @@ const AppRoutes: FunctionalComponent = () => {
 
   return (
     <Fragment>
-      <Menu email={user.email} />
+      <Menu uid={user.uid} />
 
       <Router>
         <Route path="/" component={Cats} updateUser={updateData} day={user.day} weather={user.weather} location={user.location} />

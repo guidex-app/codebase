@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { route } from 'preact-router';
 
 import FormButton from '../../components/form/basicButton';
@@ -81,11 +81,11 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
   };
 
   return (
-    <div class={`${style.profile} small_size_holder`}>
+    <Fragment>
 
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
 
-      <form>
+      <form class="small_size_holder">
 
         <section class="group form">
           <h3>Für Deine Vorschläge</h3>
@@ -178,7 +178,7 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
 
       </form>
 
-    </div>
+    </Fragment>
   );
 };
 

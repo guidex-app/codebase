@@ -1,5 +1,5 @@
 import { IconAdjustmentsHorizontal } from '@tabler/icons';
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import FabButton from '../../components/fabButton';
@@ -18,7 +18,6 @@ import { smallerThanDays } from '../../helper/date';
 import useTitle from '../../hooks/seo/useTitle';
 import { Cat } from '../../interfaces/categorie';
 import { Location, User, Weather } from '../../interfaces/user';
-import style from './style.css';
 
 interface CatsProps {
   location?: Location;
@@ -27,7 +26,7 @@ interface CatsProps {
   updateUser: (data: User) => void;
 }
 
-const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day, updateUser }: CatsProps) => {
+const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day = 'Heute', updateUser }: CatsProps) => {
   useTitle('Guidex | Dein Unternehmungs-Ratgeber für jede Wetterlage');
 
   const [filter, setFilter] = useState<string[]>([]);
@@ -79,8 +78,8 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day, updateUs
   useEffect(() => { getData(); }, [location]);
 
   return (
-    <div class={style.cats}>
-      <Teaser openModal={setOpenModal} day={day || 'Heute'} weather={weatherList !== false ? weatherList[0] : undefined} location={location} />
+    <Fragment>
+      <Teaser openModal={setOpenModal} day={['Heute', 'Morgen'].includes(day) ? day : day.substring(0, 2)} weather={weatherList !== false ? weatherList[0] : undefined} location={location} />
       <FilterBar />
       <BasicMasonry list={filteredCats} />
       <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filter')} />
@@ -91,7 +90,7 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day, updateUs
           {openModal === 'Tag' && <WeatherList changeDay={changeDay} />}
         </Modal>
       )}
-    </div>
+    </Fragment>
   );
 };
 

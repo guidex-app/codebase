@@ -2,7 +2,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
-import Masonry from '../../components/masonry';
+import BasicMasonry from '../../components/masonry/basicMasonry';
 import Loading from '../../components/masonry/loading';
 import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
@@ -50,7 +50,7 @@ const TopicPage: FunctionalComponent<TopicProps> = ({ topicID, location }: Topic
           </Fragment>
         )}
       </article>
-      {list === false && data?.title ? <Loading /> : <Masonry list={list} />}
+      {list === false && data?.title ? <Loading /> : <BasicMasonry list={list} />}
     </main>
   );
 };

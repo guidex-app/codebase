@@ -6,10 +6,10 @@ import style from './style.module.css';
 
 interface VirtualScrollProps {
     chunks: any[][];
-    type?: 'Voting' | 'Topic' | 'Geteilt' | 'Privat';
+    link?: 'explore' | 'activity';
 }
 
-const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }: VirtualScrollProps) => {
+const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, link }: VirtualScrollProps) => {
   const MAX_ITEMS: number = chunks.length;
   const VISIBLE_ITEMS = 3;
 
@@ -43,7 +43,7 @@ const VirtualScroll: FunctionalComponent<VirtualScrollProps> = ({ chunks, type }
 
   const visibleChildren = useMemo(() => new Array(VISIBLE_ITEMS).fill(null).map((_, index) => (
 
-    <MasonryItem chunks={chunks[index + scrolling.startAt] || []} type={type} index={index} />
+    <MasonryItem chunks={chunks[index + scrolling.startAt] || []} link={link} index={index} />
 
   )), [scrolling.startAt, chunks]);
 

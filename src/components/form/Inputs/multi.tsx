@@ -41,7 +41,7 @@ const MultiInput: FunctionalComponent<MultiInputProps> = ({ label, group, icon, 
 
   const changeValue = (e: any) => {
     const getValue: any = e.target.value;
-    // if (typeof getValue === 'string') return;
+
     const isSecond: boolean = e.target.id.endsWith('+second');
 
     const [first, second]: string[] = invalidValue ? invalidValue.split('-') : ['', ''];

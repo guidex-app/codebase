@@ -1,17 +1,15 @@
-.masonryList {
+.chunk {
+    max-width: 1430px;
+    padding: 0 15px;
+    margin: 0 auto;
+    color: var(--white);
+
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
-}
-
-.masonryList > div {
-    max-width: 1430px;
-    padding: 0 15px;
-    margin: 0 auto;
-    color: var(--white);
 }
 
 .chunk {

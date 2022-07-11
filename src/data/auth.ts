@@ -12,11 +12,6 @@ export const loginUser = async (email: string, password: string) => {
   }
 };
 
-export const getUser = async (): Promise<any> => {
-  const auth = await getAuth(fireConfig);
-  return auth.currentUser || {};
-};
-
 export const logoutUser = async () => {
   const auth = await getAuth(fireConfig);
   signOut(auth).then(() => {

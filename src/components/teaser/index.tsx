@@ -34,10 +34,10 @@ const Teaser: FunctionalComponent<TeaserProps> = ({ location, day, weather, open
   return (
     <section class={style.teaser} style={{ backgroundImage: image }}>
       <div>
-        <h1>Was möchtest du<br />{day.split('.,')[0]} unternehmen?</h1>
+        <h1>Was möchtest du<br />{`${day}.`} unternehmen?</h1>
         <p>Deine individuellen Vorschläge für {location?.city || 'Hamburg'}</p>
 
-        <Chooser action={openModal} city={location?.city || 'Hamburg'} day={day.split('.,')[0]} />
+        <Chooser action={openModal} city={location?.city || 'Hamburg'} day={day} />
 
         {/* {globalWeather ? <Chooser openModal={openModal} weatherName={globalWeather[1]} /> : <div style={{ borderRadius: '33px', background: 'var(--ion-color-dark)', height: '55px', maxWidth: '350px', width: '85%' }} /> } */}
         <small class={style.weatherText}><strong>{weather ? `${weather?.temp}° | ${weather?.description}` : `Wetter für ${location?.city || 'Hamburg'}...`}</strong></small>

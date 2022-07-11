@@ -1,17 +1,16 @@
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import { Cat } from '../../interfaces/categorie';
 import Loading from './loading';
 import MasonryItem from './masonryItem';
-import style from './style.module.css';
 
 interface BasicMasonryProps {
     list: Cat[] | false | undefined;
-    type?: 'Voting' | 'Topic' | 'Geteilt' | 'Privat';
+    link?: 'explore' | 'activity';
 }
 
-const BasicMasonry: FunctionalComponent<BasicMasonryProps> = ({ list, type }: BasicMasonryProps) => {
+const BasicMasonry: FunctionalComponent<BasicMasonryProps> = ({ list, link }: BasicMasonryProps) => {
   const [chunks, setChunks] = useState<false | any[][] | undefined>(false);
   const generateChunks = () => {
     if (!list) return setChunks(undefined);
@@ -24,9 +23,10 @@ const BasicMasonry: FunctionalComponent<BasicMasonryProps> = ({ list, type }: Ba
 
   if (list === false || chunks === false) return <Loading />;
   return (
-    <div class={style.masonryList}>
-      {chunks?.map((item, index) => <MasonryItem chunks={item} type={type} index={index} />)}
-    </div>
+    <Fragment>
+      {chunks?.map((item, index) => <MasonryItem chunks={item} link={link} index={index} />)}
+      <div />
+    </Fragment>
   );
 };
 

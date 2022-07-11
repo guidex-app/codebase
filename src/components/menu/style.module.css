@@ -27,6 +27,7 @@
 
     font-style: italic;
     letter-spacing: 1px;
+    font-weight: 500;
     color: var(--fifth);
 }
 
@@ -68,10 +69,13 @@
     opacity: 0.85;
     color: var(--white);
     text-align: center;
+
+    align-items: center;
+    justify-content: center;
 }
 
 .button .openMenu {
-    display: block;
+    display: flex;
     color: var(--red);
 }
 
@@ -81,7 +85,9 @@
 }
 
 .button svg {
-    display: inline-block;
+    height: auto;
+    width: 24px;
+    vertical-align: middle;
 }
 
 .button button:hover {
@@ -98,7 +104,7 @@
 
 @media (min-width: 693px) {
     .button button {
-        display: block;
+        display: flex;
     }
     .button .openMenu {
         color: var(--fifth);

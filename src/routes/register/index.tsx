@@ -109,14 +109,14 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
   };
 
   return (
-    <div class={`${style.register} small_size_holder`}>
+    <Fragment>
       <BackButton url="/login" />
 
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
 
       <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>{company ? 'Ihr Partner-Konto erstellen' : 'Ihr Nutzer-Konto erstellen'}</h1>
 
-      <form>
+      <form class="small_size_holder">
         <section class="group form">
           <h3>Dein Login</h3>
           <NormalInput
@@ -286,7 +286,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
         </Modal>
       )}
 
-    </div>
+    </Fragment>
   );
 };
 

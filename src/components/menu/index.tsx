@@ -4,20 +4,15 @@ import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { route } from 'preact-router';
 
-import { getUser } from '../../data/auth';
 import Item from '../item';
 import Overlay from '../overlay';
 import style from './style.module.css';
 
 interface MenuProps {
-  email?: string;
+  uid?: string;
 }
 
-const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
-  const [user, setUser] = useState<{
-    email: string,
-    displayName: string,
-  } | undefined>(undefined);
+const Menu: FunctionalComponent<MenuProps> = ({ uid }: MenuProps) => {
   const [show, setShow] = useState<boolean>(false);
   const container = useRef<any>(null);
 
@@ -34,17 +29,12 @@ const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
     { title: 'Erlebnisse verwalten', link: '/company', icon: <IconTools /> },
   ];
 
-  const checkUserState = async (): Promise<void> => {
-    const { displayName, email: serverMail } = await getUser();
-    if (displayName && serverMail) setUser(displayName && serverMail ? { displayName, email: serverMail } : undefined);
-  };
-
   const getElement = () => {
     container.current = typeof window !== 'undefined' && document?.getElementById('modals');
   };
 
-  useEffect(() => { if (!user?.email) checkUserState(); }, [show]);
   useEffect(() => { if (!container.current) getElement(); }, []);
+  // useEffect(() => { checkUserState(); }, [uid]);
 
   const toggleModal = () => setShow(!show);
 
@@ -72,19 +62,19 @@ const Menu: FunctionalComponent<MenuProps> = ({ email }: MenuProps) => {
             <Overlay action={toggleModal} />
             <aside class={style.menu}>
               <h1 class={style.title}>Guidex</h1>
-              <small>Willkommen {user?.displayName ? user?.displayName.split(' ')?.[0] : 'auf Guidex'}</small>
+              <small>Willkommen {uid ? 'zurück' : 'auf Guidex'}</small>
               <nav style={{ padding: '0 4px' }}>
                 {routes.map((item: { title: string; link: string; icon: any }) => (
                   <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                 ))}
 
-                {email && user?.email ? (
+                {uid ? (
                   <Fragment>
                     <h4>Account</h4>
                     {userRoutes.map((item: { title: string; link: string; icon: any }) => (
                       <Item key={item.title} label={item.title} icon={item.icon} link={item.link} action={toggleModal} />
                     ))}
-                    {user.email.endsWith('@guidex.app') && (
+                    {uid === 'rGp6VBgqJBekDWCALsLHZbuhb2m1' && (
                     <Item label="Admin" icon={<IconLock />} link="/admin" action={toggleModal} />
                     )}
                     <Item label="Ausloggen" icon={<IconLogout />} link="/logout" action={toggleModal} />

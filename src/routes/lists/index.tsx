@@ -1,4 +1,4 @@
-import { IconHeart } from '@tabler/icons';
+import { IconHeart, IconPlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -52,33 +52,30 @@ const Lists: FunctionalComponent<ListsProps> = ({ uid }: ListsProps) => {
 
   return (
     <Fragment>
-      <TextHeader icon={<IconHeart />} title="Deine Erlebnisse" text="Es gibt Erlebnisse, die du festhalten willst, dann kreiere eine Sammlung und teile sie mit Freunden." />
+      <TextHeader icon={<IconHeart />} title="Deine Listen" text="Es gibt Erlebnisse, die du festhalten willst, dann kreiere eine Sammlung und teile sie mit Freunden." />
 
-      <main style={{ padding: '20px 10px' }} class="size_holder">
-        {uid && lists ? (
-          <Fragment>
-            <Item label="Liste anlegen" action={addNew} type="grey" />
-            <div class={style.list}>
-              {lists && lists.map((x: any) => (
-                <ListItem item={x} />
-              ))}
-            </div>
-          </Fragment>
-        ) : (
-          <Fragment>
-            {lists === false ? <Loading /> : (
-              <MessageButton
-                title="Es wurde noch nichts angelegt"
-                text="Lege deine erste Sammlung an, um durchzustarten"
-                buttonText="Neue Sammlung anlegen"
-                action={addNew}
-              />
-            )}
+      <Item label="Eine neue Liste erstellen" type="grey" icon={<IconPlus />} action={addNew} />
 
-            ...
-          </Fragment>
-        )}
-      </main>
+      {uid && lists ? (
+        <div class={style.list}>
+          {lists && lists.map((x: any) => (
+            <ListItem item={x} />
+          ))}
+        </div>
+      ) : (
+        <Fragment>
+          {lists === false ? <Loading /> : (
+            <MessageButton
+              title="Es wurde noch nichts angelegt"
+              text="Lege deine erste Sammlung an, um durchzustarten"
+              buttonText="Neue Sammlung anlegen"
+              action={addNew}
+            />
+          )}
+
+          ...
+        </Fragment>
+      )}
 
       {openCreateList && (
       <Modal title="Neue Sammlung anlegen" close={closeModal}>
