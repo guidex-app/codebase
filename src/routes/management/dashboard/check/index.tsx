@@ -116,7 +116,7 @@ const Check: FunctionalComponent<CheckProp> = ({ activity }: CheckProp) => {
             <Fragment>
               <h2 style={{ margin: '0 0 15px 0' }}>Ihr Erlebnis ist online</h2>
               <Item icon={<IconAlertCircle color="var(--orange)" />} type="info" label="Ihr Erlebnis ist bei uns gelistet und für alle Nutzer verfügbar." text="Wenn sie ihr Erlebnis offline stellen, können sie nicht mehr auf unserer Seite gefunden werden. Jedoch, bleiben ihre Daten bestehen und können im Mitgliederbereich bearbeitet werden." />
-              <ActivityItem activity={activity} />
+              <ActivityItem activity={activity} currentShortDay="Mo" />
               <br /><br />
               <FormButton disabled={checkData.percent < 100} label="Erlebnis offline stellen" action={toggleActivityState} />
             </Fragment>

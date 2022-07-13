@@ -22,7 +22,7 @@ const Modal: FunctionalComponent<ModalProps> = ({ close, title, children, invert
         <Overlay action={close} />
         <div class={`${style.modal} ${type ? style[type] : ''}`}>
           <Header title={title} action={close} invert={invert} />
-          <div class={style.content}>{children}</div>
+          {children}
         </div>
       </Fragment>
     ), container,

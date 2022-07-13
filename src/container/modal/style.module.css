@@ -18,12 +18,6 @@
     will-change: transform;
   }
   
-  .content {
-    overflow: auto;
-    min-height: 100%;
-    padding: 10px 15px;
-  }
-  
   @media (min-width: 693px) {
     .modal {
         top: 75px;

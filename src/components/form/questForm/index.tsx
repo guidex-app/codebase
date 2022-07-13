@@ -38,6 +38,7 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
   // speichert die aktuelle frage und antworten
   const nextQuestion = () => { if (field && validation === 'valid') save(field); };
+  const skip = () => { if (question && question.info.availableActivated) save({ name: question.info.title.form }); };
 
   /**
    * Findet den nächsten Index in den Fragen (Questions)
@@ -208,12 +209,12 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
 
   return (
     <Fragment>
-      <header class={style.header} style={{ paddingBottom: '15px' }}>
-        <TopButton action={toggleOverview} title="Übersicht" />
+      <header class={style.header}>
+        <TopButton action={toggleOverview} title="Übersicht" color="white" />
         <h2>{question.info.question}</h2>
       </header>
 
-      <main style={{ paddingBottom: '5px' }}>
+      <main style={{ padding: '15px 15px 5px 15px' }}>
         {question.info.type === 'onService' && !service?.serviceName?.[0] && <p class="red">Definiere mindestens eine Leistung.</p>}
         {question.answers.map((answer: AnsInfo) => {
           // if (skipAnswerCheck(answer.name)) return;
@@ -253,12 +254,13 @@ const QuestForm: FunctionalComponent<QuestFormProps> = ({ questions, service, op
         })}
       </main>
 
-      <FormButton action={nextQuestion} label={field?.selected || !question.info.availableActivated ? `${validation === 'notValid' ? 'Bitte Vervollständige die Anworten' : 'Weiter'}` : question.info.availableText || 'Hat keinen Einfluss'} disabled={validation === 'notValid'} />
+      <FormButton action={nextQuestion} label={validation === 'valid' ? 'Weiter' : 'Bitte Vervollständige die Anworten'} disabled={validation === 'notValid' || !field?.selected} />
+      {question.info.availableActivated && <button class={style.skipButton} type="button" disabled={validation === 'notValid'} onClick={skip}>Frage überspringen</button>}
 
       <InfoBox title={question.info.advice} text={question.info.example} />
       {question.info.explanation && <InfoBox text={question.info.explanation} />}
 
-      <Chip label="Unterstützung von Guidex erhalten" type="delete" action={() => console.log('')} />
+      <Chip label="Unterstützung von Guidex erhalten" type="delete" action={() => console.log('d')} />
     </Fragment>
   );
 };

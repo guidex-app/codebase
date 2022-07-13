@@ -1,8 +1,7 @@
-.header h2 {
-    background: #46244C;
-    margin: -15px -15px 15px -15px;
-    padding: 30px 15px;
+.header {
+    padding: 75px 15px 30px 15px;
     border-radius: 0 0 20px 20px;
+    background: linear-gradient(90deg,#fa8142, #ff4088);
 }
 
 .header h2 + p {
@@ -17,4 +16,14 @@
     margin-top: 3px;
 }
 
-
+.skipButton {
+    display: block;
+    margin: 0 auto;
+    color: var(--orange);
+    cursor: pointer;
+    background-color: transparent;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border: none;
+}

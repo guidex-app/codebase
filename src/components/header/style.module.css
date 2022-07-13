@@ -12,6 +12,11 @@
 	grid-template-areas: "extraButton title menu";
 }
 
+.invert {
+	position: absolute;
+	top: 0; right:0; left: 0;
+}
+
 .fixed {
 	position: fixed;
 	left: 0;

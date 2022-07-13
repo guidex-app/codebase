@@ -5,10 +5,9 @@
     align-items: center;
 
     width: 100%;
-    max-width: calc(100vw - 40px);
     min-height: 55px;
     padding: 0 15px;
-    margin: 0 auto;
+
 
     cursor: pointer;
     transition: background 0.3s ease-in-out, 0.5s ease-out border-image;
@@ -56,13 +55,8 @@
 
 .image img { width: 100%; height: auto; }
 
-.clean p { 
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.clean:last-child p {
-    border-bottom: none;
-}
+.clean p { border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s border-bottom; }
+.clean:hover p, .clean:last-child p { border-bottom: 1px solid transparent; }
 
 .warning:hover, .success:hover { opacity: 0.8; }
 
@@ -77,4 +71,10 @@
     line-height: 30px;
     font-size: 14px;
     border-radius: 15px;
+}
+
+.grey, .warning, .success, .info {
+    max-width: calc(100% - 30px);
+    margin-left: auto;
+    margin-right: auto;
 }

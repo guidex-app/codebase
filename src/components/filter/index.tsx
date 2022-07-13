@@ -60,7 +60,7 @@ const FilterList: FunctionalComponent<FilterListProps> = ({ data, values, close,
   return (
     <Fragment>
       {data.map((group: Filter[], groupIndex: number) => (
-        <div key={`${groupIndex.toString()}`} style={{ backgroundColor: 'var(--fourth)', borderRadius: '20px', marginBottom: '15px' }}>
+        <div key={`${groupIndex.toString()}`} style={{ backgroundColor: 'var(--fourth)', borderRadius: '20px', margin: '0 15px 15px 15px' }}>
           {group.map((item: Filter) => (
             <FilterItem
               filter={values}

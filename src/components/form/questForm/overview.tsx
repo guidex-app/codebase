@@ -1,4 +1,4 @@
-import { IconInfoCircle } from '@tabler/icons';
+import { IconArrowRight, IconInfoCircle } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 
 import { Questions } from '../../../interfaces/company';
@@ -14,23 +14,24 @@ interface OverviewProps {
 const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, select, close }: OverviewProps) => (
   <Fragment>
     <h2 style={{
-      backgroundColor: '#46244C',
-      margin: '-15px -15px 15px -15px',
-      padding: '30px 15px',
+      backgroundColor: 'var(--fifth)',
+      padding: '75px 15px 30px 15px',
       borderRadius: '0 0 20px 20px',
+      marginBottom: '15px',
     }}
-    >Was möchtest du bearbeiten?
+    >
+      Was möchtest du bearbeiten?
     </h2>
 
-    <section class="form group">
+    <div style={{ paddingBottom: '15px' }}>
       {fields?.includes(questions[0].info.title.form) ? questions.map((x: Questions, index: number) => (
         fields?.includes(x.info.title.form) && <Item icon={x.info.icon} label={x.info.title.name} text={x.info.question} action={() => select(index)} />
       )) : (
         <Item icon={<IconInfoCircle color="orange" />} type="info" label="Bitte beantworten sie zuerst die nachfolgenden Fragen." action={close} />
       )}
+    </div>
 
-      {fields && fields?.length !== questions.length && questions[fields.length] && <Item icon={questions[fields.length].info.icon} label={`${questions[fields.length].info.title.name} (Nächste Frage)`} type="large" text={questions[fields.length]?.info.question} action={() => select(fields.length)} />}
-    </section>
+    {fields && fields?.length !== questions.length && questions[fields.length] && <Item type="warning" icon={<IconArrowRight />} label={`Fortfahren (${questions[fields.length].info.title.name})`} text={questions[fields.length]?.info.question} action={() => select(fields.length)} />}
   </Fragment>
 );
 

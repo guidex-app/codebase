@@ -10,7 +10,7 @@
 
 .topic header div {
     background: linear-gradient(180deg, rgba(243, 118, 22, 0.7) 0%, rgba(43, 0, 121, 0.7) 100%);
-    padding: calc((100vh / 2) - 80px) 10px 20px 10px;
+    padding: calc((100vh / 2) - 120px) 15px 20px 15px;
     border-radius: 0 0 20px 20px;
 }
 
@@ -20,7 +20,7 @@
 }
 
 .topic article {
-    padding: 10px;
+    padding: 15px;
 }
 
 .topic article p:first-child::first-letter {
@@ -32,4 +32,11 @@
     line-height: 0.9;
   }
 
-/* .topic article p { padding-bottom: 20px; } */
+  @media (min-width: 860px) {
+    .topic header {
+        margin-top: 15px;
+        border-radius: 20px;
+    }
+
+    .topic header div { border-radius: 20px; }
+  }

@@ -1,7 +1,6 @@
 .size_holder, .medium_size_holder, .small_size_holder, .mini_size_holder {
     margin-left: auto;
     margin-right: auto;
-    padding: 0 15px;
 }
 
 .size_holder { max-width: 1280px; }
