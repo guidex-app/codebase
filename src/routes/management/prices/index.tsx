@@ -1,4 +1,5 @@
 import { IconBrandDribbble, IconCurrencyDollar, IconHome, IconPlus, IconUser } from '@tabler/icons';
+import { arrayUnion } from 'firebase/firestore/lite';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -112,11 +113,11 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   };
 
   const updateStructureField = (newField: ServiceField) => {
-    if (selected === false) return;
-    const newStructure: ServiceField[] = selected.structure || [];
+    if (!selected) return;
+    let newStructure: ServiceField[] = selected.structure || [];
 
-    if (!selected.structure) {
-      newStructure.push(newField);
+    if (!selected.structure?.[0]) {
+      newStructure = [newField];
     } else {
       const currentIndex: number = newStructure.findIndex((s) => s.name === newField.name);
       if (currentIndex !== -1) {
@@ -127,7 +128,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
     }
 
     const dayGroups: string[] | undefined = newStructure.length === StructureQuestions.length ? generateDayGroups(newStructure) : undefined;
-    setSelected({ ...selected, structure: newStructure, dayGroups });
+    setSelected({ ...selected, structure: [...newStructure], dayGroups });
   };
 
   const closeModal = () => {
@@ -161,9 +162,13 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
   const saveStructure = (newField: ServiceField, isInit: boolean) => {
     if (!selected) return;
     const description: string = generateDescription(newField);
+    const changed = selected.structure?.length === StructureQuestions.length ? { changed: arrayUnion(newField.name) } : {};
 
     if (isInit) fireArray(`activities/${activityID}`, 'state', 'prices', 'add');
-    return fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, { description }, 'update');
+    return fireDocument(`activities/${data.title.form}/services/${selected.service.id}`, {
+      description,
+      ...changed,
+    }, 'update');
   };
 
   const saveQuestions = (newField: ServiceField) => {
@@ -197,7 +202,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
       {serviceList !== false ? (
         <section class="group form small_size_holder">
           {serviceList ? (
-            serviceList.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} label={`${x.serviceName || ''} ${x.structureID ? '' : '(Tabelle)'}`} text={x.serviceType && serviceProps[x.serviceType].name} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
+            serviceList.map((x: ServiceInfo) => x.serviceName && <Item key={x.id} text={x.description || ''} label={`${x.serviceName || ''} (${x.serviceType && serviceProps[x.serviceType].name})`} icon={x.serviceType && serviceProps[x.serviceType].icon} action={() => selectService(x)} />)
           ) : (
             <Item icon={<IconPlus />} type="grey" label="Jetzt eine Leistung anlegen" text="Sie haben noch keine Leistungen definiert; Jetzt eine neue Leistung anlegen" action={navigateToServices} />
           )}
@@ -215,6 +220,7 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
             <ChangeStructure
               unfinishedNr={StructureQuestions.length - (selected.structure?.length || 0)}
               dayGroups={selected.dayGroups}
+              changed={selected.service.changed}
               openModal={selectStructure}
             />
           )}
@@ -230,7 +236,15 @@ const Prices: FunctionalComponent<ActivityProp> = ({ activity, activityID }: Act
           )}
 
           {show === 'prices' && selected && selected.service.id && selected.day && (
-            <EditPrices structure={selected.structure} serviceID={selected.service.id} day={selected.day} activityID={activityID} dayGroups={selected.dayGroups} changeDay={changeDay} />
+            <EditPrices
+              structure={selected.structure}
+              serviceID={selected.service.id}
+              day={selected.day}
+              changed={selected.service.changed}
+              activityID={activityID}
+              dayGroups={selected.dayGroups}
+              changeDay={changeDay}
+            />
           )}
         </Modal>
       )}

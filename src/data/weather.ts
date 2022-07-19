@@ -17,17 +17,18 @@ const getWeather = async (lat: number, lng: number): Promise<Weather[]> => {
   const loadAPI = await fetch(getURL(lat, lng));
   const data = await loadAPI.json();
 
-  console.log(data);
+  const lastUpdated = generateDateString(new Date());
+  console.log('WIRD NEU GELADEN', data);
   const current = {
+    lastUpdated,
     temp: Math.round(data.current.feels_like),
     shortName: data.current.weather[0].main,
-    date: generateDateString(new Date(data.current.dt * 1000)),
     description: data.current.weather[0].description,
   };
 
   const nextDays = [1, 2, 3, 4, 5].map((dayNr: number) => ({
+    lastUpdated,
     temp: Math.round(data.daily[dayNr].feels_like.day),
-    date: generateDateString(new Date(data.daily[dayNr].dt * 1000)),
     shortName: data.daily[dayNr].weather[0].main,
     description: data.daily[dayNr].weather[0].description,
   }));

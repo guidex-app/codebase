@@ -1,4 +1,67 @@
 .textHeader {
+	padding: 80px 15px 30px 15px;
+}
+
+.textHeader h1 {
+	padding-bottom: 15px;
+	/* line-height: 30px; */
+	font-weight: 800;
+}
+
+.textHeader p {
+	position: relative;
+
+	margin: -10px 0 0 0;
+	color: var(--fifth);
+	font-size: 18px;
+	line-height: 1.3em;
+}
+
+.textHeader button {
+	clear: both;
+	padding: 0.2em 0 0 0;
+
+	font-size: 14px;
+	text-transform: uppercase;
+	line-height: 1.2em;
+	font-weight: 800;
+
+	color: var(--white);
+	opacity: 0.8;
+	background-color: transparent;
+
+    border-bottom: 2px solid var(--white);
+}
+
+.textHeader button:hover {
+	opacity: 1;
+}
+
+.image {
+	display: block;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 28% 28% 28% 28% / 30% 30% 30% 30%;
+    background-color: #323643;
+    color: transparent;
+	margin-right: 15px;
+	margin-top: 5px;
+	float: left;
+}
+
+.textHeader svg { 
+	width: 35px;
+	height: calc(35px + 1.2em);
+	padding-bottom: 1.2em;
+	margin-right: 20px;
+	margin-top: 1.2em;
+	float: left;
+}
+
+.image img { width: 100%; height: auto; }
+
+/* .textHeader {
 	display: flex;
 	align-items: center;
 	gap: 20px;
@@ -9,7 +72,6 @@
 .textHeader > div {
 	flex-grow: 1;
 	width: 100%;
-	/* min-height: 158px; */
 }
 
 .textHeader h1 {
@@ -62,4 +124,4 @@
 }
 
 .image img { width: 100%; height: auto; }
-.textHeader svg { width: 35px; height: auto; }
+.textHeader svg { width: 35px; height: auto; } */

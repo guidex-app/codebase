@@ -1,5 +1,5 @@
 .header {
-    padding: 75px 15px 30px 15px;
+    padding: 100px 15px 30px 15px;
     border-radius: 0 0 20px 20px;
     background: linear-gradient(90deg,#fa8142, #ff4088);
 }
@@ -19,11 +19,20 @@
 .skipButton {
     display: block;
     margin: 0 auto;
-    color: var(--orange);
+    color: var(--red);
     cursor: pointer;
     background-color: transparent;
     text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 1px;
     border: none;
+    transform: scale(1);
+    opacity: 0.9;
+    will-change: transform, opacity;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.skipButton:hover {
+    transform: scale(1.05);
+    opacity: 1;
 }

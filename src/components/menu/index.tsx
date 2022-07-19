@@ -23,8 +23,6 @@ const Menu: FunctionalComponent<MenuProps> = ({ uid }: MenuProps) => {
   ];
 
   const userRoutes: { title: string; link: string; icon: any }[] = [
-    // { title: 'Listen', link: '/lists', icon: <Bookmark /> },
-    // { title: 'Einstellungen', link: '/settings', icon: <Settings /> },
     { title: 'Profile', link: '/profile', icon: <IconUser /> },
     { title: 'Erlebnisse verwalten', link: '/company', icon: <IconTools /> },
   ];
@@ -33,8 +31,7 @@ const Menu: FunctionalComponent<MenuProps> = ({ uid }: MenuProps) => {
     container.current = typeof window !== 'undefined' && document?.getElementById('modals');
   };
 
-  useEffect(() => { if (!container.current) getElement(); }, []);
-  // useEffect(() => { checkUserState(); }, [uid]);
+  useEffect(() => { getElement(); }, []);
 
   const toggleModal = () => setShow(!show);
 
@@ -56,7 +53,7 @@ const Menu: FunctionalComponent<MenuProps> = ({ uid }: MenuProps) => {
         </button>
       </div>
 
-      {show && container.current && createPortal(
+      {show && createPortal(
         (
           <Fragment>
             <Overlay action={toggleModal} />

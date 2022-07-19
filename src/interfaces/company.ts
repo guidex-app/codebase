@@ -12,10 +12,16 @@ export interface ServiceInfo {
   id?: string;
   serviceType?: 'entry' | 'section' | 'object';
   serviceName?: string;
-  structure?: string[],
   description?: string;
+  changed?: Array<'duration' | 'discount' | 'time' | 'persons' | 'roundDiscount'>;
   image?: string;
-  structureID: number;
+}
+
+export interface SelectedValues {
+  value: any;
+  onDays?: string[];
+  option?: string;
+  isRound?: boolean;
 }
 
 /**
@@ -24,7 +30,7 @@ export interface ServiceInfo {
 export interface Selected {
   name: string,
   amountOfFields: string,
-  values?: { value: any; onDays?: string[]; option?: string; isRound?: boolean; }[];
+  values?: SelectedValues[];
 }
 
 /**

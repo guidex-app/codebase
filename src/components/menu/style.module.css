@@ -39,8 +39,8 @@
 
 .button {
     position: fixed;
-    right: 14px;
-    top: 14px;
+    right: 15px;
+    top: 10px;
     width: 40px;
     z-index: 50;
 
@@ -60,22 +60,17 @@
 
 .button button {
     display: none;
-    border: none;
     height: 40px;
     width: 40px;
+    padding: 8px;
     opacity: 1;
-    cursor: pointer;
     background-color: transparent;
     opacity: 0.85;
     color: var(--white);
-    text-align: center;
-
-    align-items: center;
-    justify-content: center;
 }
 
 .button .openMenu {
-    display: flex;
+    display: block;
     color: var(--red);
 }
 
@@ -85,8 +80,6 @@
 }
 
 .button svg {
-    height: auto;
-    width: 24px;
     vertical-align: middle;
 }
 
@@ -97,15 +90,17 @@
     opacity: 1;
 }
 
+.button .openMenu:hover {
+    color: var(--red);
+}
+
 @keyframes slideInFromLeft {
 	0% { transform: translateX(250px); }
 	100% { transform: translateX(0); }
 }
 
 @media (min-width: 693px) {
-    .button button {
-        display: flex;
-    }
+    .button button { display: block; }
     .button .openMenu {
         color: var(--fifth);
     }

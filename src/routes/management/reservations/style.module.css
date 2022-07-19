@@ -1,0 +1,9 @@
+.slot {
+    height: 50px;
+    display: flex;
+    line-height: 50px;
+}
+
+.slot:nth-child(odd) {
+    background-color: rgba(255,255,255,0.1);
+}

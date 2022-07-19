@@ -1,6 +1,6 @@
 /* === TABLE RESET === */
 
-.table td { padding: 0; position: relative; }
+.table td { padding: 0; position: relative; color: var(--white); }
 
 /* =================== */
 
@@ -103,7 +103,6 @@
 .heading th {
     margin: 0;
     padding: 0.5rem;
-    background-color: #f12711;
     color: white;
     font-size: 14px;
     min-width: 100px;
@@ -113,9 +112,11 @@
 .heading small {
     display: block;
     font-size: 10px;
-    color: var(--white);
+    font-style: italic;
+    letter-spacing: 0.5px;
+    color: var(--dark) !important;
     border-radius: 5px;
-    margin-top: 5px;
+    margin-bottom: 5px;
     padding: 2.5px 10px;
 }
 
@@ -132,19 +133,21 @@
 } */
 
 .dark {
-    background-color: #1a1a1a;
+    background-color: black;
 }
 
 .footer {
-    background-color: var(--fifth);
-    margin: 15px 15px 20px 15px;
+    margin: 0 15px 20px 15px;
     padding: 10px 20px;
     text-align: center;
-    border-radius: 15px;
-    color: white;
+    color: var(--orange);
     font-weight: 500;
     letter-spacing: 1px;
     font-style: italic;
+}
+
+.footer strong {
+    font-weight: 800;
 }
 
 /* RABATT ZELL ANSICHT */

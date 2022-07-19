@@ -16,7 +16,8 @@ export const getStorageKeys = async (keys: Array<'displayName' | 'email' | 'loca
   for (let index = 0; index < keys.length; index += 1) {
     if (getKeys[index] !== undefined) {
       const value = getKeys[index];
-      formatKeys[keys[index]] = keys[index] === 'location' ? JSON.parse(value) : value;
+      const isObject: boolean = ['location', 'weather'].includes(keys[index]);
+      formatKeys[keys[index]] = isObject ? JSON.parse(value) : value;
     }
   }
 
@@ -26,7 +27,8 @@ export const getStorageKeys = async (keys: Array<'displayName' | 'email' | 'loca
 export const setStorageKeys = async (data: User): Promise<boolean> => {
   const keys = Object.entries(data);
   await keys.forEach(([key, value]: [string, string]) => {
-    localStorage.setItem(key, key === 'location' ? JSON.stringify(value) : value);
+    const isObject: boolean = ['location', 'weather'].includes(key);
+    localStorage.setItem(key, isObject ? JSON.stringify(value) : value);
   });
   return true;
 };

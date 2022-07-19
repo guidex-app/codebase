@@ -2,12 +2,12 @@ import { IconAlarm, IconArchive, IconBox, IconCalendar, IconClock, IconHourglass
 import { FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import FormButton from '../../../components/form/basicButton';
-import Item from '../../../components/item';
-import Spinner from '../../../components/spinner';
-import { getFireDocument } from '../../../data/fire';
-import { getSimpleDateString } from '../../../helper/date';
-import { Reservation } from '../../../interfaces/reservation';
+import FormButton from '../../../../components/form/basicButton';
+import Item from '../../../../components/item';
+import Spinner from '../../../../components/spinner';
+import { getFireDocument } from '../../../../data/fire';
+import { getSimpleDateString } from '../../../../helper/date';
+import { Reservation } from '../../../../interfaces/reservation';
 
 interface CapacityProps {
     document: string;

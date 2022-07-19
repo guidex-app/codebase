@@ -1,15 +1,13 @@
 .listItem {
-    display: grid;
-    grid-template-areas: 
-        "img1 img2"
-        "img1 img3"
-        "h h"
-        "p p";
-
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     border-radius: 15px;
     background: var(--fourth);
 
     transform: scale(1);
+    border-radius: 20px;
+    overflow: hidden;
     transition: transform 0.3s ease-in-out;
     will-change: transform;
 }
@@ -22,13 +20,14 @@
     font-weight: bolder;
     grid-area: 'h';
     padding: 5px 15px 0 15px;
+    width: 100%;
     font-weight: 800;
     line-height: 1.1;
 }
 
 .listItem small {
     display: block;
-    grid-area: p;
+    width: 100%;
     padding: 3px 15px 10px 15px;
     opacity: 0.6;
     letter-spacing: 1;
@@ -38,22 +37,21 @@
 
 .listItem div,
 .listItem picture {
-    min-height: 20px;
-    background-color: rgba(255,255,255,0.5);
+    display: block;
+    height: auto;
+    width: calc(100% / 3);
+    background-color: rgba(255,255,255,0.3);
+    overflow: hidden;
 }
 
-.listItem small + * { 
-    grid-area: img1;
-    height: 150px;
-    border-radius: 15px 0 0 15px;
+.listItem div {
+    padding-bottom: 42.5%;
 }
-.listItem small + * + * { 
-    grid-area: img2;
-    border-radius: 0 15px 0 0;
-    opacity: 0.9;
+
+.listItem img {
+    width: 100%;
+    display: block;
 }
-.listItem small + * + * + * {
-    grid-area: img3;
-    border-radius: 0 0 15px 0;
-    opacity: 0.8;
-}
+
+.listItem div:nth-child(odd),
+.listItem picture:nth-child(odd) { opacity: 0.8; }

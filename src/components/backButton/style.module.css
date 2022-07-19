@@ -1,18 +1,20 @@
 .backButton {
     position: fixed;
-    top: 12px; left: 15px;
+    top: 10px; left: 15px;
 	padding: 0 12px 2px 8px;
 	border-radius: 25px;
     line-height: 34px;
     color: var(--red);
+	font-weight: 500;
 	z-index: 50;
 	background-color: var(--first);
+	transform: scale(1);
 	animation: 0.3s ease-in-out 0s 1 slideInFromLeft;
-    transition: 0.3s background ease-in-out, 0.3s;
-    will-change: background;
+    transition: 0.3s transform ease-in-out, 0.3s;
+    will-change: transform;
 }
 
-.backButton:hover { background-color: rgba(24, 17, 34, 0.5); }
+.backButton:hover { transform: scale(1.02); }
 
 .backButton span::before {
 	border-style: solid;

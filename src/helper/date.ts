@@ -7,18 +7,17 @@ export const getCurrentShortname = (dayNr?: number): 'Mo' | 'Di' | 'Mi' | 'Do' |
   return shortDay[currentDayNr === 0 ? 6 : currentDayNr - 1];
 };
 
-/**
- * True, wenn heute + angegebene tage kleiner als der zu vergleichende Tag ist.
- */
-export const smallerThanDays = (dayToCompare: Date, days: number): boolean => {
-  const time = days * 60 * 60 * 24 * 1000;
-  return dayToCompare.getTime() < (new Date().getTime() + time);
-};
-
 export const generateDateString = (from: Date): string => {
   const options: any = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric' };
   return from.toLocaleDateString('de-DE', options);
 };
+
+/**
+ * True, wenn heute + angegebene tage kleiner als der zu vergleichende Tag ist.
+ */
+export const isUpToDate = (day: string): boolean => (
+  day === generateDateString(new Date())
+);
 
 export const getSimpleDateString = (date: Date) => {
   let month = `${date.getMonth() + 1}`;

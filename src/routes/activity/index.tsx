@@ -1,4 +1,4 @@
-import { IconAdjustmentsHorizontal, IconInfoCircle, IconPlus } from '@tabler/icons';
+import { IconAdjustmentsHorizontal, IconInfoCircle, IconSquarePlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -76,9 +76,9 @@ const ActivityList: FunctionalComponent<ActivitiesProps> = ({ categoryID, day, m
       />
 
       <div class="small_size_holder">
-        <Item type="grey" icon={<IconPlus />} label="Einer Liste hinzufügen" action={() => setOpenModal('Listen')} />
+        <Item type="grey" icon={<IconSquarePlus />} label="Einer Liste hinzufügen" action={() => setOpenModal('Listen')} />
         {list === undefined && <Item icon={<IconInfoCircle />} type="info" label="Es wurde nichts in deiner Nähe gefunden" text="Überprüfe deinen Standort oder wähle eine andere Aktivität" />}
-        {list !== undefined && parameter?.l && <Item type="warning" text={`Der Filter ist aufgrund des Wetters auf ${parameter.l === 'o' ? '"Draußen"' : '"Drinnen"'} gestellt.`} icon={<IconInfoCircle />} label="Guidex empfiehlt" action={openFilter} />}
+        {list !== undefined && parameter?.l && <Item type="warning" text={`Der Filter ist aufgrund des Wetters auf ${parameter.l === 'o' ? '"Draußen"' : '"Drinnen"'} gestellt.`} editLabel="Filter ändern" label="Guidex empfiehlt" action={openFilter} />}
       </div>
 
       <main style={{ padding: '40px 10px' }} class="size_holder">

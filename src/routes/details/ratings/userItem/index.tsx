@@ -1,7 +1,7 @@
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 import { FunctionalComponent, h } from 'preact';
 
-import { RatingComment } from '../../../interfaces/rating';
+import { RatingComment } from '../../../../interfaces/rating';
 import style from './style.module.css';
 
 interface UserCommentItemProps {

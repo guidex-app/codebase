@@ -15,7 +15,8 @@ const TextHeader: FunctionalComponent<TextHeaderProps> = ({ title, text, shorten
   const [hideText, setHideText] = useState(!!shorten);
 
   return (
-    <header class={`${style.textHeader} small_size_holder`}>
+    <header class={`${style.textHeader} small_size_holder ${shorten && hideText ? style.hideText : ''}`}>
+
       {image ? (
         <picture class={style.image}>
           <source srcSet={`${image}.webp?alt=media`} type="image/webp" />
@@ -24,12 +25,12 @@ const TextHeader: FunctionalComponent<TextHeaderProps> = ({ title, text, shorten
       ) : (
         icon && icon
       )}
-      <div onClick={() => shorten && setHideText(!hideText)} class={shorten && hideText ? style.hideText : ''} role="button" tabIndex={0}>
-        <h1>{title}&nbsp;</h1>
-        {text ? <p>{text}</p> : (
-          <p style={{ backgroundColor: 'var(--fourth)', opacity: 0.5 }}>&nbsp;&nbsp;<br />&nbsp;</p>
-        )}
-      </div>
+      {/* <div onClick={() => shorten && setHideText(!hideText)} class={shorten && hideText ? style.hideText : ''} role="button" tabIndex={0}> */}
+      <h1>{title}&nbsp;</h1>
+      <p>{shorten && hideText ? `${text.substring(0, 275)}...` : text}</p>
+      {/* </div> */}
+
+      {shorten && <button type="button" onClick={() => shorten && setHideText(!hideText)}>{hideText ? 'Mehr' : 'Weniger'}</button>}
     </header>
   );
 };

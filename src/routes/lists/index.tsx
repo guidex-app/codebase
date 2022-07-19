@@ -1,4 +1,4 @@
-import { IconHeart, IconPlus } from '@tabler/icons';
+import { IconHeart, IconSquarePlus } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { route } from 'preact-router';
@@ -54,7 +54,9 @@ const Lists: FunctionalComponent<ListsProps> = ({ uid }: ListsProps) => {
     <Fragment>
       <TextHeader icon={<IconHeart />} title="Deine Listen" text="Es gibt Erlebnisse, die du festhalten willst, dann kreiere eine Sammlung und teile sie mit Freunden." />
 
-      <Item label="Eine neue Liste erstellen" type="grey" icon={<IconPlus />} action={addNew} />
+      <div class="small_size_holder">
+        <Item label="Eine neue Liste erstellen" type="grey" icon={<IconSquarePlus />} action={addNew} />
+      </div>
 
       {uid && lists ? (
         <div class={style.list}>

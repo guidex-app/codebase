@@ -15,7 +15,7 @@ const Overview: FunctionalComponent<OverviewProps> = ({ fields, questions, selec
   <Fragment>
     <h2 style={{
       backgroundColor: 'var(--fifth)',
-      padding: '75px 15px 30px 15px',
+      padding: '100px 15px 30px 15px',
       borderRadius: '0 0 20px 20px',
       marginBottom: '15px',
     }}

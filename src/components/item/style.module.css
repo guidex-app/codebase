@@ -64,13 +64,18 @@
     flex-shrink: 0;
     width: auto;
     height: 30px;
-    background: var(--lighter);
+    background-color: var(--lighter);
     color: var(--orange);
-    padding: 0 10px;
-    font-weight: bolder;
+    padding: 0 15px;
+    font-weight: 500;
     line-height: 30px;
     font-size: 14px;
     border-radius: 15px;
+}
+
+.warning .editLabel, .success .editLabel {
+    color: var(--white);
+    background-color: var(--darker);
 }
 
 .grey, .warning, .success, .info {

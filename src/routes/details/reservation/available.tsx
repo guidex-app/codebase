@@ -13,7 +13,7 @@ import Spinner from '../../../components/spinner';
 import TopButton from '../../../components/topButton';
 import { getFireMultiCollection } from '../../../data/fire';
 import { generateDateString, getCurrentShortname, getSimpleDateString, shortDay } from '../../../helper/date';
-import getQuestFormList from '../../../helper/priceStructure';
+import { getQuestFormData } from '../../../helper/priceStructure';
 import useForm from '../../../hooks/useForm';
 import { ServiceField, ServiceInfo } from '../../../interfaces/company';
 import { Available, Capacity, ReservationSlot } from '../../../interfaces/reservation';
@@ -31,14 +31,14 @@ interface ReserveAvailableProps {
 
 const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service, uid, activityID, day, openings, changeState }: ReserveAvailableProps) => {
   const [durationList, setDurationList] = useState<{ list: any; isRound: boolean }>();
-  const [duration, setDuration] = useState<string>('');
-  const [foundation, setFoundation] = useState<'person' | 'object'>('person');
+  // const [duration, setDuration] = useState<string>('');
   const [rooms, setRooms] = useState<number>(1);
 
   const { form, changeForm } = useForm({
     selectedDay: undefined, // aktueller Tag
     selectedShortDay: undefined,
     rounds: 1,
+    foundation: undefined,
     duration: undefined, // ausgewählte dauer
     personAmount: 1, // alters rabatt
     amountRooms: undefined,
@@ -59,7 +59,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   });
 
   const chooseTime = (time: string) => {
-    if (duration) {
+    if (form.duration) {
       changeForm(time, 'reservationTime');
       setShow('confirm');
     }
@@ -87,9 +87,11 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
    * !!Tageskarten neu unterbringen.
    */
   const setUpDuration = () => {
-    const { list = [], isRound = false } = getQuestFormList(form.selectedShortDay, reservationData.structure?.find((x) => x.name === 'duration')?.selected);
-    if (list.length >= 1) setDuration(list[0]);
-    setDurationList({ list, isRound });
+    if (!reservationData.structure) return;
+    const { duration, durationType = [false] } = getQuestFormData(form.selectedShortDay, reservationData.structure, ['duration']);
+
+    if (duration.length >= 1) changeForm(duration[0], 'duration');
+    setDurationList({ list: duration, isRound: durationType[0] === 'isRound' });
   };
 
   //   const displayPersFunction = (item: string) => {
@@ -148,15 +150,16 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
     if (!isOpened) return setReservationData({ ...reservationData, isOpened });
 
     getFireMultiCollection([
-      { path: `activities/${activityID}/structures/${service.structureID}/fields` },
+      { path: `activities/${activityID}/services/${service.id}/structure` },
       { path: `activities/${activityID}/available/${service.id}`, isDocument: true },
     ]).then(([structure, available]: [ServiceField[], Available]) => {
       if (structure && available) {
-        const getFoundation: 'person' | 'object' = (getQuestFormList(form.selectedShortDay, structure?.find((x) => x.name === 'foundation')?.selected)?.list?.[0] || 'person') as ('person' | 'object');
-        const ageList: string[] = getQuestFormList(form.selectedShortDay, structure?.find((x) => x.name === 'age')?.selected)?.list;
-        setFoundation(getFoundation);
+        const { foundation, age } = getQuestFormData(form.selectedShortDay, structure, ['foundation', 'age']);
+        // const getFoundation: 'person' | 'object' = (getQuestFormList(form.selectedShortDay, structure?.find((x) => x.name === 'foundation')?.selected)?.list?.[0] || 'person') as ('person' | 'object');
+        // const ageList: string[] = getQuestFormList(form.selectedShortDay, structure?.find((x) => x.name === 'age')?.selected)?.list;
+        changeForm(foundation[0], 'foundation');
         if (form.personAmount < available.countMinPerson) changeForm(available.countMinPerson, 'personAmount');
-        setReservationData({ structure, available, ageList, isOpened, loaded: false });
+        setReservationData({ structure, available, ageList: age, isOpened, loaded: false });
       }
     });
   };
@@ -171,7 +174,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
   useEffect(() => { loadDayData(); }, [reservationData.structure]);
   useEffect(() => { chooseDay(getSimpleDateString(day ? new Date(day) : new Date())); }, []); // init
 
-  if (show === 'confirm' && form.reservationTime && service && duration && durationList) return <Confirm goBack={() => setShow('slots')} uid={uid} foundation={foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} day={{ date: form.selectedDay, shortDay: form.selectedShortDay }} personAmount={form.personAmount} amountRooms={rooms} durationList={durationList} duration={duration} rounds={form.rounds} time={form.reservationTime} />;
+  if (show === 'confirm' && form.reservationTime && service && form.duration && durationList) return <Confirm goBack={() => setShow('slots')} uid={uid} foundation={form.foundation} service={service} activityID={activityID} serviceName={service.serviceName || 'nicht angegeben'} day={{ date: form.selectedDay, shortDay: form.selectedShortDay }} personAmount={form.personAmount} amountRooms={rooms} durationList={durationList} duration={form.duration} rounds={form.rounds} time={form.reservationTime} />;
 
   return (
     <Fragment>
@@ -193,7 +196,7 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
         change={chooseDay}
       />
 
-      {reservationData.loaded && reservationData.isOpened && reservationData.available && service?.serviceType && duration && durationList ? (
+      {reservationData.loaded && reservationData.isOpened && reservationData.available && service?.serviceType && form.duration && durationList ? (
         <Fragment>
           <div style={{ backgroundColor: 'var(--orange)', padding: '5px', borderRadius: '10px' }}>
             <Counter
@@ -213,17 +216,17 @@ const ReserveAvailable: FunctionalComponent<ReserveAvailableProps> = ({ service,
               <SelectInput
                 label="Für welche Dauer?"
                 name="duration"
-                value={duration}
+                value={form.duration}
                 options={durationList?.list}
-                change={setDuration}
+                change={changeForm}
               />
-            ) : (<Item icon={<IconHourglass color="var(--orange)" />} background="#2b303d" label="Dauer" text={`Die Dauer beträgt ${duration} Min.`} />)}
+            ) : (<Item icon={<IconHourglass color="var(--orange)" />} background="#2b303d" label="Dauer" text={`Die Dauer beträgt ${form.duration} Min.`} />)}
 
-            {foundation === 'object' && <Chip type="active" label={`Anzahl der Räume ${form.amountRooms || '1'}`} action={() => console.log('s')} />}
+            {form.foundation === 'object' && <Chip type="active" label={`Anzahl der Räume ${form.amountRooms || '1'}`} action={() => console.log('s')} />}
           </div>
 
           <Slots
-            duration={parseInt(duration, 10)}
+            duration={parseInt(form.duration, 10)}
             durationList={durationList}
             amountRooms={rooms}
             chooseTime={chooseTime}

@@ -1,8 +1,9 @@
-import { IconBrandDribbble, IconCalendar, IconEye, IconHome, IconUser } from '@tabler/icons';
+import { IconBrandDribbble, IconEye, IconHome, IconUser } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../../components/backButton';
+import DaySlider from '../../../components/form/daySlider';
 import TextHeader from '../../../components/infos/iconTextHeader';
 import Item from '../../../components/item';
 import Spinner from '../../../components/spinner';
@@ -11,14 +12,17 @@ import Modal from '../../../container/modal';
 import { getFireCollection } from '../../../data/fire';
 import useCompany from '../../../hooks/useCompany';
 import useServiceList from '../../../hooks/useServiceList';
+import useTimeLine from '../../../hooks/useTimeLine';
 import { Activity } from '../../../interfaces/activity';
 import { ServiceInfo } from '../../../interfaces/company';
 import { Reservation } from '../../../interfaces/reservation';
-import Reservations from './reservations';
+import Reservations from './editReservation/reservations';
+import style from './style.module.css';
 
 interface ReservationPageProps {
     activityID: string;
     activity: Activity;
+
 }
 
 const ReservationPage: FunctionalComponent<ReservationPageProps> = ({ activity, activityID }: ReservationPageProps) => {
@@ -31,6 +35,7 @@ const ReservationPage: FunctionalComponent<ReservationPageProps> = ({ activity, 
     />
   );
   if (!data) return header;
+  const timeLine = useTimeLine(30, data.openings);
 
   // const formInit: FormInit = {
   //   defaultCapacity: { value: 10, type: 'number', required: false },
@@ -43,7 +48,7 @@ const ReservationPage: FunctionalComponent<ReservationPageProps> = ({ activity, 
   const { serviceList } = useServiceList(activityID);
 
   const [showReservationId, setShowReservationId] = useState<string | false>(false);
-  const [reservationList, setReservationList] = useState<Reservation[]>();
+  const [, setReservationList] = useState<Reservation[]>();
 
   const closeReservation = () => setShowReservationId(false);
   const loadReservations = async () => {
@@ -52,9 +57,7 @@ const ReservationPage: FunctionalComponent<ReservationPageProps> = ({ activity, 
     if (list) setReservationList(list);
   };
 
-  useEffect(() => {
-    if (selected) loadReservations();
-  }, [selected]);
+  useEffect(() => { if (selected) loadReservations(); }, [selected]);
 
   const serviceProps: { [key: string]: { name: 'Eintritt' | 'Verleihobjekt' | 'Raum/Bahn/Spiel', icon: any } } = {
     entry: { name: 'Eintritt', icon: <IconUser color="#63e6e1" /> }, object: { name: 'Verleihobjekt', icon: <IconBrandDribbble color="#d4be21" /> }, section: { name: 'Raum/Bahn/Spiel', icon: <IconHome color="#bf5bf3" /> },
@@ -67,7 +70,13 @@ const ReservationPage: FunctionalComponent<ReservationPageProps> = ({ activity, 
       {selected ? (
         <main class="small_size_holder">
           <TopButton action={() => setSelected(false)} />
-          {reservationList?.map((r: Reservation) => <Item type="info" icon={<IconCalendar color="var(--orange)" />} label={`${r.serviceName} - ${r.startTime} (${r.duration})`} text={`${r.personAmount} Pers. (${r.totalPrice} €) (${r.uid})`} editLabel={`${r.reservationStatus?.state === 'active' ? 'Aktiv' : 'Abgesagt'}`} action={() => setShowReservationId(r.reservationId)} />)}
+          <DaySlider change={() => console.log('')} name="day" openedDays={[]} />
+          {timeLine.map((time: string) => (
+            <div class={style.slot}>
+              {time}
+            </div>
+          ))}
+          {/* {reservationList?.map((r: Reservation) => <Item type="info" icon={<IconCalendar color="var(--orange)" />} label={`${r.serviceName} - ${r.startTime} (${r.duration})`} text={`${r.personAmount} Pers. (${r.totalPrice} €) (${r.uid})`} editLabel={`${r.reservationStatus?.state === 'active' ? 'Aktiv' : 'Abgesagt'}`} action={() => setShowReservationId(r.reservationId)} />)} */}
         </main>
       ) : (
         <main class="small_size_holder">

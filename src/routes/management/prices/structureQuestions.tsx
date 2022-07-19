@@ -123,10 +123,8 @@ const StructureQuestions: Questions[] = [
       availableText: 'Nein, die Personenanzahl hat keinen Einfluss auf den Preis',
     },
     answers: [
-      { icon: <IconCalendar />, label: 'Ja, ab folgender Personenanzahl gelten unterschiedliche Preise', options: ['Gruppenpreis', 'pro Person'], name: 'person', inputType: 'number', info: 'Bitte geben Sie an für welche Personenanzahlen sich der Preis pro Person verändert z.B. 2 Personen, 4 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
-      // { icon: <IconCalendar />, label: 'Ja, für folgende Personenanzahlen gelten Gruppenpreise', name: 'group', inputType: 'number', info: 'Bitte geben Sie an für welche Gruppengröße andere Preise gelten z.B. 10 Personen, 20 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
-      // { icon: <IconCalendar />, label: 'Ja, aber nur an folgenden Tagen gelten andere Preise ab einer Personenanzahl (pro Person)', name: 'onDayPerson', inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen sich der Preis pro Person verändert', onDay: true, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
-      { icon: <IconCalendar />, label: 'Ja, aber nur an folgenden Tagen', name: 'onDayGroup', options: ['Gruppenpreis', 'pro Person'], inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen Gruppenpreise gelten', onDay: true, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
+      { icon: <IconCalendar />, label: 'Ja, ab folgender Personenanzahl gelten unterschiedliche Preise', options: ['Für', 'Ab'], name: 'person', inputType: 'number', info: 'Bitte geben Sie an für welche Personenanzahlen sich der Preis pro Person verändert z.B. 2 Personen, 4 Personen usw.', onDay: false, isMultiField: false, placeholder: 'z.B.: 10 Personen' },
+      { icon: <IconCalendar />, label: 'Ja, aber nur an folgenden Tagen', name: 'onDayGroup', options: ['Für', 'Ab'], inputType: 'number', info: 'Bitte definieren Sie, an welchen Tagen Gruppenpreise gelten', onDay: true, isMultiField: false, placeholder: 'z.B.: 20 Personen' },
     ],
   },
   {

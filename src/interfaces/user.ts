@@ -10,15 +10,15 @@ export interface Location {
     lng: number,
     city?: string,
     geoHash: string,
-    // weather?: Weather;
 }
 
 export interface User {
+    uid?: string;
+
     displayName?: string;
     email?: string;
     day?: string;
     location?: Location;
     interests?: string[];
     weather?: Weather;
-    uid?: string;
 }

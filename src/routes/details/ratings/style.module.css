@@ -4,7 +4,6 @@
     text-align: center;
     background: linear-gradient(145deg, #201b29, #272031);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 50px;
     box-shadow:  5px 5px 15px #221c2b,
     -5px -5px 15px #262031;
 }

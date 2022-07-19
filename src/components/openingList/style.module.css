@@ -1,6 +1,5 @@
 .openings {
     padding: 0;
-    width: 100%;
     border: none;
     color: rgba(255,255,255,0.8);
     font-size: 14px;
@@ -12,6 +11,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     align-content: flex-start;
+    margin: 0 15px 15px 15px;
 }
 
 .openings div {

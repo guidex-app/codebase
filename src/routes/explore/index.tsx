@@ -28,6 +28,16 @@ const Explore: FunctionalComponent = () => {
         text="Entdecke neue Unternehmungen. Durstöbere unsere Kategorien nach neuen Unternehmungen"
       />
       <BackButton url="/" />
+      {/* calc((100vw - 75px) / 4) */}
+      {/* <img
+        style={{
+          margin: '15px',
+          width: 'auto',
+          height: 'calc((((100vw - 75px) / 4) / 7) * 9)',
+        }}
+        alt=""
+        src="https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/topics%2Ferlebnisessen%2Ferlebnisessen_600x450.jpeg?alt=media"
+      /> */}
       <BasicMasonry list={topicList} link="explore" />
       <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} action={() => console.log('klick')} />
     </Fragment>

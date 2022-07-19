@@ -14,7 +14,7 @@ import catFilter from '../../data/catFilter';
 import filterCats from '../../data/filter';
 import { getFireCollection } from '../../data/fire';
 import getWeather from '../../data/weather';
-import { smallerThanDays } from '../../helper/date';
+import { isUpToDate } from '../../helper/date';
 import useTitle from '../../hooks/seo/useTitle';
 import { Cat } from '../../interfaces/categorie';
 import { Location, User, Weather } from '../../interfaces/user';
@@ -28,10 +28,8 @@ interface CatsProps {
 
 const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day = 'Heute', updateUser }: CatsProps) => {
   useTitle('Guidex | Dein Unternehmungs-Ratgeber für jede Wetterlage');
-
   const [filter, setFilter] = useState<string[]>([]);
   const [filteredCats, setFilteredCats] = useState<Cat[] | undefined | false>(false);
-  const [weatherList, setWeatherList] = useState<Weather[] | false>(false);
   const [catList, setCatList] = useState<Cat[] | false>(false);
 
   const [openModal, setOpenModal] = useState<undefined | 'Filter' | 'Tag' | 'Wetter' | 'Standort'>(undefined);
@@ -39,25 +37,29 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day = 'Heute'
   const closeModal = () => setOpenModal(undefined);
 
   const getFilteredCats = () => {
-    if (catList === false || weatherList === false) return;
-    const newCats = filterCats(catList, filter, weatherList[0]);
+    if (catList === false || !weather) return;
+    const newCats = filterCats(catList, filter, weather);
     return setFilteredCats(newCats);
   };
 
   const fetchCats = (): any => getFireCollection(`geo/${location?.geoHash}/categories`, 'sortCount', undefined, 200);
 
-  const getWeatherData = async (): Promise<Weather[]> => {
-    if (!location) return [];
+  const getWeatherData = async (): Promise<Weather | undefined> => {
+    if (!location) return undefined;
 
     const updated = weather?.lastUpdated;
-    if (updated && smallerThanDays(new Date(updated), 1)) return [weather];
-    return getWeather(location.lat, location.lng);
+
+    if (updated && isUpToDate(updated)) return weather;
+
+    const getNewWeather = await getWeather(location.lat, location.lng);
+
+    return getNewWeather[0];
   };
 
   const getData = async () => {
     const [weatherData, cats] = await Promise.all([getWeatherData(), fetchCats()]);
 
-    setWeatherList(weatherData);
+    updateUser({ weather: weatherData });
     setCatList(cats);
   };
 
@@ -72,14 +74,14 @@ const Cats: FunctionalComponent<CatsProps> = ({ location, weather, day = 'Heute'
   };
 
   // update cats
-  useEffect(() => { getFilteredCats(); }, [filter, catList, weatherList]);
+  useEffect(() => { getFilteredCats(); }, [filter, catList, weather]);
 
   // start daten
   useEffect(() => { getData(); }, [location]);
 
   return (
     <Fragment>
-      <Teaser openModal={setOpenModal} day={['Heute', 'Morgen'].includes(day) ? day : day.substring(0, 2)} weather={weatherList !== false ? weatherList[0] : undefined} location={location} />
+      <Teaser openModal={setOpenModal} day={['Heute', 'Morgen'].includes(day) ? day : day.substring(0, 2)} weather={weather} location={location} />
       <FilterBar />
       <BasicMasonry list={filteredCats} />
       <FabButton icon={<IconAdjustmentsHorizontal size={35} color="#581e0d" />} hide={!!openModal} action={() => setOpenModal('Filter')} />

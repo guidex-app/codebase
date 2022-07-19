@@ -9,14 +9,6 @@ import fireConfig from './fireConfig';
 
 const db = getFirestore(fireConfig);
 
-// export const deleteStoragePath = (path:string) => {
-//   const storageRef = fire.storage().ref();
-//   const activityRef = storageRef.child(path);
-//   activityRef.listAll().then((result) => {
-//     result.items.forEach((file) => file.delete());
-//   });
-// };
-
 const getQuery = (item: { path:string, order: string | false, w?: [string, 'array-contains' | 'array-contains-any' | '!=' | '==' | 'in' | '>' | 'not-in' | '>=' | '<=', any][], limited?: number, start?: (string | number)[] }) => {
   const whereFields = item.w?.map((i) => where(...i)) || [];
   return query(
@@ -72,6 +64,14 @@ export const fireArray = async (path: string, fieldName: string, value: string, 
 export const deleteFireDocument = (path: string) => {
   const docRef = doc(db, path);
   deleteDoc(docRef);
+};
+
+export const deleteDocuments = (path: string, ids: string[]) => {
+  const promises: any = [];
+  ids.forEach((id: string) => {
+    promises.push(deleteDoc(doc(db, `${path}/${id}`)));
+  });
+  return Promise.all(promises);
 };
 
 export const setNewRating = async (activityId: string, uid: string, values: any, type: 'rating' | 'tipps', oldStarValue?: number) => {

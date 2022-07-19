@@ -2,11 +2,11 @@ import { IconStar } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { getFireDocument, setNewRating } from '../../data/fire';
-import { User } from '../../interfaces/user';
-import FormButton from '../form/basicButton';
-import NormalInput from '../form/Inputs/basic';
-import TextInput from '../form/Inputs/textArea';
+import { getFireDocument, setNewRating } from '../../../data/fire';
+import { User } from '../../../interfaces/user';
+import FormButton from '../../../components/form/basicButton';
+import NormalInput from '../../../components/form/Inputs/basic';
+import TextInput from '../../../components/form/Inputs/textArea';
 import style from './style.module.css';
 
 interface AddRatingProps {

@@ -1,15 +1,13 @@
 .header {
 	min-height: 60px;
 	width: 100%;
-	padding: 0 2.5px;
 	background: transparent;
 	overflow: hidden;
 
-	display: grid;
-	grid-template-columns: 100px calc(100% - 212px) 100px; 
-	grid-template-rows: 60px;
-	gap: 0px 5px; 
-	grid-template-areas: "extraButton title menu";
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	text-align: center;
 }
 
 .invert {
@@ -26,10 +24,7 @@
 }
 
 .title { 
-	grid-area: title;
-	text-align: center;
-	align-self: center;
-	justify-self: center;
+	width: clamp(100% - 110px, 272px, 100% - 55px);
 	pointer-events: none;
 }
 
@@ -40,34 +35,30 @@
 }
 
 .menu { 
-	grid-area: menu;
-	align-self: center;
-	justify-self: end;
+	width: 55px;
+	padding-right: 15px;
 }
 
 .menu button {
-	text-align: center;
-	border: none;
-	text-decoration: none;
 	color: #ed576b;
-	height: 32px;
-	width: 32px;
-	vertical-align: middle;
 	background-color: #232732;
-	border-radius: 50%;
-	cursor: pointer;
-	transition: 0.3s background ease-in-out;
-	will-change: background, transform;
+
+    height: 40px;
+    width: 40px;
+    padding: 8px;
+
 	transition: 0.3s transform;
 	transform: scale(1);
+
+	border-radius: 50%;
+	transition: 0.3s transform;
+	will-change: background, transform;
 }
 
 .menu svg {
-	display: inline-block;
-	width: 20px;
-	height: 30px;
+	vertical-align: middle;
 }
 
-.menu button:hover { background: var(--white); transform: scale(1.1) }
+.menu button:hover { background-color: var(--white); transform: scale(1.02) }
 
 .invert .button { background-color: rgba(255,255,255,0.5); }

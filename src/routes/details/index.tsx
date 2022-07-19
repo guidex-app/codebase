@@ -4,13 +4,14 @@ import { useEffect, useState } from 'preact/hooks';
 
 import BackButton from '../../components/backButton';
 import IconScrollList from '../../components/iconScrollList';
+import TextHeader from '../../components/infos/iconTextHeader';
 import Item from '../../components/item';
 import OpeningsList from '../../components/openingList/openings';
-import Rating from '../../components/ratings';
 import Slider from '../../components/slider';
 import useCompany from '../../hooks/useCompany';
 import { Activity } from '../../interfaces/activity';
 import { User } from '../../interfaces/user';
+import Rating from './ratings';
 import Reservation from './reservation';
 
 interface DetailsProps {
@@ -39,10 +40,16 @@ const Details: FunctionalComponent<DetailsProps> = ({ activityID, user, day }: D
         height={300}
       />
 
-      <main class="small_size_holder">
+      <main class="small_size_holder" style={{ marginTop: '-50px' }}>
         <BackButton url={data ? `/activity/${data.category.form}` : '/'} />
-        <h1 style={{ marginTop: '20px' }}>{data?.title.name}&nbsp;</h1>
-        <p style={{ color: 'var(--fifth)' }}>{data?.description}&nbsp;</p>
+        <TextHeader
+          image={`https://firebasestorage.googleapis.com/v0/b/guidex-95302.appspot.com/o/activity%2F${activityID}%2F${activityID}_250x200`}
+          title={data?.title.name || ''}
+          shorten
+          text={data?.description || ''}
+        />
+        {/* <h1 style={{ marginTop: '20px' }}>{data?.title.name}&nbsp;</h1>
+        <p style={{ color: 'var(--fifth)' }}>{data?.description}&nbsp;</p> */}
         <OpeningsList openings={data?.openings} day={day} />
         <Item icon={<IconMapPin />} label={data ? `${data.address?.street || ''} ${data.address?.houseNumber || ''}, ${data.address?.plz || ''} ${data.address?.place || ''}` : ''} text="Klicke zum kopieren" type="info" />
         {data?.customerContact?.website && <Item icon={<IconGlobe />} label={data.customerContact?.website} text="Klicke zum öffnen" type="grey" />}

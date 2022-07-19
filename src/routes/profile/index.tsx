@@ -85,7 +85,7 @@ const Profile: FunctionalComponent<ProfileProps> = ({ updateUser }: ProfileProps
 
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
 
-      <form class="small_size_holder">
+      <form class="small_size_holder" style={{ padding: '0 15px' }}>
 
         <section class="group form">
           <h3>Für Deine Vorschläge</h3>

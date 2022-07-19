@@ -2,12 +2,12 @@ import { IconEdit, IconToggleLeft } from '@tabler/icons';
 import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import Modal from '../../container/modal';
-import { getFireCollection, voteItem } from '../../data/fire';
-import { RatingComment } from '../../interfaces/rating';
-import { User } from '../../interfaces/user';
-import Chip from '../chip';
-import Item from '../item';
+import Chip from '../../../components/chip';
+import Item from '../../../components/item';
+import Modal from '../../../container/modal';
+import { getFireCollection, voteItem } from '../../../data/fire';
+import { RatingComment } from '../../../interfaces/rating';
+import { User } from '../../../interfaces/user';
 import AddRating from './add';
 import VisuellOverview from './overview';
 import UserCommentItem from './userItem';
@@ -47,7 +47,7 @@ const Rating: FunctionalComponent<RatingProps> = ({ user, activityId, rating = [
   };
 
   return (
-    <div style={{ padding: '10px', backgroundColor: 'rgba(255,255,255,0.03', borderRadius: '20px', marginBottom: '20px' }}>
+    <div style={{ padding: '10px', backgroundColor: 'var(--dark)', borderTop: '1px solid var(--lighter)', marginBottom: '20px' }}>
 
       <Item icon={<IconToggleLeft color="var(--orange)" />} label={`${segment === 'rating' ? 'Tipps' : 'Bewertungen'} anzeigen`} type="info" action={() => setSegment(segment === 'rating' ? 'tipps' : 'rating')} />
       {segment === 'rating' && (

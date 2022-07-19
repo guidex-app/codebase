@@ -56,7 +56,7 @@ const SignIn: FunctionalComponent<SignInProps> = ({ updateUser, logout }: SignIn
 
       <img class={style.logo} src="../../assets/logo/logo_farbe.svg" alt="guidex" />
 
-      <form class="mini_size_holder">
+      <form class="mini_size_holder" style={{ padding: '0 15px' }}>
         <NormalInput
           icon={<IconMailbox />}
           label="E-Mail"

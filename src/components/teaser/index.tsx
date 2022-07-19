@@ -34,7 +34,7 @@ const Teaser: FunctionalComponent<TeaserProps> = ({ location, day, weather, open
   return (
     <section class={style.teaser} style={{ backgroundImage: image }}>
       <div>
-        <h1>Was möchtest du<br />{`${day}.`} unternehmen?</h1>
+        <h1>Was möchtest du<br />{['Heute', 'Morgen'].includes(day) ? day : `${day}.`} unternehmen?</h1>
         <p>Deine individuellen Vorschläge für {location?.city || 'Hamburg'}</p>
 
         <Chooser action={openModal} city={location?.city || 'Hamburg'} day={day} />

@@ -116,7 +116,7 @@ const Register: FunctionalComponent<RegisterProps> = ({ updateUser, company }: R
 
       <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>{company ? 'Ihr Partner-Konto erstellen' : 'Ihr Nutzer-Konto erstellen'}</h1>
 
-      <form class="small_size_holder">
+      <form class="small_size_holder" style={{ padding: '0 15px' }}>
         <section class="group form">
           <h3>Dein Login</h3>
           <NormalInput

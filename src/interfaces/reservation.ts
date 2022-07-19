@@ -94,7 +94,7 @@ export interface ShoppingCart {
     amount: number,
     groupDiscount?: number,
     room?: number,
-  }
+}
 
 export interface UserValues {
     ages?: { [key: string]: number },

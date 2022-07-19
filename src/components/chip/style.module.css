@@ -34,9 +34,9 @@
 }
 
 .active {
-    border-color: var(--orange);
-    background-color: #342935;
-    color: var(--orange);
+    border-color: transparent;
+    background: linear-gradient(90deg,#fa8142, #ff4088);
+    color: var(--white);
 }
 
 .warning {
